@@ -6,18 +6,6 @@ const PokemonSchema = new mongoose.Schema(
                 required: true, 
                 trim: true },
 
-        breed: {type: String, 
-                required: true, 
-                trim: true},
-
-        age: {type: Number, 
-                required: true, 
-                min: 0 },
-
-        colour: {type: String, 
-                default: 'Unkown', 
-                trim: true},
-
         shiny: {type: Boolean, 
                 default: false },
 
@@ -39,7 +27,7 @@ const PokemonSchema = new mongoose.Schema(
 
         level: {type: Number,
                 required: true,
-                min: 0,
+                min: 1,
                 max: 100,
                 default: 1},
         
@@ -48,14 +36,29 @@ const PokemonSchema = new mongoose.Schema(
                 enum: ['Male', 'Female', 'Genderless'],
                 default: 'Genderless' },
         
-        type: {type: String,
+        type:{
+
+         type: [{
+                type: String,
+                enum: ['Normal', 'Fire', 'Water', 'Electric', 'Grass', 'Ice', 'Fighting', 'Poison', 'Ground', 'Flying',
+                        'Psychic', 'Bug', 'Rock', 'Ghost', 'Dragon', 'Dark', 'Steel', 'Fairy'],
+                        }],
                 required: true,
-                trim: true
-        }
+                validate: [
+                        (val) => val.length > 0 && val.length <= 2,
+                //pokemon can have more than 1 type, validate allows for max two to be chosen
+                ],
+                default: 'Normal',
+                trim: true},
+
+        imagePokemon: {type: String,
+                        required: true,
+                        trim: true
+        },
 
     },
     {timestamps : true}
 );
 
-const PokemonSchema = mongoose.model("Pokemon", PokemonSchema);
+const Pokemon = mongoose.model("Pokemon", PokemonSchema);
 module.exports = Pokemon;
