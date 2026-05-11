@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const Dog = require('../models/Dog');
+const Pokemon = require('../models/pokemon');
 
 router.post('/', async (req, res) => {
     try {
-        const newDog = new Dog(req.body);
-        const saved = await newDog.save();
+        const newPokemon = new Pokemon(req.body);
+        const saved = await newPokemon.save();
 
-        res.status(201).json(saved);
+        res.status(200).json(saved);
     }
     catch (error) {
         res.status(400).json({ message: error.message });
@@ -16,9 +16,9 @@ router.post('/', async (req, res) => {
 
 router.get('/', async (req, res) => {
     try{
-        const dogs = await Dog.find();
+        const pokemon = await Pokemon.find();
 
-        res.status(201).json(dogs);
+        res.status(200).json(pokemon);
     }
     catch (error){
         res.status(500).json({ message: error.message });
@@ -27,13 +27,13 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try{
-        const dogs = await Dog.findById(req.params.id);;
+        const pokemon = await Pokemon.findById(req.params.id);
 
-        if(!dog){
-            return res.status(404).json({ message: "Dog not found" });
+        if(!pokemon){
+            return res.status(404).json({ message: "pokemon not found" });
         }
 
-        res.status(200).json(dogs);
+        res.status(200).json(pokemon);
     }
     catch (error){
         res.status(500).json({ message: error.message });
@@ -42,7 +42,7 @@ router.get('/:id', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
     try{
-        const updateDog = await Dog.findByIdAndUpdate(
+        const updatePokemon = await Pokemon.findByIdAndUpdate(
             req.params.id, 
             req.body,
         {
@@ -50,11 +50,11 @@ router.put('/:id', async (req, res) => {
             runValidators: true,
         });
 
-        if(!updatedDog){
-            res.status(404).json({ message: "Dog not found" });
+        if(!updatedPokemon){
+            res.status(404).json({ message: "Pokemon not found" });
         }
 
-        res.status(200).json(updateDog);
+        res.status(200).json(updatePokemon);
     }
     catch (error){
         res.status(400).json({ message: error.message });
@@ -63,13 +63,13 @@ router.put('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
     try{
-        const deleteDog = await Dog.findByIdAndDelete(req.params.id);
+        const deletePokemon = await Pokemon.findByIdAndDelete(req.params.id);
 
-        if(!deleteDog){
-            res.status(404).json({ message: "Dog not found" });
+        if(!deletePokemon){
+            res.status(404).json({ message: "Pokemon not found" });
         }
 
-        res.status(200).json({ message: "Dog deleted successfully" });
+        res.status(200).json({ message: "Pokemon deleted successfully" });
     }
     catch (error){
         res.status(400).json({ message: error.message });
