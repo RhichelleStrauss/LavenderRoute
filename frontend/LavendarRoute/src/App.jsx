@@ -1,3 +1,9 @@
+
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import Catalog from './pages/Catalog'
+import ProductAdd from './pages/ProductAdd'
+import SignUp from './pages/SignUp'
+
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
