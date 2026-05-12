@@ -18,3 +18,11 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+:root{
+  --yellow: #C4FF4D;
+  --purple: #BA8CFF;
+  --grey: #4D4D4D;
+  --black: #1A1A1A;
+  --dark-purple: #2A1A3A;
+}

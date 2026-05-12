@@ -1,5 +1,5 @@
-import * as React from 'react';
-import FormExample from '../components/Form.jsx';
+import React, { useState } from 'react';
+import PokemonAddForm from '../components/PokemonAddForm.jsx';
 import LiquidEther from '../components/LiquidEther.jsx'
 import { Container, Card } from 'react-bootstrap';
 
@@ -43,15 +43,16 @@ export default function PokemonAdd() {
             border: '1px solid #C4FF4D',
             borderRadius: '15px',
             boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.8)',
-            color: 'azure'
+            color: '#BA8CFF'
           }}
         >
           <Card.Body style={{ padding: '40px' }}>
-            <h2 style={{ color: '#C4FF4D', marginBottom: '30px', textTransform: 'uppercase', letterSpacing: '1px' }}>
+            <h2 style={{ color: '#C4FF4D', marginBottom: '30px', textTransform: 'uppercase', letterSpacing: '1px', fontFamily: 'vt323' }}>
               Add New Pokémon
             </h2>
 
-        <FormExample />
+        <PokemonAddForm />
+
         </Card.Body>
         </Card>
         </Container>
