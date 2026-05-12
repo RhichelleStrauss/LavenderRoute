@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import Catalog from './pages/Catalog'
-import ProductAdd from './pages/ProductAdd'
+import PokemonAdd from './pages/PokemonAdd'
 import SignUp from './pages/SignUp'
 
 import reactLogo from './assets/react.svg'
@@ -18,7 +18,7 @@ function App() {
     <div style={{ padding: '20px', display: 'flex', gap: '20px', borderBottom: '1px solid #333' }}>
         <Link to="/" className="nav-link">Home</Link>
         <Link to="/catalog" className="nav-link">Catalog</Link>
-        <Link to="/add-pokemon" className="nav-link">Add Product</Link>
+        <Link to="/add-pokemon" className="nav-link">Add Pokemon</Link>
         <Link to="/signup" className="nav-link">Sign Up</Link>
       </div>
     
@@ -26,7 +26,7 @@ function App() {
         <Routes>
 
           <Route path="/catalog" element={<Catalog />} />
-          <Route path="/add-pokemon" element={<ProductAdd />} />
+          <Route path="/add-pokemon" element={<PokemonAdd />} />
           <Route path="/signup" element={<SignUp />} />
         </Routes>
         </div>
