@@ -4,7 +4,6 @@ import ReflectiveCard from '../components/pokemonCard.jsx';
 import '../css/catalog.css'
 
 export default function PokemonAdd() {
-  // Move these INSIDE the function
   const [teamPokemon, setTeamPokemon] = useState([{
     _id: "test123",
     name: "PIKACHU",

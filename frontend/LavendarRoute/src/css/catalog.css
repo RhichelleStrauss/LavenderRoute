@@ -8,7 +8,7 @@
 }
 
 .catalog-title {
-  font-family: 'vt323', monospace; /* Use your pixel font */
+  font-family: 'vt323', monospace; 
   color: #C4FF4D;
   font-size: 3rem;
   margin-bottom: 30px;

@@ -20,7 +20,7 @@ const ReflectiveCard = ({
             <span className="tag">{stage}</span>
             <span className="tag">{gender}</span>
 
-            {/* Dynamic Type Mapping */}
+          
             {type.map((t, index) => (
               <span key={index} className={`tag type-${t.toLowerCase()}`}>
                 {t}
