@@ -4,6 +4,8 @@ import ReflectiveCard from '../components/pokemonCard.jsx';
 import '../css/catalog.css'
 import PokemonAddForm from '../components/PokemonAddForm.jsx';
 
+import CrossIcon from '../assets/icons/CrossIcon.png';
+
 export default function PokemonAdd() {
   const [teamPokemon, setTeamPokemon] = useState([{
     _id: "test123",
@@ -35,6 +37,7 @@ export default function PokemonAdd() {
   }, []);
 
   // opening modal with the correct data from card/backedn
+  //opens when card is clicked - modalopeem true 
   const handleEditClick = (pokemon) => {
     setSelectedPokemon(pokemon);
     setIsModalOpen(true);
@@ -59,6 +62,8 @@ export default function PokemonAdd() {
       console.error("np updatey:", error);
     }
   };
+  //put - updates 
+  //map looks at data edited, looks through list - if matching what was uodated UI gets upated
   //ᓚᘏᗢ
 
   //handle delte post ᓚᘏᗢ
@@ -82,6 +87,7 @@ export default function PokemonAdd() {
     }
 
   };
+  //filter removes deleted pokemon, make new list wihgout the poor thing
 
 
   return (
@@ -143,15 +149,19 @@ export default function PokemonAdd() {
 
             <button
               onClick={() => setIsModalOpen(false)}
-              style={{ position: 'absolute', top: '16px', right: '16px', background: 'transparent', border: 'none', color: '#BA8CFF', fontSize: '24px', cursor: 'pointer', zIndex: 1000 }}
+              style={{ position: 'absolute', top: '48px', right: '28px', background: 'transparent', border: 'none', color: '#BA8CFF', fontSize: '24px', cursor: 'pointer', zIndex: 1000 }}
             >
-              ✕
+              <img 
+                src={CrossIcon} 
+                style={{ width: "34px", height: "34px", objectFit: 'contain' }} 
+              />
             </button>
 
             <PokemonAddForm
               initialData={selectedPokemon}
               onSave={handleUpdatePokemon}
               onDelete={handleDeletePokemon}
+              isModal={true}
             />
           </div>
         </div>

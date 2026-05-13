@@ -14,7 +14,7 @@ const POKEMON_TYPE = [
 ]; 
 
 
- function PokemonAddForm({ initialData, onSave, onDelete }) {
+ function PokemonAddForm({ initialData, onSave, onDelete, isModal = false }) {
   const navigate = useNavigate();
   const [isTypeMenuOpen, setIsTypeMenuOpen] = useState(false);
   const typeRef = useRef(null);
@@ -71,8 +71,8 @@ const POKEMON_TYPE = [
   
 
 const styles = {
-    card: { width: "100%", maxWidth: 800, margin: "40px auto", border: "1px solid #C4FF4D", borderRadius: "16px", backgroundColor: "#1a1a1ab5)", padding: "40px", boxSizing: "border-box", fontFamily: "'Poppins', sans-serif", color: "#BA8CFF", boxShadow: "0 0 40px #1a1a1a80",maxHeight: "90vh", 
-      overflowY: "auto" },
+    card: { width: "100%", maxWidth: 800, margin:isModal ? "0 auto" : "40px auto", border: "1px solid #C4FF4D", borderRadius: "16px", backgroundColor: "#1a1a1ab5)", padding: "40px", boxSizing: "border-box", fontFamily: "'Poppins', sans-serif", color: "#BA8CFF", boxShadow: "0 0 40px #1a1a1a80",maxHeight: isModal ? "90vh" : "none", 
+      overflowY: isModal ? "auto" : "visible"},
     header: { margin: "0 0 32px 0", fontSize: 24, fontWeight: 800, color: "#BA8CFF", letterSpacing: "2px", textTransform: "uppercase", fontFamily: "'VT323', monospace", textShadow: "2px 2px 0px rgba(#1a1a1a80)" },
     row: { display: "flex", gap: "24px", marginBottom: "20px" },
     col: { flex: 1, position: "relative" },
