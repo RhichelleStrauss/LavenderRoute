@@ -67,6 +67,7 @@ const POKEMON_TYPE = [
       }
     }
   };
+  
 
 const styles = {
     card: { width: "100%", maxWidth: 800, margin: "40px auto", border: "1px solid #C4FF4D", borderRadius: "16px", backgroundColor: "#1a1a1ab5)", padding: "40px", boxSizing: "border-box", fontFamily: "'Poppins', sans-serif", color: "#BA8CFF", boxShadow: "0 0 40px #1a1a1a80" },
@@ -209,7 +210,7 @@ const styles = {
             Save Draft
           </button> */}
           <button type="submit" style={styles.btnSubmit}>
-            Add Product to be reviwed
+            Add Product to be reviewed
           </button>
         </div>
         
