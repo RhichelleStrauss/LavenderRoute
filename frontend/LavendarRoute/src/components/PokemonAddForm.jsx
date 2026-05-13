@@ -68,50 +68,54 @@ const POKEMON_TYPE = [
     }
   };
 
- const styles = {
-    card: { width: "100%", maxWidth: 700, margin: "40px auto", border: "2px solid black", backgroundColor: "#1a1a1a81", padding: "32px", boxSizing: "border-box", fontFamily: "sans-serif", color: "black" },
-    field: { display: "flex", flexDirection: "column", gap: "6px" },
-    label: { fontSize: "14px", fontWeight: "bold", margin: 0, textTransform: "uppercase" },
-    input: { width: "100%", boxSizing: "border-box", padding: "10px 14px", border: "2px solid black", backgroundColor: "white", color: "black", fontSize: "14px", outline: "none", borderRadius: "0" },
-    error: { color: "black", fontSize: "12px", margin: 0, fontWeight: "bold" },
-    numberGroup: { display: "flex", alignItems: "center", width: "100%", border: "2px solid black" },
-    numberBtn: { background: "#f0f0f0", color: "black", width: "40px", height: "40px", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", fontSize: "18px", flexShrink: 0 },
-    numberInput: { flex: 1, border: "none", borderLeft: "2px solid black", borderRight: "2px solid black", textAlign: "center", padding: "10px 0", outline: "none", fontSize: "14px", borderRadius: "0", margin: 0, appearance: "textfield" },
-    typeContainer: { minHeight: "44px", display: "flex", flexWrap: "wrap", gap: "6px", alignItems: "center", cursor: "pointer", border: "2px solid black", padding: "6px", backgroundColor: "white", position: "relative" },
-    tag: { background: "black", color: "white", padding: "4px 8px", fontSize: "12px", display: "flex", alignItems: "center", gap: "6px", fontWeight: "bold" },
-    tagBtn: { background: "transparent", border: "none", color: "white", cursor: "pointer", fontSize: "10px", padding: 0 },
-    priceWrapper: { display: "flex", border: "2px solid black", overflow: "hidden", backgroundColor: "white" },
-    pricePrefix: { background: "#f0f0f0", padding: "10px 16px", borderRight: "2px solid black", color: "black", display: "flex", alignItems: "center", fontWeight: "bold" },
-    priceInput: { flex: 1, background: "transparent", border: "none", color: "black", padding: "10px 14px", outline: "none", fontSize: "14px" },
-    submitBtn: { background: "black", border: "2px solid black", color: "white", padding: "14px 24px", fontSize: "14px", fontWeight: "bold", cursor: "pointer", textTransform: "uppercase", letterSpacing: "1px", width: "100%", marginTop: "32px" },
-    deleteBtn: { background: "white", border: "2px solid black", color: "black", padding: "14px 24px", fontSize: "14px", fontWeight: "bold", cursor: "pointer", textTransform: "uppercase", letterSpacing: "1px", width: "100%", marginTop: "12px" }
+const styles = {
+    card: { width: "100%", maxWidth: 800, margin: "40px auto", border: "1px solid #C4FF4D", borderRadius: "16px", backgroundColor: "#1a1a1ab5)", padding: "40px", boxSizing: "border-box", fontFamily: "'Poppins', sans-serif", color: "#BA8CFF", boxShadow: "0 0 40px #1a1a1a80" },
+    header: { margin: "0 0 32px 0", fontSize: 24, fontWeight: 800, color: "#BA8CFF", letterSpacing: "2px", textTransform: "uppercase", fontFamily: "'VT323', monospace", textShadow: "2px 2px 0px rgba(#1a1a1a80)" },
+    row: { display: "flex", gap: "24px", marginBottom: "20px" },
+    col: { flex: 1, position: "relative" },
+    label: { display: "block", fontSize: "14px", color: "#BA8CFF", marginBottom: "8px" },
+    input: { width: "100%", boxSizing: "border-box", padding: "12px 16px", border: "1px solid #BA8CFF", borderRadius: "12px", backgroundColor: "rgba(186, 140, 255, 0.2)", color: "#BA8CFF", fontSize: "14px", outline: "none" },
+    textarea: { width: "100%", boxSizing: "border-box", padding: "12px 16px", border: "1px solid #BA8CFF", borderRadius: "12px", backgroundColor: "rgba(186, 140, 255, 0.2)", color: "#BA8CFF", fontSize: "14px", outline: "none", minHeight: "100px", resize: "vertical" },
+    imageArea: { width: "100%", boxSizing: "border-box", padding: "12px 16px", border: "1px dashed #BA8CFF", borderRadius: "12px", backgroundColor: "rgba(186, 140, 255, 0.2)", color: "#BA8CFF", fontSize: "14px", outline: "none", minHeight: "140px", resize: "vertical" },
+    typeContainer: { minHeight: "44px", display: "flex", flexWrap: "wrap", gap: "8px", alignItems: "center", cursor: "pointer", border: "1px solid #BA8CFF", borderRadius: "12px", padding: "8px 12px", backgroundColor: "rgba(186, 140, 255, 0.2)" },
+    tag: { background: "#c4ff4dad", color: "#4D4D4D", padding: "4px 10px", borderRadius: "6px", fontSize: "13px", display: "flex", alignItems: "center", gap: "6px", fontWeight: "bold" },
+    tagBtn: { background: "transparent", border: "none", color: "#4D4D4D", cursor: "pointer", fontSize: "12px", padding: 0, fontWeight: "bold" },
+    numberGroup: { display: "flex", alignItems: "center", width: "100%", border: "1px solid #BA8CFF", borderRadius: "12px", overflow: "hidden", backgroundColor: "rgba(186, 140, 255, 0.2)", height: "44px" },
+    numberBtn: { background: "transparent", color: "#BA8CFF", width: "44px", height: "100%", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", fontSize: "18px" },
+    numberInput: { flex: 1, border: "none", borderLeft: "1px solid rgb(166, 29, 161) 1px solid rgb(186, 140, 255)", textAlign: "center", height: "100%", outline: "none", fontSize: "14px", margin: 0, appearance: "textfield", backgroundColor: "transparent", color: "#BA8CFF" },
+    priceWrapper: { display: "flex", border: "1px solid #BA8CFF", borderRadius: "12px", overflow: "hidden", backgroundColor: "rgba(255, 255, 255, 0.03)", height: "44px" },
+    pricePrefix: { background: "#ba8cffd4", padding: "0 20px", color: "#1a1a1a", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", fontSize: "18px" },
+    priceInput: { flex: 1, background: "rgba(186, 140, 255, 0.2)", border: "none", color: "#BA8CFF", padding: "0 16px", outline: "none", fontSize: "14px" },
+    btnContainer: { display: "flex", justifyContent: "flex-end", gap: "16px", marginTop: "40px" },
+    // btnDraft: { background: "rgba(196, 255, 77, 0.2)", border: "1px solid rgba(196, 255, 77, 0.4)", color: "#C4FF4D", borderRadius: "12px", padding: "14px 28px", fontSize: "16px", fontWeight: "bold", cursor: "pointer" },
+    btnSubmit: { background: "#c4ff4dca", border: "none", color: "#2A1A3A", borderRadius: "12px", padding: "14px 28px", fontSize: "16px", fontWeight: "bold", cursor: "pointer", border: "1px solid #C4FF4D" }
   };
 
  return (
     <div style={styles.card}>
-      <h2 style={{ margin: "0 0 24px 0", fontSize: 24, fontWeight: 800, textTransform: "uppercase", borderBottom: "2px solid black", paddingBottom: "16px" }}>
-        {initialData ? "Edit Pokémon" : "Register Pokémon"}
+      <h2 style={{ margin: "0 0 24px 0", fontSize: 36, fontWeight: 800, textTransform: "uppercase", borderBottom: "2px solid black", paddingBottom: "16px", fontFamily: "'VT323', monospace" }}>
+        {initialData ? "Edit Pokémon" : "Add New Pokémon"}
       </h2>
 
       <form onSubmit={handleSubmit}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px 20px" }}>
           
           <Field.Root style={{ ...styles.field, gridColumn: "1 / -1" }}>
-            <Field.Label style={styles.label}>Pokémon name</Field.Label>
-            <Field.Control required style={styles.input} value={form.name} onChange={e => set("name", e.target.value)} placeholder="e.g. Charizard" />
+            <Field.Label style={styles.label}>Pokémon name:</Field.Label>
+            <Field.Control required style={styles.input} value={form.name} onChange={e => set("name", e.target.value)} placeholder="e.g. gengar" />
             <Field.Error style={styles.error} match="valueMissing">Please enter a name.</Field.Error>
           </Field.Root>
 
           <Field.Root style={{ ...styles.field, gridColumn: "1 / -1" }}>
-             <Field.Label style={styles.label}>Description</Field.Label>
-             <Field.Control render={<textarea />} required style={{ ...styles.input, minHeight: '80px', resize: 'vertical' }} value={form.description} onChange={e => set("description", e.target.value)} placeholder="A brief lore description..." />
+             <Field.Label style={styles.label}>Description:</Field.Label>
+             <Field.Control render={<textarea />} required style={{ ...styles.input, minHeight: '80px', resize: 'vertical' }} value={form.description} onChange={e => set("description", e.target.value)} placeholder="Describe your pokémon " />
              <Field.Error style={styles.error} match="valueMissing">Description is required.</Field.Error>
           </Field.Root>
 
           <Field.Root style={{ ...styles.field, position: "relative" }} ref={typeRef}>
-            <Field.Label style={styles.label}>Type (Max 2)</Field.Label>
+            <Field.Label style={styles.label}>Type:</Field.Label>
             <div onClick={() => setIsTypeMenuOpen(!isTypeMenuOpen)} style={styles.typeContainer}>
-              {form.type.length === 0 && <span style={{color: "#777", fontSize: "14px", paddingLeft: "4px"}}>Select types...</span>}
+              {form.type.length === 0 && <span style={{color: "rgb(186, 140, 255)", fontSize: "14px", paddingLeft: "4px"}}>Select types...</span>}
               {form.type.map(t => (
                 <span key={t} style={styles.tag}>
                   {t}
@@ -121,9 +125,9 @@ const POKEMON_TYPE = [
             </div>
             
             {isTypeMenuOpen && form.type.length < 2 && (
-              <div style={{ position: "absolute", top: "100%", left: 0, right: 0, zIndex: 50, marginTop: "4px", background: "white", border: "2px solid black", maxHeight: "180px", overflowY: "auto", padding: "4px", boxShadow: "4px 4px 0px rgba(0,0,0,1)" }}>
+              <div style={{ position: "absolute", top: "100%", left: 0, right: 0, zIndex: 50, marginTop: "4px", backgroundColor: "rgba(186, 140, 255, 0.2)", color: "#BA8CFF", border: "2px solid #1A1A1A", maxHeight: "180px", overflowY: "auto", padding: "4px"}}>
                 {POKEMON_TYPE.filter(t => !form.type.includes(t)).map(t => (
-                  <div key={t} onClick={() => { set("type", [...form.type, t]); setIsTypeMenuOpen(false); }} style={{ padding: "8px 12px", cursor: "pointer", fontSize: "14px", color: "black", fontWeight: "500", borderBottom: "1px solid #eee" }} onMouseOver={e => e.currentTarget.style.background = "#f0f0f0"} onMouseOut={e => e.currentTarget.style.background = "transparent"}>
+                  <div key={t} onClick={() => { set("type", [...form.type, t]); setIsTypeMenuOpen(false); }} style={{ padding: "8px 12px", cursor: "pointer", fontSize: "14px", color: "black", fontWeight: "500", borderBottom: "1px solid #2a1a3adc" }} onMouseOver={e => e.currentTarget.style.background = "#ba8cff79"} onMouseOut={e => e.currentTarget.style.background = "transparent"}>
                     {t}
                   </div>
                 ))}
@@ -132,7 +136,7 @@ const POKEMON_TYPE = [
           </Field.Root>
           
           <Field.Root style={styles.field}>
-            <Field.Label style={styles.label}>Gender</Field.Label>
+            <Field.Label style={styles.label}>Gender:</Field.Label>
             <Field.Control render={<select />} required style={styles.input} value={form.gender} onChange={e => set("gender", e.target.value)}>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
@@ -141,7 +145,7 @@ const POKEMON_TYPE = [
           </Field.Root>
 
           <Field.Root style={styles.field}>
-            <Field.Label style={styles.label}>Level (1-100)</Field.Label>
+            <Field.Label style={styles.label}>Level:</Field.Label>
             <NumberField.Root value={form.level === "" ? null : Number(form.level)} onValueChange={v => set("level", v ?? "")} min={1} max={100} required>
               <NumberField.Group style={styles.numberGroup}>
                 <NumberField.Decrement style={styles.numberBtn}>-</NumberField.Decrement>
@@ -153,7 +157,7 @@ const POKEMON_TYPE = [
           </Field.Root>
 
           <Field.Root style={styles.field}>
-            <Field.Label style={styles.label}>Height (m)</Field.Label>
+            <Field.Label style={styles.label}>Height (inches):</Field.Label>
             <NumberField.Root value={form.height === "" ? null : Number(form.height)} onValueChange={v => set("height", v ?? "")} step={0.1} min={0} required>
               <NumberField.Group style={styles.numberGroup}>
                 <NumberField.Decrement style={styles.numberBtn}>-</NumberField.Decrement>
@@ -165,7 +169,7 @@ const POKEMON_TYPE = [
           </Field.Root>
 
           <Field.Root style={styles.field}>
-            <Field.Label style={styles.label}>Weight (kg)</Field.Label>
+            <Field.Label style={styles.label}>Weight (kg):</Field.Label>
             <NumberField.Root value={form.weight === "" ? null : Number(form.weight)} onValueChange={v => set("weight", v ?? "")} step={0.1} min={0} required>
               <NumberField.Group style={styles.numberGroup}>
                 <NumberField.Decrement style={styles.numberBtn}>-</NumberField.Decrement>
@@ -200,15 +204,15 @@ const POKEMON_TYPE = [
 
         </div>
 
-        <button type="submit" style={styles.submitBtn}>
-          {initialData ? "Update Pokémon" : "Save to Pokédex"}
-        </button>
-
-        {initialData && onDelete && (
-          <button type="button" onClick={() => onDelete(initialData._id)} style={styles.deleteBtn}>
-            Delete Pokémon
+        <div style={styles.btnContainer}>
+          {/* <button type="button" onClick={() => navigate(-1)} style={styles.btnDraft}>
+            Save Draft
+          </button> */}
+          <button type="submit" style={styles.btnSubmit}>
+            Add Product to be reviwed
           </button>
-        )}
+        </div>
+        
       </form>
     </div>
   );
