@@ -43,6 +43,7 @@ function App() {
       <div className="content-container">
         <div style={{ padding: "20px" }}>
           <Routes>
+            <Route path="/" element={<Catalog />} />
             <Route path="/catalog" element={<Catalog />} />
             <Route path="/add-pokemon" element={<PokemonAdd />} />
             <Route path="/signup" element={<SignUp />} />

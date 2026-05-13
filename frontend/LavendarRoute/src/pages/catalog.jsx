@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'; // Added useEffect import
 import LiquidEther from '../components/LiquidEther.jsx'
 import ReflectiveCard from '../components/pokemonCard.jsx';
+import '../css/catalog.css'
 
 export default function PokemonAdd() {
   // Move these INSIDE the function
@@ -53,19 +54,25 @@ export default function PokemonAdd() {
       </div>
 
       <div className="catalog-grid">
-        {teamPokemon.map((poke) => (
-          <ReflectiveCard 
-            key={poke._id} 
-            pokemonName={poke.name}
-            level={poke.level}
-            type={poke.type} 
-            gender={poke.gender}
-            height={poke.height}
-            weight={poke.weight}
-            imgUrl={poke.imagePokemon}
-          />
-        ))}
-      </div>
+          {teamPokemon.length > 0 ? (
+            teamPokemon.map((poke) => (
+              <ReflectiveCard 
+                key={poke._id} 
+                pokemonName={poke.name}
+                level={poke.level}
+                type={poke.type} 
+                gender={poke.gender}
+                height={poke.height}
+                weight={poke.weight}
+                imgUrl={poke.imagePokemon}
+              />
+            ))
+          ) : (
+            <p className="pixel-text" style={{ color: '#C4FF4D' }}>
+              Scanning for lifeforms...
+            </p>
+          )}
+        </div>
     </>
   );
 }

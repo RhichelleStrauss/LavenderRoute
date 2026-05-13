@@ -1,14 +1,14 @@
 import "../css/reflectiveCard.css";
 
 const ReflectiveCard = ({
-  pokemonName = "PICKACHU",
-  level = "52",
-  type = "Electric",
-  gender = "Male",
+  pokemonName,
+  level,
+  type = [], // Default to empty array to allow .map() to work
+  gender,
   stage = "Basic",
-  height = "0.4 m",
-  weight = "6 kg",
-  imgUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png",
+  height,
+  weight,
+  imgUrl,
 }) => {
   return (
     <div className="reflective-card-container">
@@ -17,9 +17,10 @@ const ReflectiveCard = ({
       <div className="reflective-content">
         <div className="card-header">
           <div className="pokemon-tags">
-            <span className="tag">{stage}</span>{" "}
+            <span className="tag">{stage}</span>
             <span className="tag">{gender}</span>
 
+            {/* Dynamic Type Mapping */}
             {type.map((t, index) => (
               <span key={index} className={`tag type-${t.toLowerCase()}`}>
                 {t}
@@ -38,8 +39,8 @@ const ReflectiveCard = ({
 
         <div className="card-footer">
           <div className="stat-box">
-            <span>Height: {height}</span>
-            <span>Weight: {weight}</span>
+            <span>H: {height}m</span>
+            <span>W: {weight}kg</span>
           </div>
         </div>
       </div>

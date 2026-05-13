@@ -39,7 +39,7 @@ router.get("/:id", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   try {
-    const updatePokemon = await Pokemon.findByIdAndUpdate(
+    const updatedPokemon = await Pokemon.findByIdAndUpdate(
       req.params.id,
       req.body,
       {
@@ -52,7 +52,7 @@ router.put("/:id", async (req, res) => {
       res.status(404).json({ message: "Pokemon not found" });
     }
 
-    res.status(200).json(updatePokemon);
+    res.status(200).json(updatedPokemon);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

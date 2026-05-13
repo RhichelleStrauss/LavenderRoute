@@ -1,7 +1,24 @@
+/* catalog.css */
+
+.catalog-container {
+  width: 100%;
+  max-width: 1200px; /* This keeps the grid from getting too wide */
+  margin: 0 auto;    /* Centers the entire container */
+  padding: 40px 20px;
+}
+
+.catalog-title {
+  font-family: 'vt323', monospace; /* Use your pixel font */
+  color: #C4FF4D;
+  font-size: 3rem;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
 .catalog-grid {
   display: grid;
+  /* This creates columns that are at least 300px wide */
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 30px;
-  padding: 40px;
-  justify-items: center;
+  gap: 30px;         /* Space between cards */
+  width: 100%;
 }
