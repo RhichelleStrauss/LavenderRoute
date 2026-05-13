@@ -1,0 +1,98 @@
+/* Keep your .reflective-card-container, .reflective-noise, etc. exactly as they are! */
+
+.reflective-content {
+  position: relative;
+  z-index: 10;
+  height: 550px;
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px; /* Slightly tighter padding for more content */
+  color: white;
+  border-radius: 20px;
+border: 2px solid var(--dark-purple, #2A1A3A);
+background: rgba(42, 26, 58, 0.50);
+backdrop-filter: blur(5px);
+}
+
+/* --- HEADER SECTION --- */
+.card-header {
+  display: flex;
+  justify-content: center; /* Center the tags */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 12px;
+}
+
+.pokemon-tags {
+  display: flex;
+  gap: 10px;
+}
+
+.tag {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Specific styling for the Type Tag to make it pop like the image */
+.tag.type-electric {
+  background: #ffcc00;
+  color: #1a1a1a;
+}
+
+/* --- BODY SECTION --- */
+.card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-sprite {
+  width: 100%;
+  max-width: 220px; /* Limits size so it doesn't overlap tags */
+  height: 200px;    /* Fixed height keeps cards uniform */
+  object-fit: contain; /* This is the magic: it fits the image without stretching */
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+  margin-bottom: 10px;
+}
+.identity {
+  text-align: center;
+}
+
+.pixel-text {
+  font-family: 'Courier New', Courier, monospace; /* Use your actual pixel font name here */
+  margin: 0;
+  text-transform: uppercase;
+}
+
+h2.pixel-text {
+  font-size: 26px;
+  letter-spacing: 2px;
+}
+
+p.pixel-text {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+/* --- FOOTER SECTION --- */
+.card-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 16px;
+}
+
+.stat-box {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.9;
+  letter-spacing: 0.5px;
+}
