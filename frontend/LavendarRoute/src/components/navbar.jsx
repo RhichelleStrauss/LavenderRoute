@@ -7,7 +7,7 @@ const Navbar = () => {
 
   return (
     <nav className="misty-glass-nav">
-      <div className="nav-logo">
+      <div className="nav-logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
         <img src={gengarLogo} alt="Logo" className="nav-icon" />
         <h1 className="nav-brand">
           <span className="text-purple">LAVENDER</span> <span className="text-lime">ROUTE</span>
@@ -15,8 +15,8 @@ const Navbar = () => {
       </div>
       
       <div className="nav-links">
-        <a href="#" className="nav-link active">HOME</a>
-        <a href="#" className="nav-link">INVENTORY</a>
+        <button onClick={() => navigate('/')} className="nav-link-btn active">HOME</button>
+        <button onClick={() => navigate('/catalog')} className="nav-link-btn">INVENTORY</button>
       </div>
 
       <div className="nav-actions">
@@ -27,8 +27,9 @@ const Navbar = () => {
         </svg>
         
         <svg 
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/signup')}
           className="action-icon text-lime" 
+          style={{ cursor: 'pointer' }}
           viewBox="0 0 24 24" 
           fill="none" 
           stroke="currentColor" 
