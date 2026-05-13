@@ -4,6 +4,7 @@ import { Field, Switch, NumberField } from '@base-ui/react';
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from 'react-bootstrap/Card';  
+import BinIcon from '../assets/icons/BinIcon.png';
 
 const API = "http://localhost:5000/api/pokemon";
 
@@ -70,7 +71,8 @@ const POKEMON_TYPE = [
   
 
 const styles = {
-    card: { width: "100%", maxWidth: 800, margin: "40px auto", border: "1px solid #C4FF4D", borderRadius: "16px", backgroundColor: "#1a1a1ab5)", padding: "40px", boxSizing: "border-box", fontFamily: "'Poppins', sans-serif", color: "#BA8CFF", boxShadow: "0 0 40px #1a1a1a80" },
+    card: { width: "100%", maxWidth: 800, margin: "40px auto", border: "1px solid #C4FF4D", borderRadius: "16px", backgroundColor: "#1a1a1ab5)", padding: "40px", boxSizing: "border-box", fontFamily: "'Poppins', sans-serif", color: "#BA8CFF", boxShadow: "0 0 40px #1a1a1a80",maxHeight: "90vh", 
+      overflowY: "auto" },
     header: { margin: "0 0 32px 0", fontSize: 24, fontWeight: 800, color: "#BA8CFF", letterSpacing: "2px", textTransform: "uppercase", fontFamily: "'VT323', monospace", textShadow: "2px 2px 0px rgba(#1a1a1a80)" },
     row: { display: "flex", gap: "24px", marginBottom: "20px" },
     col: { flex: 1, position: "relative" },
@@ -88,8 +90,9 @@ const styles = {
     pricePrefix: { background: "#ba8cffd4", padding: "0 20px", color: "#1a1a1a", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", fontSize: "18px" },
     priceInput: { flex: 1, background: "rgba(186, 140, 255, 0.2)", border: "none", color: "#BA8CFF", padding: "0 16px", outline: "none", fontSize: "14px" },
     btnContainer: { display: "flex", justifyContent: "flex-end", gap: "16px", marginTop: "40px" },
-    // btnDraft: { background: "rgba(196, 255, 77, 0.2)", border: "1px solid rgba(196, 255, 77, 0.4)", color: "#C4FF4D", borderRadius: "12px", padding: "14px 28px", fontSize: "16px", fontWeight: "bold", cursor: "pointer" },
-    btnSubmit: { background: "#c4ff4dca", border: "none", color: "#2A1A3A", borderRadius: "12px", padding: "14px 28px", fontSize: "16px", fontWeight: "bold", cursor: "pointer", border: "1px solid #C4FF4D" }
+    btnDraft: { background: "rgba(196, 255, 77, 0.2)", border: "1px solid rgba(196, 255, 77, 0.4)", color: "#C4FF4D", borderRadius: "12px", padding: "14px 28px", fontSize: "16px", fontWeight: "bold", cursor: "pointer" },
+    btnSubmit: { background: "#c4ff4dca", border: "none", color: "#2A1A3A", borderRadius: "12px", padding: "14px 28px", fontSize: "16px", fontWeight: "regular", cursor: "pointer", border: "1px solid #C4FF4D" },
+    btnDeleteIcon: { width: "54px", height: "54px", display: "flex", alignItems: "center", justifyContent: "center", background: "#9e004cb4", border: "1px solid #9e004d", borderRadius: "12px", cursor: "pointer", padding: "12px" }
   };
 
  return (
@@ -206,14 +209,24 @@ const styles = {
         </div>
 
         <div style={styles.btnContainer}>
-          {/* <button type="button" onClick={() => navigate(-1)} style={styles.btnDraft}>
-            Save Draft
-          </button> */}
           <button type="submit" style={styles.btnSubmit}>
-            Add Product to be reviewed
+            {initialData ? "Save Changes" : "Add Product"}
           </button>
+          
+          {initialData && (
+            <button 
+              type="button" 
+              style={styles.btnDeleteIcon} 
+              onClick={() => onDelete(initialData._id)}
+            >
+              <img 
+                src={BinIcon} 
+                style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
+              />
+            </button>
+          )}
         </div>
-        
+
       </form>
     </div>
   );
