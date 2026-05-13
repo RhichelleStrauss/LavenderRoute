@@ -1,208 +1,216 @@
 //base ui imports------
-'use client';
-import * as React from 'react';
-import { ChevronDown, ChevronsUpDown, Check, Plus, Minus } from 'lucide-react';
-import { Button } from './button';
-import { CheckboxGroup } from './checkbox-group';
-import { Form } from './form';
-import { RadioGroup } from './radio-group';
-import { ToastProvider, useToastManager } from './toast';
-import * as Autocomplete from './autocomplete';
-import * as Checkbox from './checkbox';
-import * as Combobox from './combobox';
-import * as Field from './field';
-import * as Fieldset from './fieldset';
-import * as NumberField from './number-field';
-import * as Radio from './radio';
-import * as Select from './select';
-import * as Slider from './slider';
-import * as Switch from './switch';
+import { Field, Switch, NumberField } from '@base-ui/react';
 //-------
-
-import React, { useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
-import Row from 'react-bootstrap/Row';
-import Card from 'react-bootstrap/Card';
+import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Card from 'react-bootstrap/Card';  
 
 const API = "http://localhost:5000/api/pokemon";
 
-const pokemonTypes = [
+const POKEMON_TYPE = [
     'Normal', 'Fire', 'Water', 'Electric', 'Grass', 'Ice', 'Fighting', 'Poison', 'Ground', 'Flying',
     'Psychic', 'Bug', 'Rock', 'Ghost', 'Dragon', 'Dark', 'Steel', 'Fairy'
 ]; 
 
-const emptyForm = {
-    name: "", description: "", type: "", gender: "", height: "", weight: "", level: "",
-    shiny: "", price: "", imagePokemon: ""
-};
 
-function PokemonAddForm() {
-  const [validated, setValidated] = useState(false);
+ function PokemonAddForm({ initialData, onSave, onDelete }) {
+  const navigate = useNavigate();
+  const [isTypeMenuOpen, setIsTypeMenuOpen] = useState(false);
+  const typeRef = useRef(null);
 
-  //setting all form data using pokemon models created
-  const [formData, setFormData] = useState({
-
-    name: '',
-    description: '',
-    type: '',
-    gender: '',
-    height: '',
-    weight: '',
-    level: '',
-    shiny: '',
-    price: '',
-    imagePokemon: '',
-
+  const [form, setForm] = useState(initialData || {
+    name: "", level: "", price: "", height: "", weight: "", 
+    description: "", imagePokemon: "", type: [], gender: "Genderless", shiny: false 
   });
 
-  const handleChange = (event) => {
+  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
-    const {name, value, type, checked } = event.target;
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (typeRef.current && !typeRef.current.contains(event.target)) {
+        setIsTypeMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
-    setFormData({
-      ...formData,
-      [name]: type === 'checkbox' ? checked : value
-    });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (form.type.length === 0) return alert("Select at least 1 type!");
 
-  };
-
-  const handleSubmit = (event) => {
-    const form = event.currentTarget;
-    event.preventDefault();
-
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-
+    if (onSave) {
+      onSave(form);
     } else {
+      try {
+        const payload = {
+          ...form,
+          price: Number(form.price),
+          level: Number(form.level),
+          height: Number(form.height),
+          weight: Number(form.weight)
+        };
 
-      console.log("got le data:", formData);
+        const response = await fetch("http://localhost:5000/api/pokemon", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
 
+        if (response.ok) {
+          navigate('/catalog');
+        } else {
+          alert("Failed to save to database");
+        }
+      } catch (error) {
+        alert("Error connecting to server");
+      }
     }
-    setValidated(true);
   };
 
-  return (
-  <Card style={{backgroundColor: '#1a1a1a80', color: 'var(--purple)', border: '1px solid var(--yellow)' }}>
-    <Card.Body className='py-4'>
-      <Form noValidate validated={validated} onSubmit={handleSubmit}>
+ const styles = {
+    card: { width: "100%", maxWidth: 700, margin: "40px auto", border: "2px solid black", backgroundColor: "#1a1a1a81", padding: "32px", boxSizing: "border-box", fontFamily: "sans-serif", color: "black" },
+    field: { display: "flex", flexDirection: "column", gap: "6px" },
+    label: { fontSize: "14px", fontWeight: "bold", margin: 0, textTransform: "uppercase" },
+    input: { width: "100%", boxSizing: "border-box", padding: "10px 14px", border: "2px solid black", backgroundColor: "white", color: "black", fontSize: "14px", outline: "none", borderRadius: "0" },
+    error: { color: "black", fontSize: "12px", margin: 0, fontWeight: "bold" },
+    numberGroup: { display: "flex", alignItems: "center", width: "100%", border: "2px solid black" },
+    numberBtn: { background: "#f0f0f0", color: "black", width: "40px", height: "40px", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", fontSize: "18px", flexShrink: 0 },
+    numberInput: { flex: 1, border: "none", borderLeft: "2px solid black", borderRight: "2px solid black", textAlign: "center", padding: "10px 0", outline: "none", fontSize: "14px", borderRadius: "0", margin: 0, appearance: "textfield" },
+    typeContainer: { minHeight: "44px", display: "flex", flexWrap: "wrap", gap: "6px", alignItems: "center", cursor: "pointer", border: "2px solid black", padding: "6px", backgroundColor: "white", position: "relative" },
+    tag: { background: "black", color: "white", padding: "4px 8px", fontSize: "12px", display: "flex", alignItems: "center", gap: "6px", fontWeight: "bold" },
+    tagBtn: { background: "transparent", border: "none", color: "white", cursor: "pointer", fontSize: "10px", padding: 0 },
+    priceWrapper: { display: "flex", border: "2px solid black", overflow: "hidden", backgroundColor: "white" },
+    pricePrefix: { background: "#f0f0f0", padding: "10px 16px", borderRight: "2px solid black", color: "black", display: "flex", alignItems: "center", fontWeight: "bold" },
+    priceInput: { flex: 1, background: "transparent", border: "none", color: "black", padding: "10px 14px", outline: "none", fontSize: "14px" },
+    submitBtn: { background: "black", border: "2px solid black", color: "white", padding: "14px 24px", fontSize: "14px", fontWeight: "bold", cursor: "pointer", textTransform: "uppercase", letterSpacing: "1px", width: "100%", marginTop: "32px" },
+    deleteBtn: { background: "white", border: "2px solid black", color: "black", padding: "14px 24px", fontSize: "14px", fontWeight: "bold", cursor: "pointer", textTransform: "uppercase", letterSpacing: "1px", width: "100%", marginTop: "12px" }
+  };
 
+ return (
+    <div style={styles.card}>
+      <h2 style={{ margin: "0 0 24px 0", fontSize: 24, fontWeight: 800, textTransform: "uppercase", borderBottom: "2px solid black", paddingBottom: "16px" }}>
+        {initialData ? "Edit Pokémon" : "Register Pokémon"}
+      </h2>
 
-  {/* ---------------------------------------------- */}
-        {/* POKEMAN NAME */}
-        {/* SHOULD MADE ADD AN AUTO CAPITALIZE OR SOMETHING? IF POSSIBE?? */}
-        <Row className='mb-3'>
-          <Form.Group as={Col} md='6'>
+      <form onSubmit={handleSubmit}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px 20px" }}>
+          
+          <Field.Root style={{ ...styles.field, gridColumn: "1 / -1" }}>
+            <Field.Label style={styles.label}>Pokémon name</Field.Label>
+            <Field.Control required style={styles.input} value={form.name} onChange={e => set("name", e.target.value)} placeholder="e.g. Charizard" />
+            <Field.Error style={styles.error} match="valueMissing">Please enter a name.</Field.Error>
+          </Field.Root>
 
-            <Form.Label style={{backgroundColor: '#1a1a1a80', color: 'var(--purple)', border: '1px solid var(--yellow)'}}>Pokemon name:</Form.Label>
+          <Field.Root style={{ ...styles.field, gridColumn: "1 / -1" }}>
+             <Field.Label style={styles.label}>Description</Field.Label>
+             <Field.Control render={<textarea />} required style={{ ...styles.input, minHeight: '80px', resize: 'vertical' }} value={form.description} onChange={e => set("description", e.target.value)} placeholder="A brief lore description..." />
+             <Field.Error style={styles.error} match="valueMissing">Description is required.</Field.Error>
+          </Field.Root>
 
-            <Form.Control required name="name" type='text' placeholder='eg. gengar' value={formData.name} onChange={handleChange}></Form.Control>
+          <Field.Root style={{ ...styles.field, position: "relative" }} ref={typeRef}>
+            <Field.Label style={styles.label}>Type (Max 2)</Field.Label>
+            <div onClick={() => setIsTypeMenuOpen(!isTypeMenuOpen)} style={styles.typeContainer}>
+              {form.type.length === 0 && <span style={{color: "#777", fontSize: "14px", paddingLeft: "4px"}}>Select types...</span>}
+              {form.type.map(t => (
+                <span key={t} style={styles.tag}>
+                  {t}
+                  <button type="button" onClick={(e) => { e.stopPropagation(); set("type", form.type.filter(type => type !== t)); }} style={styles.tagBtn}>✕</button>
+                </span>
+              ))}
+            </div>
+            
+            {isTypeMenuOpen && form.type.length < 2 && (
+              <div style={{ position: "absolute", top: "100%", left: 0, right: 0, zIndex: 50, marginTop: "4px", background: "white", border: "2px solid black", maxHeight: "180px", overflowY: "auto", padding: "4px", boxShadow: "4px 4px 0px rgba(0,0,0,1)" }}>
+                {POKEMON_TYPE.filter(t => !form.type.includes(t)).map(t => (
+                  <div key={t} onClick={() => { set("type", [...form.type, t]); setIsTypeMenuOpen(false); }} style={{ padding: "8px 12px", cursor: "pointer", fontSize: "14px", color: "black", fontWeight: "500", borderBottom: "1px solid #eee" }} onMouseOver={e => e.currentTarget.style.background = "#f0f0f0"} onMouseOut={e => e.currentTarget.style.background = "transparent"}>
+                    {t}
+                  </div>
+                ))}
+              </div>
+            )}
+          </Field.Root>
+          
+          <Field.Root style={styles.field}>
+            <Field.Label style={styles.label}>Gender</Field.Label>
+            <Field.Control render={<select />} required style={styles.input} value={form.gender} onChange={e => set("gender", e.target.value)}>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Genderless">Genderless</option>
+            </Field.Control>
+          </Field.Root>
 
-          </Form.Group>
-        </Row>
+          <Field.Root style={styles.field}>
+            <Field.Label style={styles.label}>Level (1-100)</Field.Label>
+            <NumberField.Root value={form.level === "" ? null : Number(form.level)} onValueChange={v => set("level", v ?? "")} min={1} max={100} required>
+              <NumberField.Group style={styles.numberGroup}>
+                <NumberField.Decrement style={styles.numberBtn}>-</NumberField.Decrement>
+                <NumberField.Input style={styles.numberInput} />
+                <NumberField.Increment style={styles.numberBtn}>+</NumberField.Increment>
+              </NumberField.Group>
+            </NumberField.Root>
+            <Field.Error style={styles.error} match="valueMissing">Required.</Field.Error>
+          </Field.Root>
 
+          <Field.Root style={styles.field}>
+            <Field.Label style={styles.label}>Height (m)</Field.Label>
+            <NumberField.Root value={form.height === "" ? null : Number(form.height)} onValueChange={v => set("height", v ?? "")} step={0.1} min={0} required>
+              <NumberField.Group style={styles.numberGroup}>
+                <NumberField.Decrement style={styles.numberBtn}>-</NumberField.Decrement>
+                <NumberField.Input style={styles.numberInput} />
+                <NumberField.Increment style={styles.numberBtn}>+</NumberField.Increment>
+              </NumberField.Group>
+            </NumberField.Root>
+            <Field.Error style={styles.error} match="valueMissing">Required.</Field.Error>
+          </Field.Root>
 
-  {/* ---------------------------------------------- */}
-        {/* DESCRIPTION ROWWWWWWWW */}
-        {/* THIS FIELD NEEDS TO BE BIG*/}
-         <Row className='mb-3'>
-          <Form.Group as={Col} md='6'>
+          <Field.Root style={styles.field}>
+            <Field.Label style={styles.label}>Weight (kg)</Field.Label>
+            <NumberField.Root value={form.weight === "" ? null : Number(form.weight)} onValueChange={v => set("weight", v ?? "")} step={0.1} min={0} required>
+              <NumberField.Group style={styles.numberGroup}>
+                <NumberField.Decrement style={styles.numberBtn}>-</NumberField.Decrement>
+                <NumberField.Input style={styles.numberInput} />
+                <NumberField.Increment style={styles.numberBtn}>+</NumberField.Increment>
+              </NumberField.Group>
+            </NumberField.Root>
+            <Field.Error style={styles.error} match="valueMissing">Required.</Field.Error>
+          </Field.Root>
 
-            <Form.Label style={{backgroundColor: '#1a1a1a80', color: 'var(--purple)', border: '1px solid var(--yellow)'}}>Description:</Form.Label>
+          <Field.Root style={{ ...styles.field, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: '10px' }}>
+            <Field.Label style={{ ...styles.label, cursor: 'pointer' }}>Shiny Variant</Field.Label>
+            <Switch.Root checked={form.shiny} onCheckedChange={(c) => set("shiny", c)} style={{ width: '48px', height: '26px', backgroundColor: form.shiny ? 'black' : 'white', border: '2px solid black', borderRadius: '9999px', position: 'relative', cursor: 'pointer', padding: 0 }}>
+              <Switch.Thumb style={{ display: 'block', width: '18px', height: '18px', backgroundColor: form.shiny ? 'white' : 'black', borderRadius: '9999px', transition: 'transform 0.2s', transform: `translateX(${form.shiny ? '24px' : '2px'})`, marginTop: '2px' }} />
+            </Switch.Root>
+          </Field.Root>
 
-            <Form.Control required as='textarea' name="description" type='text' rows={2} value={formData.description} onChange={handleChange}></Form.Control>
+          <Field.Root style={{ ...styles.field, gridColumn: "1 / -1" }}>
+            <Field.Label style={styles.label}>Price</Field.Label>
+            <div style={styles.priceWrapper}>
+              <div style={styles.pricePrefix}>₽</div>
+              <Field.Control required type="number" step="any" min="0" value={form.price} onChange={e => set("price", e.target.value)} style={styles.priceInput} placeholder="0.00" />
+            </div>
+            <Field.Error style={styles.error} match="valueMissing">Price is required.</Field.Error>
+          </Field.Root>
 
-          </Form.Group>
-        </Row>
+          <Field.Root style={{ ...styles.field, gridColumn: "1 / -1" }}>
+            <Field.Label style={styles.label}>Image URL</Field.Label>
+            <Field.Control required type="url" style={styles.input} value={form.imagePokemon} onChange={e => set("imagePokemon", e.target.value)} placeholder="https://..." />
+            <Field.Error style={styles.error} match="valueMissing">Image URL is required.</Field.Error>
+          </Field.Root>
 
+        </div>
 
-    {/* ---------------------------------------------- */}
-        {/*TYPE AND GENMER ROW */}
-        {/* BOTH NEED TO BE DROPDOWNS */}
-        <Row className='mb-3'>
-          <Form.Group as={Col} md='6'>
+        <button type="submit" style={styles.submitBtn}>
+          {initialData ? "Update Pokémon" : "Save to Pokédex"}
+        </button>
 
-            <Form.Label style={{backgroundColor: '#1a1a1a80', color: 'var(--purple)', border: '1px solid var(--yellow)'}}>Type:</Form.Label>
-
-            <Form.Control required name="type" value={formData.type} onChange={handleChange}></Form.Control>
-
-          </Form.Group>
-
-          <Form.Group as={Col} md='6'>
-
-            <Form.Label style={{backgroundColor: '#1a1a1a80', color: 'var(--purple)', border: '1px solid var(--yellow)'}}>Gender:</Form.Label>
-
-            <Form.Control required name="gender" value={formData.gender} onChange={handleChange}></Form.Control>
-
-          </Form.Group>
-        </Row>
-
-        {/* ---------------------------------------------- */}
-        {/* HEIGHT AND WEIGHT ROWWWWWWWW */}
-        {/* HEIGHT IN INCHES?? WEIGHT IN GRAMS OR POUNDS?? */}
-         <Row className='mb-3'>
-          <Form.Group as={Col} md='6'>
-
-            <Form.Label style={{backgroundColor: '#1a1a1a80', color: 'var(--purple)', border: '1px solid var(--yellow)'}}>heigt:</Form.Label>
-
-            <Form.Control required name="height" type='number' step='0.1' value={formData.height} onChange={handleChange}></Form.Control>
-
-          </Form.Group>
-
-          <Form.Group as={Col} md='6'>
-
-            <Form.Label style={{backgroundColor: '#1a1a1a80', color: 'var(--purple)', border: '1px solid var(--yellow)'}}>Weight:</Form.Label>
-
-            <Form.Control required name="weight" type='number' step='0.1' value={formData.weight} onChange={handleChange}></Form.Control>
-
-          </Form.Group>
-        </Row>
-
-        {/* ---------------------------------------------- */}
-        {/* LEVEL AND SSHONY OR NO SHINY*/}
-        {/* TOGGLE FOR SHINY? */}
-         <Row className='mb-3'>
-          <Form.Group as={Col} md='6'>
-
-            <Form.Label style={{backgroundColor: '#1a1a1a80', color: 'var(--purple)', border: '1px solid var(--yellow)'}}>Price(₽)</Form.Label>
-
-            <Form.Control required name="type" type='number' value={formData.price} onChange={handleChange}></Form.Control>
-
-          </Form.Group>
-
-          <Form.Group as={Col} md='6'>
-
-            <Form.Label style={{backgroundColor: '#1a1a1a80', color: 'var(--purple)', border: '1px solid var(--yellow)'}}>Gender:</Form.Label>
-
-            <Form.Control required name="gender" type='text' value={formData.gender} onChange={handleChange}></Form.Control>
-
-          </Form.Group>
-        </Row>
-
-        {/* ---------------------------------------------- */}
-        {/* ROW FOR IMG URRL */}
-        {/* this will change to img upload */}
-         <Row className='mb-3'>
-          <Form.Group as={Col} md='6'>
-
-            <Form.Label style={{backgroundColor: '#1a1a1a80', color: 'var(--purple)', border: '1px solid var(--yellow)'}}>Image:</Form.Label>
-
-            <Form.Control required name="type" type='url' value={formData.height} onChange={handleChange}></Form.Control>
-
-          </Form.Group>
-        </Row>
-
-
-      </Form>
-
-
-    </Card.Body>
-</Card>
-   
-  
+        {initialData && onDelete && (
+          <button type="button" onClick={() => onDelete(initialData._id)} style={styles.deleteBtn}>
+            Delete Pokémon
+          </button>
+        )}
+      </form>
+    </div>
   );
 }
 
