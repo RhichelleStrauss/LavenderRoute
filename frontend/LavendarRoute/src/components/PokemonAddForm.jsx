@@ -14,6 +14,15 @@ const POKEMON_TYPE = [
 ]; 
 //pokemon types for dropdown
 
+//braindump?
+//if editing (on catalog page), the form sends the data to the catalog component via onsave
+//if adding the form sends data out to api, redirects uou to catalog on sibmit 
+// payload is a bundle of info about a pokemon sendinf to database\
+//before sending data, create a payload object that takes values on form
+//certain objets convert strings into numbers 
+//payload is stringified into a json string, and placed into bpody of fetch to server on api https
+//modal not open 
+
 
 //initialdata: on addpokemon page nothing, on catalog stores pokemons when clicking card
 //on save on delete callbacks - form givess functipns data
