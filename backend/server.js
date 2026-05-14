@@ -3,19 +3,26 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
 
+
+const pokemonRoutes = require("./routes/pokemon"); 
+
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
+
 app.get("/", (req, res) => {
     res.send("API is running");
 });
 
-// Connect MongoDB
+
+app.use("/api/pokemon", pokemonRoutes);
+
+
 mongoose.connect(process.env.MONGO_URI)
-.then(() => console.log("MongoDB Connected"))
-.catch(err => console.log(err));
+  .then(() => console.log("MongoDB Connected"))
+  .catch(err => console.log(err));
 
 app.listen(5000, () => {
     console.log("Server running on port 5000");

@@ -2,12 +2,12 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import gengarSprite from './assets/gengar-sprite.png';
 
-import Catalog from './pages/catalog';
+import Catalog from './pages/Catalog'; 
 import PokemonAdd from './pages/PokemonAdd';
 import SignUp from './pages/SignUp';
 import Navbar from './components/navbar';
 import LetterGlitch from './components/LetterGlitch'; 
-import './App.css'; 
+import './App.css';
 
 const Home = () => {
   return (
@@ -23,7 +23,7 @@ const Home = () => {
         />
       </div>
       
-      <Navbar />
+      
 
       <main className="home-main-content">
         
@@ -72,9 +72,11 @@ const Home = () => {
   );
 };
 
+
 function App() {
   return (
     <BrowserRouter>
+    <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/catalog" element={<Catalog />} />
