@@ -1,8 +1,8 @@
 .reflective-content {
   position: relative;
   z-index: 10;
-  height: 550px;
-  width: 350px;
+  height: 430px;
+  width: 330px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -12,6 +12,12 @@
 border: 2px solid var(--dark-purple, #2A1A3A);
 background: rgba(42, 26, 58, 0.50);
 backdrop-filter: blur(5px);
+}
+
+.reflective-card-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .card-header {
