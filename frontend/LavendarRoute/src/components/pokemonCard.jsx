@@ -14,11 +14,9 @@ const ReflectiveCard = ({
 }) => {
   return (
 
-   
     <div className="reflective-card-container"
-    onClick={() => navigate('/pokemon/{_id}')}
+    onClick={onEdit}
     style={{ cursor: 'pointer' }}>
-
 
 
       <div className="card-glass-background" />
