@@ -105,7 +105,7 @@ export default function PokemonAdd() {
           cursorSize={100}
           isViscous
           viscous={30}
-          colors={["#C4FF4D", "#C4FF4D", "#C4FF4D"]}
+          colors={["#C4FF4D","#C4FF4D","#C4FF4D"]}
           autoDemo
           autoSpeed={0.5}
           autoIntensity={2.2}
@@ -155,17 +155,13 @@ export default function PokemonAdd() {
                 src={CrossIcon} 
                 style={{ width: "34px", height: "34px", objectFit: 'contain' }} 
               />
-            </button>
-
-            <PokemonAddForm
-              initialData={selectedPokemon}
-              onSave={handleUpdatePokemon}
-              onDelete={handleDeletePokemon}
-              isModal={true}
-            />
-          </div>
+            ))
+          ) : (
+            <p className="pixel-text" style={{ color: '#C4FF4D' }}>
+              Scanning for lifeforms...
+            </p>
+          )}
         </div>
-      )}
     </>
   );
 }
