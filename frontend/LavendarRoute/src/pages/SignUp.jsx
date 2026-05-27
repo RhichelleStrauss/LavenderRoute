@@ -77,8 +77,8 @@ export default function SignUp() {
               </div>
 
               <div className="input-group">
-                <label htmlFor="specialCode">Insert your own special code (Nells auth)</label>
-                <input type="text" id="specialCode" placeholder="Enter Nells auth code" value={specialCode} onChange={(e) => setSpecialCode(e.target.value)} />
+                <label htmlFor="specialCode">Insert your own special code (rhisauth)</label>
+                <input type="text" id="specialCode" placeholder="Enter rhis auth code" value={specialCode} onChange={(e) => setSpecialCode(e.target.value)} />
               </div>
 
               <button type="submit" className="submit-btn">Sign Up</button>
