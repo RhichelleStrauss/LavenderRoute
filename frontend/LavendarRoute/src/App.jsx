@@ -5,6 +5,7 @@ import gengarSprite from './assets/gengar-sprite.png';
 import Catalog from './pages/Catalog'; 
 import PokemonAdd from './pages/PokemonAdd';
 import SignUp from './pages/SignUp';
+import Login from './pages/Login';
 import Navbar from './components/navbar';
 import LetterGlitch from './components/LetterGlitch'; 
 import Product from './pages/Product';
@@ -24,7 +25,7 @@ const Home = () => {
         />
       </div>
       
-      
+      <Navbar />
 
       <main className="home-main-content">
         
@@ -77,13 +78,13 @@ const Home = () => {
 function App() {
   return (
     <BrowserRouter>
-    <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/catalog" element={<Catalog />} />
         <Route path="/add-pokemon" element={<PokemonAdd />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/pokemon/:id" element={<Product />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </BrowserRouter>
   );

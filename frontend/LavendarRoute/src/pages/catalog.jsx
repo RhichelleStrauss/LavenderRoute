@@ -3,6 +3,7 @@ import LiquidEther from '../components/LiquidEther.jsx'
 import ReflectiveCard from '../components/pokemonCard.jsx';
 import '../css/catalog.css'
 import PokemonAddForm from '../components/PokemonAddForm.jsx';
+import Navbar from '../components/navbar.jsx';
 
 import CrossIcon from '../assets/icons/CrossIcon.png';
 
@@ -113,6 +114,8 @@ export default function PokemonAdd() {
           resolution={0.5}
         />
       </div>
+
+      <Navbar />
 
       <div className="catalog-grid">
         {teamPokemon.length > 0 ? (
