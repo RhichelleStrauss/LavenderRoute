@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PokemonAddForm from '../components/PokemonAddForm.jsx';
 import LiquidEther from '../components/LiquidEther.jsx'
 import { Container, Card } from 'react-bootstrap';
+import Navbar from '../components/navbar';
 
 
 
@@ -33,7 +34,9 @@ export default function PokemonAdd() {
   />
   </div>
 
-  <Container style={{ position: 'relative', zIndex: 1, paddingTop: '60px', paddingBottom: '60px' }}>
+      <Navbar />
+
+  <Container style={{ position: 'relative', zIndex: 1, paddingTop: '100px', paddingBottom: '60px' }}>
      
 
         <PokemonAddForm />
