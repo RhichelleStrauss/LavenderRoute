@@ -7,15 +7,18 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
+import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 function Product() {
+  const {id} = useParams();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function getData() {
-      const url = "http://localhost:5000/api/pokemon";
+      const url = `http://localhost:5000/api/pokemon/${id}`;
 
       try {
         const response = await fetch(url);
@@ -26,10 +29,7 @@ function Product() {
         const pokemons = await response.json();
         console.log(pokemons);
 
-        let num = Math.floor(Math.random() * (pokemons.length - 0 + 1)) + 0;
-        let pokemon = pokemons[num];
-
-        setData(pokemon);
+        setData(pokemons);
       } catch (error) {
         console.error(error.message);
       }
@@ -38,7 +38,7 @@ function Product() {
     }
 
     getData();
-  }, []);
+  },[id]);
 
   if (loading) {
     return <h1>Loading...</h1>;
@@ -60,7 +60,7 @@ function Product() {
               </Row> */}
 
               <Row className="d-flex justify-content-center">
-                <img className="pokemon-image" src={data.imagePokemon}></img>
+                <img className="pokemon-image" src={data?.imagePokemon}></img>
               </Row>
 
               {/* <Row>
@@ -86,7 +86,7 @@ function Product() {
                 <Col className="d-grid row-gap-2">
                   <Row className="text-green">
                     <Col>
-                      <h3>{data.name}</h3>
+                      <h3>{data?.name}</h3>
                     </Col>
                     <Col className="d-flex justify-content-end">
                       <StarRating></StarRating>
@@ -96,7 +96,7 @@ function Product() {
                     <p>Sold by: PokeCatcher69</p>
                   </Row>
                   <Row>
-                    <p>{data.description}</p>
+                    <p>{data?.description}</p>
                   </Row>
                 </Col>
               </Row>
@@ -106,19 +106,19 @@ function Product() {
                   <Row>
                     <h4>
                       <span className="text-purple">Shiny: </span>
-                      {String(data.shiny)}
+                      {String(data?.shiny)}
                     </h4>
                   </Row>
                   <Row>
                     <h4>
                       <span className="text-purple">Level: </span>
-                      {data.level}
+                      {data?.level}
                     </h4>
                   </Row>
                   <Row>
                     <h4>
                       <span className="text-purple">Gender: </span>
-                      {data.gender}
+                      {data?.gender}
                     </h4>
                   </Row>
                 </Col>
@@ -126,20 +126,20 @@ function Product() {
                   <Row>
                     <h4>
                       <span className="text-purple">Weight: </span>
-                      {data.weight}kg
+                      {data?.weight}kg
                     </h4>
                   </Row>
                   <Row>
                     <h4>
                       <span className="text-purple">Height: </span>
-                      {data.height}cm
+                      {data?.height}cm
                     </h4>
                   </Row>
                   <Row>
                     <h4 className="text-purple d-flex flex-row">
                       <span className="me-1">Type(s):</span>
                       <span className="text-white">
-                        {data.type.map((type, index) => (
+                        {data?.type.map((type, index) => (
                           <span key={index}>
                             {type}
                             {index < data.type.length - 1 ? " | " : ""}
@@ -156,7 +156,7 @@ function Product() {
                   <h2>P</h2>
                 </Col>
                 <Col id="price">
-                  <h2>{data.price}</h2>
+                  <h2>{data?.price}</h2>
                 </Col>
               </Row>
             </Col>
@@ -192,3 +192,4 @@ function Product() {
 }
 
 export default Product;
+//note to self - look at loading function
