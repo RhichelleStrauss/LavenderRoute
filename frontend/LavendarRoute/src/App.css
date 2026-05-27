@@ -1,19 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
 
 :root {
   --lavender-purple: #c084fc;
   --lavender-lime: #a3e635;
 }
 
-.misty-glass-nav, .home-main-content {
+.misty-glass-nav,
+.home-main-content {
   position: relative;
-  z-index: 10; 
+  z-index: 10;
 }
 
 .home-fullscreen-container {
   width: 100vw;
   min-height: 100vh;
-  padding: 30px 50px; 
+  padding: 30px 50px;
   display: flex;
   flex-direction: column;
   gap: 30px;
@@ -36,28 +37,33 @@
   position: relative;
 }
 
-.text-purple { color: var(--lavender-purple); }
-.text-lime { color: var(--lavender-lime); }
+.text-purple {
+  color: var(--lavender-purple);
+}
+.text-lime {
+  color: var(--lavender-lime);
+}
 
 .pixel-heading {
-  font-family: 'VT323', monospace;
+  font-family: "VT323", monospace;
   font-size: 2.5rem;
   letter-spacing: 1px;
   margin-bottom: 15px;
   font-weight: normal;
-  text-align: left; 
+  text-align: left;
 }
 
 .body-text {
   font-size: 1.15rem;
   line-height: 1.6;
   color: #e4e4e7;
-  text-align: left; 
+  text-align: left;
 }
 
-.misty-glass-nav, .misty-glass-panel {
-  background: rgba(255, 255, 255, 0.12); 
-  backdrop-filter: blur(16px); 
+.misty-glass-nav,
+.misty-glass-panel {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 20px;
@@ -86,14 +92,14 @@
 }
 
 .nav-brand {
-  font-family: 'VT323', monospace;
+  font-family: "VT323", monospace;
   font-size: 2.4rem;
   letter-spacing: 2px;
-  margin: 0; 
+  margin: 0;
 }
 
 .nav-links .nav-link-btn {
-  font-family: 'VT323', monospace; 
+  font-family: "VT323", monospace;
   font-size: 2rem;
   color: var(--lavender-purple);
   background: transparent;
@@ -105,14 +111,14 @@
 }
 
 .nav-link {
-  font-family: 'VT323', monospace;
+  font-family: "VT323", monospace;
   font-size: 2rem;
   color: var(--lavender-purple);
   text-decoration: none;
   transition: all 0.2s;
 }
 
-.nav-links .nav-link-btn:hover, 
+.nav-links .nav-link-btn:hover,
 .nav-links .nav-link-btn.active {
   color: #d8b4fe;
   text-shadow: 0 0 12px rgba(192, 132, 252, 0.6);
@@ -151,7 +157,7 @@
   display: flex;
   flex-direction: row;
   gap: 40px;
-  align-items: stretch; 
+  align-items: stretch;
   width: 100%;
 }
 
@@ -170,15 +176,14 @@
 }
 
 .featured-panel {
-  flex: 1; 
+  flex: 1;
   min-height: 250px;
 }
-
 
 .giant-sprite {
   width: 100%;
   max-width: 750px;
-  transform: scale(1.15); 
+  transform: scale(1.15);
   height: auto;
   image-rendering: pixelated;
   filter: drop-shadow(0 0 40px rgba(192, 132, 252, 0.4));
@@ -217,14 +222,14 @@
   align-items: center;
 }
 
-.navBar .pageLinks{
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
+.navBar .pageLinks {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
 }
 
-.page-container, .catalog-grid, .home-fullscreen-container {
-  padding-top: 100px; 
-  
+.page-container,
+.catalog-grid,
+.home-fullscreen-container {
+  padding-top: 100px;
 }
-
