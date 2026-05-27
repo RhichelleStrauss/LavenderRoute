@@ -11,7 +11,12 @@ const ReflectiveCard = ({
   imgUrl,
 }) => {
   return (
-    <div className="reflective-card-container">
+
+    <div className="reflective-card-container"
+    onClick={onEdit}
+    style={{ cursor: 'pointer' }}>
+
+
       <div className="card-glass-background" />
 
       <div className="reflective-content">
