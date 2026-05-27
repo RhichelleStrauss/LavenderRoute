@@ -1,8 +1,8 @@
 .reflective-content {
   position: relative;
   z-index: 10;
-  height: 550px;
-  width: 350px;
+  height: 430px;
+  width: 330px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -12,6 +12,12 @@
 border: 2px solid var(--dark-purple, #2A1A3A);
 background: rgba(42, 26, 58, 0.50);
 backdrop-filter: blur(5px);
+}
+
+.reflective-card-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .card-header {
@@ -36,10 +42,100 @@ backdrop-filter: blur(5px);
   letter-spacing: 1px;
 }
 
-/* Specific styling for the Type Tag to make it pop like the image */
+.tag.type-normal {
+  background: #A8A77A;
+  color: #FFFFFF;
+}
+
+.tag.type-fire {
+  background: #EE8130;
+  color: #FFFFFF;
+}
+
+.tag.type-water {
+  background: #6390F0;
+  color: #FFFFFF;
+}
+
+.tag.type-grass {
+  background: #7AC74C;
+  color: #FFFFFF;
+}
+
 .tag.type-electric {
-  background: #ffcc00;
-  color: #1a1a1a;
+  background: #F7D02C;
+  color: #1A1A1A; 
+}
+
+.tag.type-ice {
+  background: #96D9D6;
+  color: #1A1A1A; 
+}
+
+.tag.type-fighting {
+  background: #C22E28;
+  color: #FFFFFF;
+}
+
+.tag.type-poison {
+  background: #A33EA1;
+  color: #FFFFFF;
+}
+
+.tag.type-ground {
+  background: #E2BF65;
+  color: #1A1A1A;
+}
+
+.tag.type-flying {
+  background: #A98FF3;
+  color: #FFFFFF;
+}
+
+.tag.type-psychic {
+  background: #F95587;
+  color: #FFFFFF;
+}
+
+.tag.type-bug {
+  background: #A6B91A;
+  color: #FFFFFF;
+}
+
+.tag.type-rock {
+  background: #B6A136;
+  color: #FFFFFF;
+}
+
+.tag.type-ghost {
+  background: #705746;
+  color: #FFFFFF;
+}
+
+.tag.type-dragon {
+  background: #6F35FC;
+  color: #FFFFFF;
+}
+
+.tag.type-dark {
+  background: #4E3F35;
+  color: #FFFFFF;
+}
+
+.tag.type-steel {
+  background: #B7B7CE;
+  color: #1A1A1A;
+}
+
+.tag.type-fairy {
+  background: #D685AD;
+  color: #FFFFFF;
+}
+
+.tag.type-stellar {
+  background: linear-gradient(45deg, #FF6B6B, #4D96FF, #6BCB77, #FFA1CF);
+  color: #FFFFFF;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8); 
 }
 
 .card-body {
