@@ -4,6 +4,10 @@ import gengarLogo from '../assets/gengar-logo.png';
 import '../css/SignUp.css'; 
 import LetterGlitch from '../components/LetterGlitch';
 
+import axios from 'axios';
+
+const [email, setEmail] = useState('');
+
 function Login() {
   const navigate = useNavigate();
   
@@ -11,11 +15,24 @@ function Login() {
   const [password, setPassword] = useState('');
   const [specialCode, setSpecialCode] = useState(''); 
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    console.log("Logging in with:", username, password, specialCode);
+  const handleLogin = async (e) => {
+  e.preventDefault();
+  
+  try {
+    const response = await axios.post('http://localhost:5000/api/auth/login', {
+      email,
+      password,
+      specialCode
+    });
+    localStorage.setItem('token', response.data.token);
+    
+    console.log("Welcome back,", response.data.firstName);
     navigate('/catalog');
-  };
+
+  } catch (err) {
+    alert(err.response?.data?.message || "Login failed");
+  }
+};
 
   return (
     <div className="signup-outer-wrapper" style={{ 
