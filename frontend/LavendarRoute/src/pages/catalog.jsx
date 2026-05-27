@@ -72,7 +72,7 @@ export default function PokemonAdd() {
     }
   };
   //put - updates
-  //map looks at data edited, looks through list - if matching what was uodated UI gets upated
+  //map looks at data edited, looks through list - if matching what was updated UI gets updated
   //ᓚᘏᗢ
 
   //handle delte post ᓚᘏᗢ

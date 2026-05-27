@@ -89,6 +89,7 @@ h4 {
 }
 
 #pokemon-price {
+  height: 100%;
   background-color: rgba(186, 140, 255, 0.08);
   border-style: solid;
   border-width: 2px;
@@ -106,16 +107,91 @@ h4 {
   color: var(--grey);
 }
 
-#price{
-    padding: 2%;
+#price {
+  padding: 2%;
 }
 
-.css-9xw0na-MuiRating-icon{
-    color:#c4ff4d !important;
+#price-num {
+  font-size: 175%;
 }
 
-.css-1xc33vf-MuiRating-root{
-    color:#c4ff4d !important;
+#cart-btn {
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  border-color: var(--green);
+  border-width: 2px;
+  border-radius: 20px;
+  color: var(--green);
+  font-size: 135%;
 }
 
+#cart-btn:hover {
+  background-color: var(--green);
+  color: var(--black);
+}
 
+#create-comment-section {
+  background-color: rgba(186, 140, 255, 0.08);
+  border-style: solid;
+  border-width: 2px;
+  border-color: var(--purple);
+  border-radius: 20px;
+}
+
+#comment-btn {
+  width: 100%;
+  height: 50%;
+  background-color: transparent;
+  border-color: var(--purple);
+  border-width: 2px;
+  border-radius: 16px;
+  color: var(--purple);
+  font-size: 135%;
+}
+
+#comment-btn:hover {
+  background-color: var(--purple);
+  color: white;
+}
+
+.MuiInputBase-root {
+  background-color: white;
+  border-radius: 16px !important;
+  border-width: 2px !important;
+  border-color: var(--purple) !important;
+}
+
+#outlined-multiline-static {
+  background-color: white;
+}
+
+.comment-container {
+  margin-top: 20px !important;
+  background-color: rgba(196, 255, 77, 0.08);
+  border-style: solid;
+  border-width: 2px;
+  border-color: var(--green);
+  border-radius: 20px;
+  padding: 1%;
+}
+
+.comment-username {
+  font-weight: 700;
+  font-size: 120%;
+  margin-top: 1% !important;
+  margin-bottom: 1% !important;
+}
+
+.comment-text {
+  font-size: 100%;
+  margin-bottom: 1% !important;
+}
+
+.css-9xw0na-MuiRating-icon {
+  color: #c4ff4d !important;
+}
+
+.css-1xc33vf-MuiRating-root {
+  color: #c4ff4d !important;
+}
