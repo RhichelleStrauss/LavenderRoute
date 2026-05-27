@@ -118,7 +118,9 @@ export default function PokemonAdd() {
         {teamPokemon.length > 0 ? (
           teamPokemon.map((poke) => (
             <ReflectiveCard
-              key={poke._id}
+            id={poke._id}
+            key={poke._id}
+            
               pokemonName={poke.name}
               level={poke.level}
               type={poke.type}

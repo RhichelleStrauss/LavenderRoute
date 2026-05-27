@@ -1,8 +1,11 @@
 import "../css/reflectiveCard.css";
 
+import { useNavigate } from "react-router-dom";
+
 
 const ReflectiveCard = ({
   pokemonName,
+  id,
   level,
   type = [], // Default to empty array to allow .map() to work
   gender,
@@ -12,11 +15,13 @@ const ReflectiveCard = ({
   imgUrl,
   onEdit
 }) => {
+  const navigate = useNavigate();
+
   return (
 
    
     <div className="reflective-card-container"
-    onClick={() => navigate('/pokemon/{_id}')}
+    onClick={() => navigate(`/pokemon/${id}`)}
     style={{ cursor: 'pointer' }}>
 
 

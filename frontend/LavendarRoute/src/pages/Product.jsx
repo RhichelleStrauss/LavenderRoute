@@ -194,4 +194,3 @@ function Product() {
 }
 
 export default Product;
-//note to self - look at loading function
