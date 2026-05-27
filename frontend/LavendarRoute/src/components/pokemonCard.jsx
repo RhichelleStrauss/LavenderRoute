@@ -12,8 +12,7 @@ const ReflectiveCard = ({
   stage = "Basic",
   height,
   weight,
-  imgUrl,
-  onEdit
+  imgUrl
 }) => {
   const navigate = useNavigate();
 
