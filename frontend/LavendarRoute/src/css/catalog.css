@@ -19,4 +19,5 @@
   column-gap: 0px;
   row-gap: 60px;
   width: 100%;
+  padding: clamp(0px, 10vw, 200px)
 }
