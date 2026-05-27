@@ -1,6 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import gengarLogo from '../assets/gengar-logo.png'; 
+import '../App.css';
+import AddIcon from '../assets/icons/AddIcon.png';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -18,6 +20,16 @@ const Navbar = () => {
         <button onClick={() => navigate('/')} className="nav-link-btn active">HOME</button>
         <button onClick={() => navigate('/catalog')} className="nav-link-btn">INVENTORY</button>
       </div>
+
+      <div className="nav-actions">
+        <img 
+          src={AddIcon} 
+          alt="Add Pokemon" 
+          className="action-icon-png" 
+          onClick={() => navigate('/add-pokemon')} 
+          style={{ cursor: 'pointer', width: '28px', height: '28px' }}
+        />
+        </div>
 
       <div className="nav-actions">
         <svg className="action-icon text-lime" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
