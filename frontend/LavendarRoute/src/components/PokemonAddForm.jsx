@@ -68,6 +68,8 @@ const POKEMON_TYPE = [
           height: Number(form.height),
           weight: Number(form.weight)
         };
+
+
         //post request
         //stringify convertds object into jsn string
         const response = await fetch("http://localhost:5000/api/pokemon", {
