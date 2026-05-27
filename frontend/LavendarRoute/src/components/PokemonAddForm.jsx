@@ -4,6 +4,7 @@ import { Field, Switch, NumberField } from '@base-ui/react';
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from 'react-bootstrap/Card';  
+import BinIcon from '../assets/icons/BinIcon.png';
 
 const API = "http://localhost:5000/api/pokemon";
 
@@ -11,9 +12,21 @@ const POKEMON_TYPE = [
     'Normal', 'Fire', 'Water', 'Electric', 'Grass', 'Ice', 'Fighting', 'Poison', 'Ground', 'Flying',
     'Psychic', 'Bug', 'Rock', 'Ghost', 'Dragon', 'Dark', 'Steel', 'Fairy'
 ]; 
+//pokemon types for dropdown
+
+//braindump?
+//if editing (on catalog page), the form sends the data to the catalog component via onsave
+//if adding the form sends data out to api, redirects uou to catalog on sibmit 
+// payload is a bundle of info about a pokemon sendinf to database\
+//before sending data, create a payload object that takes values on form
+//certain objets convert strings into numbers 
+//payload is stringified into a json string, and placed into bpody of fetch to server on api https
+//modal not open 
 
 
- function PokemonAddForm({ initialData, onSave, onDelete }) {
+//initialdata: on addpokemon page nothing, on catalog stores pokemons when clicking card
+//on save on delete callbacks - form givess functipns data
+ function PokemonAddForm({ initialData, onSave, onDelete, isModal = false }) {
   const navigate = useNavigate();
   const [isTypeMenuOpen, setIsTypeMenuOpen] = useState(false);
   const typeRef = useRef(null);
@@ -23,8 +36,10 @@ const POKEMON_TYPE = [
     description: "", imagePokemon: "", type: [], gender: "Genderless", shiny: false 
   });
 
+  //set key value - helper function
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
+  //clicking anywhere but menu, menu ckose
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (typeRef.current && !typeRef.current.contains(event.target)) {
@@ -38,10 +53,13 @@ const POKEMON_TYPE = [
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (form.type.length === 0) return alert("Select at least 1 type!");
+    //if no types selected this alert pops up
 
     if (onSave) {
       onSave(form);
+      //checking if onsave exists foir editing, if onsave exists in catalog, the form givees data back to catalog page
     } else {
+      //if onsave wasnt passed, (on addpokemon page), it runs this block to create a new entry
       try {
         const payload = {
           ...form,
@@ -51,12 +69,16 @@ const POKEMON_TYPE = [
           weight: Number(form.weight)
         };
 
+
+        //post request
+        //stringify convertds object into jsn string
         const response = await fetch("http://localhost:5000/api/pokemon", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
         });
 
+        //if response is good, navigate to catalog page, others catch error
         if (response.ok) {
           navigate('/catalog');
         } else {
@@ -67,9 +89,11 @@ const POKEMON_TYPE = [
       }
     }
   };
+  
 
 const styles = {
-    card: { width: "100%", maxWidth: 800, margin: "40px auto", border: "1px solid #C4FF4D", borderRadius: "16px", backgroundColor: "#1a1a1ab5)", padding: "40px", boxSizing: "border-box", fontFamily: "'Poppins', sans-serif", color: "#BA8CFF", boxShadow: "0 0 40px #1a1a1a80" },
+    card: { width: "100%", maxWidth: 800, margin:isModal ? "0 auto" : "40px auto", border: "1px solid #C4FF4D", borderRadius: "16px", backgroundColor: "#1a1a1ab5)", padding: "40px", boxSizing: "border-box", fontFamily: "'Poppins', sans-serif", color: "#BA8CFF", boxShadow: "0 0 40px #1a1a1a80",maxHeight: isModal ? "90vh" : "none", 
+    overflowY: isModal ? "auto" : "visible"},
     header: { margin: "0 0 32px 0", fontSize: 24, fontWeight: 800, color: "#BA8CFF", letterSpacing: "2px", textTransform: "uppercase", fontFamily: "'VT323', monospace", textShadow: "2px 2px 0px rgba(#1a1a1a80)" },
     row: { display: "flex", gap: "24px", marginBottom: "20px" },
     col: { flex: 1, position: "relative" },
@@ -87,8 +111,9 @@ const styles = {
     pricePrefix: { background: "#ba8cffd4", padding: "0 20px", color: "#1a1a1a", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", fontSize: "18px" },
     priceInput: { flex: 1, background: "rgba(186, 140, 255, 0.2)", border: "none", color: "#BA8CFF", padding: "0 16px", outline: "none", fontSize: "14px" },
     btnContainer: { display: "flex", justifyContent: "flex-end", gap: "16px", marginTop: "40px" },
-    // btnDraft: { background: "rgba(196, 255, 77, 0.2)", border: "1px solid rgba(196, 255, 77, 0.4)", color: "#C4FF4D", borderRadius: "12px", padding: "14px 28px", fontSize: "16px", fontWeight: "bold", cursor: "pointer" },
-    btnSubmit: { background: "#c4ff4dca", border: "none", color: "#2A1A3A", borderRadius: "12px", padding: "14px 28px", fontSize: "16px", fontWeight: "bold", cursor: "pointer", border: "1px solid #C4FF4D" }
+    btnDraft: { background: "rgba(196, 255, 77, 0.2)", border: "1px solid rgba(196, 255, 77, 0.4)", color: "#C4FF4D", borderRadius: "12px", padding: "14px 28px", fontSize: "16px", fontWeight: "bold", cursor: "pointer" },
+    btnSubmit: { background: "#c4ff4dca", border: "none", color: "#2A1A3A", borderRadius: "12px", padding: "14px 28px", fontSize: "16px", fontWeight: "regular", cursor: "pointer", border: "1px solid #C4FF4D" },
+    btnDeleteIcon: { width: "54px", height: "54px", display: "flex", alignItems: "center", justifyContent: "center", background: "#9e004cb4", border: "1px solid #9e004d", borderRadius: "12px", cursor: "pointer", padding: "12px" }
   };
 
  return (
@@ -100,18 +125,21 @@ const styles = {
       <form onSubmit={handleSubmit}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px 20px" }}>
           
+          {/* ᓚᘏᗢ name */}
           <Field.Root style={{ ...styles.field, gridColumn: "1 / -1" }}>
             <Field.Label style={styles.label}>Pokémon name:</Field.Label>
             <Field.Control required style={styles.input} value={form.name} onChange={e => set("name", e.target.value)} placeholder="e.g. gengar" />
             <Field.Error style={styles.error} match="valueMissing">Please enter a name.</Field.Error>
           </Field.Root>
 
+           {/* ᓚᘏᗢ description */}
           <Field.Root style={{ ...styles.field, gridColumn: "1 / -1" }}>
              <Field.Label style={styles.label}>Description:</Field.Label>
              <Field.Control render={<textarea />} required style={{ ...styles.input, minHeight: '80px', resize: 'vertical' }} value={form.description} onChange={e => set("description", e.target.value)} placeholder="Describe your pokémon " />
              <Field.Error style={styles.error} match="valueMissing">Description is required.</Field.Error>
           </Field.Root>
 
+           {/* ᓚᘏᗢ type */}
           <Field.Root style={{ ...styles.field, position: "relative" }} ref={typeRef}>
             <Field.Label style={styles.label}>Type:</Field.Label>
             <div onClick={() => setIsTypeMenuOpen(!isTypeMenuOpen)} style={styles.typeContainer}>
@@ -125,7 +153,7 @@ const styles = {
             </div>
             
             {isTypeMenuOpen && form.type.length < 2 && (
-              <div style={{ position: "absolute", top: "100%", left: 0, right: 0, zIndex: 50, marginTop: "4px", backgroundColor: "rgba(186, 140, 255, 0.2)", color: "#BA8CFF", border: "2px solid #1A1A1A", maxHeight: "180px", overflowY: "auto", padding: "4px"}}>
+              <div style={{ position: "absolute", top: "100%", left: 0, right: 0, zIndex: 50, marginTop: "4px", backgroundColor: "rgb(186, 140, 255)", color: "#BA8CFF", border: "2px solid #1A1A1A", maxHeight: "180px", overflowY: "auto", padding: "4px"}}>
                 {POKEMON_TYPE.filter(t => !form.type.includes(t)).map(t => (
                   <div key={t} onClick={() => { set("type", [...form.type, t]); setIsTypeMenuOpen(false); }} style={{ padding: "8px 12px", cursor: "pointer", fontSize: "14px", color: "black", fontWeight: "500", borderBottom: "1px solid #2a1a3adc" }} onMouseOver={e => e.currentTarget.style.background = "#ba8cff79"} onMouseOut={e => e.currentTarget.style.background = "transparent"}>
                     {t}
@@ -135,6 +163,7 @@ const styles = {
             )}
           </Field.Root>
           
+           {/* ᓚᘏᗢ gender */}
           <Field.Root style={styles.field}>
             <Field.Label style={styles.label}>Gender:</Field.Label>
             <Field.Control render={<select />} required style={styles.input} value={form.gender} onChange={e => set("gender", e.target.value)}>
@@ -144,6 +173,8 @@ const styles = {
             </Field.Control>
           </Field.Root>
 
+
+             {/* ᓚᘏᗢ level */}
           <Field.Root style={styles.field}>
             <Field.Label style={styles.label}>Level:</Field.Label>
             <NumberField.Root value={form.level === "" ? null : Number(form.level)} onValueChange={v => set("level", v ?? "")} min={1} max={100} required>
@@ -156,6 +187,8 @@ const styles = {
             <Field.Error style={styles.error} match="valueMissing">Required.</Field.Error>
           </Field.Root>
 
+             {/* ᓚᘏᗢ height */}
+             {/* pokemon height are in inches */}
           <Field.Root style={styles.field}>
             <Field.Label style={styles.label}>Height (inches):</Field.Label>
             <NumberField.Root value={form.height === "" ? null : Number(form.height)} onValueChange={v => set("height", v ?? "")} step={0.1} min={0} required>
@@ -168,6 +201,8 @@ const styles = {
             <Field.Error style={styles.error} match="valueMissing">Required.</Field.Error>
           </Field.Root>
 
+             {/* ᓚᘏᗢ weight */}
+             {/* on pokedex sites pokemon weight is usually pounds, but can be converted to kg, need a max of 450kg */}
           <Field.Root style={styles.field}>
             <Field.Label style={styles.label}>Weight (kg):</Field.Label>
             <NumberField.Root value={form.weight === "" ? null : Number(form.weight)} onValueChange={v => set("weight", v ?? "")} step={0.1} min={0} required>
@@ -180,6 +215,7 @@ const styles = {
             <Field.Error style={styles.error} match="valueMissing">Required.</Field.Error>
           </Field.Root>
 
+             {/* ᓚᘏᗢ shiny toggle, shiny or no shiny */}
           <Field.Root style={{ ...styles.field, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: '10px' }}>
             <Field.Label style={{ ...styles.label, cursor: 'pointer' }}>Shiny Variant</Field.Label>
             <Switch.Root checked={form.shiny} onCheckedChange={(c) => set("shiny", c)} style={{ width: '48px', height: '26px', backgroundColor: form.shiny ? 'black' : 'white', border: '2px solid black', borderRadius: '9999px', position: 'relative', cursor: 'pointer', padding: 0 }}>
@@ -187,6 +223,7 @@ const styles = {
             </Switch.Root>
           </Field.Root>
 
+             {/* ᓚᘏᗢ price */}
           <Field.Root style={{ ...styles.field, gridColumn: "1 / -1" }}>
             <Field.Label style={styles.label}>Price</Field.Label>
             <div style={styles.priceWrapper}>
@@ -196,6 +233,7 @@ const styles = {
             <Field.Error style={styles.error} match="valueMissing">Price is required.</Field.Error>
           </Field.Root>
 
+             {/* ᓚᘏᗢ img url*/}
           <Field.Root style={{ ...styles.field, gridColumn: "1 / -1" }}>
             <Field.Label style={styles.label}>Image URL</Field.Label>
             <Field.Control required type="url" style={styles.input} value={form.imagePokemon} onChange={e => set("imagePokemon", e.target.value)} placeholder="https://..." />
@@ -204,15 +242,28 @@ const styles = {
 
         </div>
 
+             {/* ᓚᘏᗢ buttons depending on page */}
+             {/* save changes if on catalog editing, add product if on add product page */}
         <div style={styles.btnContainer}>
-          {/* <button type="button" onClick={() => navigate(-1)} style={styles.btnDraft}>
-            Save Draft
-          </button> */}
           <button type="submit" style={styles.btnSubmit}>
-            Add Product to be reviwed
+            {initialData ? "Save Changes" : "Add Product"}
           </button>
+          
+          {/* delete button only appears when on catalog page, editing */}
+          {initialData && (
+            <button 
+              type="button" 
+              style={styles.btnDeleteIcon} 
+              onClick={() => onDelete(initialData._id)}
+            >
+              <img 
+                src={BinIcon} 
+                style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
+              />
+            </button>
+          )}
         </div>
-        
+
       </form>
     </div>
   );
