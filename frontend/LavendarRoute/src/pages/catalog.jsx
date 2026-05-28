@@ -149,7 +149,14 @@ export default function PokemonAdd() {
           isBounce={false}
           resolution={0.5}
         />
+       
       </div>
+
+      <div>
+        <Navbar />
+      </div>
+      
+    
 
       <div className="search-capsule-container">
         <div className="search-pill-bar">

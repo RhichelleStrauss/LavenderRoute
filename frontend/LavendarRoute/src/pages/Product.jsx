@@ -6,6 +6,9 @@ import StarRating from "../components/StarRating.jsx";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Navbar from "../components/navbar.jsx"
+import BinIcon from '../assets/icons/BinIcon.png';
+import PokemonAddForm from '../components/PokemonAddForm.jsx'
 
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from "react";
@@ -42,6 +45,63 @@ function Product() {
     getData();
   },[id]);
 
+
+  // opening modal with the correct data from card/backedn
+  //opens when card is clicked - modalopeem true
+  const handleEditClick = (pokemon) => {
+    setSelectedPokemon(pokemon);
+    setIsModalOpen(true);
+  };
+  // ᓚᘏᗢ
+
+  //put request handling ᓚᘏᗢ
+  const handleUpdatePokemon = async (updatedData) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/pokemon/${updatedData._id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatedData),
+        },
+      );
+
+      if (response.ok) {
+        setTeamPokemon((prev) =>
+          prev.map((p) => (p._id === updatedData._id ? updatedData : p)),
+        );
+        setIsModalOpen(false);
+        setSelectedPokemon(null);
+      }
+    } catch (error) {
+      console.error("np updatey:", error);
+    }
+  };
+  //put - updates
+  //map looks at data edited, looks through list - if matching what was uodated UI gets upated
+  //ᓚᘏᗢ
+
+  //handle delte post ᓚᘏᗢ
+  const handleDeletePokemon = async (id) => {
+    if (!window.confirm("suresies you want to delete this cutie pokeman"))
+      return;
+
+    try {
+      const response = await fetch(`http://localhost:5000/api/pokemon/${id}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        setTeamPokemon((prev) => prev.filter((p) => p._id !== id));
+        setIsModalOpen(false);
+        setSelectedPokemon(null);
+      }
+    } catch (error) {
+      console.error("no delete:", error);
+    }
+  };
+  //filter removes deleted pokemon, make new list wihgout the poor thing
+
   if (loading) {
     return <h1>Loading...</h1>;
   } else {
@@ -49,6 +109,9 @@ function Product() {
       <>
         <Container id="product-content" className="text-white pt-5">
           <Row>
+            <div style={{marginBottom: '10%'}}>
+        <Navbar />
+      </div>
             <Col id="poke-card" className="col-5 d-grid row-gap-2">
               {/* <Row className="d-flex justify-content-between">
                 <Col className="col-6">
@@ -174,7 +237,17 @@ function Product() {
           </Row>
         </Container>
 
-        <div id="liquid-ether">
+        <div id="liquid-ether"
+          
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          zIndex: -10,
+        }}
+      >
           <LiquidEther
             mouseForce={10}
             cursorSize={100}
@@ -188,6 +261,7 @@ function Product() {
             resolution={0.5}
           />
         </div>
+        
       </>
     );
   }
