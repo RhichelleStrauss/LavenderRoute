@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import Navbar from './components/navbar';
 import LetterGlitch from './components/LetterGlitch'; 
 import ReflectiveCard from './components/pokemonCard'; 
+import Product from './pages/Product';
 import './App.css';
 
 const Home = () => {
@@ -129,6 +130,7 @@ function App() {
         <Route path="/catalog" element={<Catalog />} />
         <Route path="/add-pokemon" element={<PokemonAdd />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/pokemon/:id" element={<Product />} />
         <Route path="/login" element={<Login />} />
       </Routes>
     </BrowserRouter>

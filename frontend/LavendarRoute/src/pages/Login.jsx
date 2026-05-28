@@ -3,19 +3,40 @@ import { useNavigate } from 'react-router-dom';
 import gengarLogo from '../assets/gengar-logo.png';
 import '../css/SignUp.css'; 
 import LetterGlitch from '../components/LetterGlitch';
+import PokePattern from '../components/PokePattern';
+import axios from 'axios';
+
+
 
 function Login() {
   const navigate = useNavigate();
   
-  const [username, setUsername] = useState('');
+ const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [specialCode, setSpecialCode] = useState(''); 
+  const [tokenPattern, setTokenPattern] = useState([]);
+  const [authPattern, setAuthPattern] = useState(''); 
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    console.log("Logging in with:", username, password, specialCode);
+  const handleLogin = async (e) => {
+  e.preventDefault();
+  if (tokenPattern.length < 6) {
+      return alert('Pattern must be at least 6 tokens');
+    }
+    const authPatternString = tokenPattern.join('-');
+  try {
+    const response = await axios.post('http://localhost:5000/api/auth/login', {
+      email,
+      password,
+      authPattern: authPatternString
+    });
+    localStorage.setItem('token', response.data.token);
+    
+    console.log("Welcome back,", response.data.firstName);
     navigate('/catalog');
-  };
+
+  } catch (err) {
+    alert(err.response?.data?.message || "Login failed");
+  }
+};
 
   return (
     <div className="signup-outer-wrapper" style={{ 
@@ -72,13 +93,13 @@ function Login() {
               <form onSubmit={handleLogin}>
                 
                 <div className="input-group">
-                  <label htmlFor="username">Username</label>
+                  <label htmlFor="email">Email</label>
                   <input 
-                    type="text" 
-                    id="username" 
-                    placeholder="e.g. AshKetchum" 
-                    value={username} 
-                    onChange={(e) => setUsername(e.target.value)} 
+                    type="email" 
+                    id="email" 
+                    placeholder="trainer@pallet.town" 
+                    value={email} 
+                    onChange={(e) => setEmail(e.target.value)} 
                     required 
                   />
                 </div>
@@ -95,17 +116,7 @@ function Login() {
                   />
                 </div>
 
-                <div className="input-group">
-                  <label htmlFor="specialCode">Special Access Code</label>
-                  <input 
-                    type="text" 
-                    id="specialCode" 
-                    placeholder="Enter auth code" 
-                    value={specialCode} 
-                    onChange={(e) => setSpecialCode(e.target.value)} 
-                    required
-                  />
-                </div>
+                <PokePattern pattern={tokenPattern} setPattern={setTokenPattern} />
 
                 <button type="submit" className="submit-btn" style={{ marginTop: '20px' }}>
                   Enter Route
