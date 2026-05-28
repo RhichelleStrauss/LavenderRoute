@@ -1,41 +1,61 @@
 .catalog-container {
   width: 100%;
-  max-width: 1100px; /* This keeps the grid from getting too wide */
-  margin: 0 auto; /* Centers the entire container */
+  max-width: 1100px; 
+  margin: 0 auto; 
   padding: 40px 20px;
+  box-sizing: border-box;
 }
 
 .catalog-title {
   font-family: "vt323", monospace;
   color: #c4ff4d;
-  font-size: 48px;
+  font-size: clamp(32px, 8vw, 48px); 
   margin-bottom: 30px;
   text-align: center;
 }
 
 .catalog-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  column-gap: 0px;
-  row-gap: 60px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 320px)); 
+  justify-content: center; 
+  justify-items: center; 
+  column-gap: 80px; 
+  row-gap: 80px;   
   width: 100%;
-  padding: clamp(0px, 10vw, 200px);
+  padding: 0 150px; 
+  box-sizing: border-box;
+}
+
+@media (max-width: 1024px) {
+  .catalog-grid {
+    column-gap: 20px;
+    padding: 20px 10px;
+  }
+}
+
+@media (max-width: 340px) {
+  .catalog-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
 }
 
 .search-capsule-container {
-  max-width: 1200px;
-  margin: 40px auto 20px auto;
+  width: 100%;
+  max-width: 1100px; 
+  margin: 40px auto 5px auto; 
   padding: 0 20px;
+  box-sizing: border-box;
 }
 
 .search-pill-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 15px; 
   background: rgba(30, 20, 40, 0.45);
   border: 1.5px solid rgba(186, 140, 255, 0.2);
-  border-radius: 999px;
-  padding: 8px 24px;
+  border-radius: 12px;
+  padding: 8px 16px;
   backdrop-filter: blur(8px);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
@@ -50,10 +70,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition:
-    transform 0.2s ease,
-    color 0.2s ease;
+  transition: transform 0.2s ease, color 0.2s ease;
   padding: 0;
+  flex-shrink: 0; 
 }
 
 .filter-toggle-btn:hover {
@@ -71,8 +90,10 @@
   align-items: center;
   gap: 12px;
   background: rgba(0, 0, 0, 0.2);
-  border-radius: 999px;
+  border-radius: 10px;
   padding: 6px 16px;
+  flex-grow: 1;
+  max-width: 300px; 
 }
 
 .capsule-search {
@@ -82,7 +103,7 @@
   border: none;
   color: #c4ff4d;
   outline: none;
-  width: 180px;
+  width: 100%; 
   letter-spacing: 1.5px;
 }
 
@@ -96,28 +117,27 @@
   height: 18px;
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .filter-drawer {
   max-height: 0;
   overflow: hidden;
-  transition:
-    max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    margin-top 0.3s ease;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), margin-top 0.3s ease;
   background: rgba(26, 16, 36, 0.6);
   border-radius: 16px;
   margin-top: 0;
 }
 
 .filter-drawer.open {
-  max-height: 120px; /* Expands open gracefully */
+  max-height: 400px; 
   margin-top: 15px;
   border: 1.5px solid rgba(186, 140, 255, 0.15);
 }
 
 .drawer-inner-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 20px;
   padding: 20px;
 }
@@ -150,6 +170,8 @@
   outline: none;
   cursor: pointer;
   transition: all 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .drawer-field select:hover {
@@ -166,4 +188,39 @@
   background-color: #1a1024;
   font-family: "Courier New", monospace;
   padding: 12px;
+}
+
+@media (max-width: 576px) {
+  .catalog-container,
+  .search-capsule-container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .search-pill-bar {
+    display: flex;
+    flex-direction: row; 
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+  }
+
+  .search-input-wrapper {
+    flex-grow: 1;
+    flex-shrink: 1; 
+    min-width: 120px; 
+    max-width: 100%; 
+    padding: 6px 12px;
+  }
+
+  .capsule-search {
+    font-size: 16px; 
+    letter-spacing: 1px;
+  }
+
+  .filter-toggle-btn {
+    align-self: auto;
+    flex-shrink: 0; 
+  }
 }

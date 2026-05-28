@@ -6,7 +6,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 24px; /* Slightly tighter padding for more content */
+  padding: 24px; 
   color: white;
   border-radius: 20px;
 border: 2px solid var(--dark-purple, #2A1A3A);
@@ -18,6 +18,7 @@ backdrop-filter: blur(5px);
   display: flex;
   justify-content: center;
   align-items: center;
+  width: max-content;
 }
 
 .card-header {
@@ -130,12 +131,6 @@ backdrop-filter: blur(5px);
 .tag.type-fairy {
   background: #D685AD;
   color: #FFFFFF;
-}
-
-.tag.type-stellar {
-  background: linear-gradient(45deg, #FF6B6B, #4D96FF, #6BCB77, #FFA1CF);
-  color: #FFFFFF;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8); 
 }
 
 .card-body {
