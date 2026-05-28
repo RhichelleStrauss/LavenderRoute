@@ -9,7 +9,7 @@
 .poke-pattern-label {
   font-size: 1.5rem; 
   letter-spacing: 0.05em; 
-  color: #062d4c;
+  color: #9D4EDD;
   margin-bottom: 5px;
 }
 
@@ -17,7 +17,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: rgba(180, 218, 249, 0.3);
+  background-color: #9d4edd42;
   padding: 16px;
   border-radius: 12px;
   margin-bottom: 8px;
@@ -40,9 +40,9 @@
 .pattern-display-box {
   width: 100%;
   min-height: 120px;
-  border: 4px dashed #703344;
+  border: 4px dashed #9D4EDD;
   border-radius: 12px;
-  background-color: rgba(180, 218, 249, 0.3);
+  background-color: #9d4edd42;
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
@@ -55,7 +55,7 @@
   opacity: 0.5;
   font-style: italic;
   margin: auto;
-  color: #062d4c;
+  color: #2A1A3A;
 }
 
 .selected-token-wrapper {
