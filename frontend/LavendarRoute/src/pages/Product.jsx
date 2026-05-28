@@ -268,3 +268,59 @@ function Product() {
 }
 
 export default Product;
+
+  // // opening modal with the correct data from card/backedn
+  // //opens when card is clicked - modalopeem true
+  // const handleEditClick = (pokemon) => {
+  //   setSelectedPokemon(pokemon);
+  //   setIsModalOpen(true);
+  // };
+  // // ᓚᘏᗢ
+
+  // //put request handling ᓚᘏᗢ
+  // const handleUpdatePokemon = async (updatedData) => {
+  //   try {
+  //     const response = await fetch(
+  //       `http://localhost:5000/api/pokemon/${updatedData._id}`,
+  //       {
+  //         method: "PUT",
+  //         headers: { "Content-Type": "application/json" },
+  //         body: JSON.stringify(updatedData),
+  //       },
+  //     );
+
+  //     if (response.ok) {
+  //       setTeamPokemon((prev) =>
+  //         prev.map((p) => (p._id === updatedData._id ? updatedData : p)),
+  //       );
+  //       setIsModalOpen(false);
+  //       setSelectedPokemon(null);
+  //     }
+  //   } catch (error) {
+  //     console.error("np updatey:", error);
+  //   }
+  // };
+  // //put - updates
+  // //map looks at data edited, looks through list - if matching what was uodated UI gets upated
+  // //ᓚᘏᗢ
+
+  // //handle delte post ᓚᘏᗢ
+  // const handleDeletePokemon = async (id) => {
+  //   if (!window.confirm("suresies you want to delete this cutie pokeman"))
+  //     return;
+
+  //   try {
+  //     const response = await fetch(`http://localhost:5000/api/pokemon/${id}`, {
+  //       method: "DELETE",
+  //     });
+
+  //     if (response.ok) {
+  //       setTeamPokemon((prev) => prev.filter((p) => p._id !== id));
+  //       setIsModalOpen(false);
+  //       setSelectedPokemon(null);
+  //     }
+  //   } catch (error) {
+  //     console.error("no delete:", error);
+  //   }
+  // };
+  // //filter removes deleted pokemon, make new list wihgout the poor thing

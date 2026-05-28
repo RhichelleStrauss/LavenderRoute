@@ -1,14 +1,13 @@
-
-
 import PokemonAddForm from "../components/PokemonAddForm.jsx";
-import filterIcon from "../assets/icons/FilterIconRectangle.png";
+
 import React, { useState, useEffect } from 'react'; // Added useEffect import
 import LiquidEther from '../components/LiquidEther.jsx'
 import ReflectiveCard from '../components/pokemonCard.jsx';
 import '../css/catalog.css'
-import PokemonAddForm from '../components/PokemonAddForm.jsx';
+
 import Navbar from '../components/navbar.jsx';
 
+import filterIcon from "../assets/icons/FilterIconRectangle.png";
 import CrossIcon from "../assets/icons/CrossIcon.png";
 
 export default function PokemonAdd() {
@@ -35,7 +34,7 @@ export default function PokemonAdd() {
   const [selectedType, setSelectedType] = useState("");
   const [selectedGender, setSelectedGender] = useState("");
   const [selectedShiny, setSelectedShiny] = useState("");
-  // ᓚᘏᗢ Tracks if the sliding filter drawer is visible
+
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
 
   useEffect(() => {
@@ -51,61 +50,7 @@ export default function PokemonAdd() {
     getPokemon();
   }, []);
 
-  // opening modal with the correct data from card/backedn
-  //opens when card is clicked - modalopeem true
-  const handleEditClick = (pokemon) => {
-    setSelectedPokemon(pokemon);
-    setIsModalOpen(true);
-  };
-  // ᓚᘏᗢ
 
-  //put request handling ᓚᘏᗢ
-  const handleUpdatePokemon = async (updatedData) => {
-    try {
-      const response = await fetch(
-        `http://localhost:5000/api/pokemon/${updatedData._id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(updatedData),
-        },
-      );
-
-      if (response.ok) {
-        setTeamPokemon((prev) =>
-          prev.map((p) => (p._id === updatedData._id ? updatedData : p)),
-        );
-        setIsModalOpen(false);
-        setSelectedPokemon(null);
-      }
-    } catch (error) {
-      console.error("np updatey:", error);
-    }
-  };
-  //put - updates
-  //map looks at data edited, looks through list - if matching what was uodated UI gets upated
-  //ᓚᘏᗢ
-
-  //handle delte post ᓚᘏᗢ
-  const handleDeletePokemon = async (id) => {
-    if (!window.confirm("suresies you want to delete this cutie pokeman"))
-      return;
-
-    try {
-      const response = await fetch(`http://localhost:5000/api/pokemon/${id}`, {
-        method: "DELETE",
-      });
-
-      if (response.ok) {
-        setTeamPokemon((prev) => prev.filter((p) => p._id !== id));
-        setIsModalOpen(false);
-        setSelectedPokemon(null);
-      }
-    } catch (error) {
-      console.error("no delete:", error);
-    }
-  };
-  //filter removes deleted pokemon, make new list wihgout the poor thing
 
   const filteredPokemon = teamPokemon.filter((poke) => {
     const matchesSearch = poke.name
@@ -151,6 +96,7 @@ export default function PokemonAdd() {
         />
        
       </div>
+    
 
       <div>
         <Navbar />
@@ -255,7 +201,7 @@ export default function PokemonAdd() {
           </div>
         </div>
       </div>
-      <Navbar />
+    
 
       <div className="catalog-grid">
         {filteredPokemon.length > 0 ? (

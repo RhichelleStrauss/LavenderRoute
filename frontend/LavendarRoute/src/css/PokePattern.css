@@ -9,7 +9,7 @@
 .poke-pattern-label {
   font-size: 1.5rem; 
   letter-spacing: 0.05em; 
-  color: #062d4c;
+  color: #9D4EDD;
   margin-bottom: 5px;
 }
 
@@ -63,7 +63,7 @@
   opacity: 0.5;
   font-style: italic;
   margin: auto;
-  color: #062d4c;
+  color: #2A1A3A;
 }
 
 .selected-token-wrapper {
