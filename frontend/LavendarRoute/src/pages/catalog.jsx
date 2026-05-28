@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from "react"; // Added useEffect import
-import LiquidEther from "../components/LiquidEther.jsx";
-import ReflectiveCard from "../components/pokemonCard.jsx";
-import "../css/catalog.css";
+
+
 import PokemonAddForm from "../components/PokemonAddForm.jsx";
 import filterIcon from "../assets/icons/FilterIconRectangle.png";
+import React, { useState, useEffect } from 'react'; // Added useEffect import
+import LiquidEther from '../components/LiquidEther.jsx'
+import ReflectiveCard from '../components/pokemonCard.jsx';
+import '../css/catalog.css'
+import PokemonAddForm from '../components/PokemonAddForm.jsx';
+import Navbar from '../components/navbar.jsx';
 
 import CrossIcon from "../assets/icons/CrossIcon.png";
 
@@ -244,6 +248,7 @@ export default function PokemonAdd() {
           </div>
         </div>
       </div>
+      <Navbar />
 
       <div className="catalog-grid">
         {filteredPokemon.length > 0 ? (
