@@ -254,8 +254,7 @@ export default function PokemonAdd() {
         {filteredPokemon.length > 0 ? (
           filteredPokemon.map((poke) => (
             <ReflectiveCard
-            id={poke._id}
-            key={poke._id}
+              key={poke._id}
               pokemonName={poke.name}
               level={poke.level}
               type={poke.type}
@@ -263,6 +262,8 @@ export default function PokemonAdd() {
               height={poke.height}
               weight={poke.weight}
               imgUrl={poke.imagePokemon}
+              //edit button - onclick handle function
+              onEdit={() => handleEditClick(poke)}
             />
           ))
         ) : (
