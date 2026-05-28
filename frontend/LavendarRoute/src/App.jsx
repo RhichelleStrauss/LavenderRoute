@@ -10,6 +10,7 @@ import Navbar from './components/navbar';
 import LetterGlitch from './components/LetterGlitch'; 
 import ReflectiveCard from './components/pokemonCard'; 
 import Product from './pages/Product';
+import LiquidEther from './components/LiquidEther';
 import './App.css';
 
 const Home = () => {
@@ -34,6 +35,7 @@ const Home = () => {
   return (
     <div className="home-fullscreen-container">
       <div className="glitch-bg-wrapper">
+       
         <LetterGlitch
           glitchColors={["#7C3AED", "#A855F7"]}
           glitchSpeed={50}
@@ -41,6 +43,7 @@ const Home = () => {
           outerVignette={false}
           smooth={true}
         />
+
       </div>
       
       <Navbar />
