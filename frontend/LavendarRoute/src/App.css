@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
 
 .home-fullscreen-container {
   width: 100vw;
@@ -26,7 +26,7 @@
 .text-lime { color: #a3e635 !important; }
 
 .pixel-heading {
-  font-family: 'VT323', monospace;
+  font-family: "VT323", monospace;
   font-size: 2.5rem;
   letter-spacing: 1px;
   margin-bottom: 15px;
@@ -82,7 +82,7 @@
 }
 
 .nav-brand {
-  font-family: 'VT323', monospace;
+  font-family: "VT323", monospace;
   font-size: 2.4rem;
   letter-spacing: 2px;
   margin: 0;
@@ -199,8 +199,28 @@
     margin-top: 30px;
   }
 }
+.navBar {
+  border: 2px solid var(--grey, #4d4d4d);
+  background-color: rgba(217, 217, 217, 0.1);
+  backdrop-filter: blur(5px);
+  border-radius: 10px;
+  padding: 20px;
+  margin: 10px auto;
+  width: 90%;
+  height: 70px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navBar .pageLinks {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+
 
 .page-container, .catalog-grid {
   padding-top: 100px;
 }
-
