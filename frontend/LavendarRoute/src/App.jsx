@@ -1,16 +1,19 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import gengarSprite from './assets/gengar-sprite.png';
+import { useState } from "react";
 
 import Catalog from './pages/Catalog'; 
 import PokemonAdd from './pages/PokemonAdd';
 import SignUp from './pages/SignUp';
 import Navbar from './components/navbar';
 import Product from './pages/Product';
+import Cart from "./pages/Cart";
 import LetterGlitch from './components/LetterGlitch'; 
 import './App.css';
 
 const Home = () => {
+  
   return (
     <div className="home-fullscreen-container">
       
@@ -74,7 +77,11 @@ const Home = () => {
 };
 
 
+
+
 function App() {
+  const [cartContent, setCartContent] = useState([]);
+
   return (
     <BrowserRouter>
     <Navbar />
@@ -83,7 +90,8 @@ function App() {
         <Route path="/catalog" element={<Catalog />} />
         <Route path="/add-pokemon" element={<PokemonAdd />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/pokemon/:id" element={<Product />} />
+        <Route path="/pokemon/:id" element={<Product _setCartContent={setCartContent} />} />
+        <Route path="/cart" element={<Cart _cartContent={cartContent} />} />
       </Routes>
     </BrowserRouter>
   );

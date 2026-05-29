@@ -3,26 +3,47 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import LiquidEther from "../components/LiquidEther.jsx";
 import StarRating from "../components/StarRating.jsx";
+
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import TextField from "@mui/material/TextField";
+import Modal from "react-bootstrap/Modal";
 
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-function Product() {
+const displayModal = () => {
+  setShow(true);
+};
+
+function Product({_setCartContent}) {
+  const navigate = useNavigate();
+
   const { id } = useParams(); //id of Pokemon to display.
   const [data, setData] = useState(null); //data fetched from server.
   const [loading, setLoading] = useState(true); //variable controls when to display the finished loaded page.
   const [comment, setComment] = useState(null); //saves the current typed comment.
 
-  const formatter = new Intl.NumberFormat("en-US", { //formats the price into an accounting format.
+  const [show, setShow] = useState(false);
+  const [added, setAdded] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const formatter = new Intl.NumberFormat("en-US", {
+    //formats the price into an accounting format.
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
+
+  const CartUpdate = () =>{
+    handleShow();
+    setAdded(true);
+    _setCartContent(prevItems => [...prevItems, {data}]);
+  }
 
   //Fetched the selected Pokemon's details.
   useEffect(() => {
@@ -49,11 +70,12 @@ function Product() {
     getData();
   }, [id]);
 
-  const PostComment = async () => { //Posts a new comment to teh server.
+  const PostComment = async () => {
+    //Posts a new comment to teh server.
     if (!comment) {
       console.log("Is empty"); //Checks if a comment has been made.
-    } 
-    else { //Posts the new comment.
+    } else {
+      //Posts the new comment.
       try {
         const response = await fetch(
           `http://localhost:5000/api/pokemon/${id}/comments`,
@@ -63,8 +85,8 @@ function Product() {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                text: comment,
-                userName: "PokeCatcher69",
+              text: comment,
+              userName: "PokeCatcher69",
             }),
           },
         );
@@ -74,7 +96,7 @@ function Product() {
         console.log(data);
       } catch (error) {
         console.error("Error updating Pokémon:", error);
-      } finally{
+      } finally {
         window.location.reload();
       }
     }
@@ -86,6 +108,26 @@ function Product() {
     console.log(data.comments);
     return (
       <>
+        <Modal show={show} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Pokémon added to cart</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="d-flex flex-row">
+              <div>
+                <img id="modal-image" src={data?.imagePokemon}></img>
+              </div>
+              <div>
+                <h1 id="modal-item-name">{data?.name}</h1>
+                <p>Level: {data?.level}</p>
+                <p>Shiny: {String(data?.shiny)}</p>
+              </div>
+            </div>
+
+            <Button onClick={() => navigate('/cart')}>View Cart</Button>
+          </Modal.Body>
+        </Modal>
+
         <Container id="product-content" className="text-white pt-5">
           <Row>
             <Col id="poke-card" className="col-5 d-grid row-gap-2">
@@ -182,9 +224,23 @@ function Product() {
                   </Row>
                 </Col>
                 <Col className="col-4 p-0">
-                  <Button variant="primary" id="cart-btn">
-                    Add to cart
-                  </Button>
+                  {added ? (
+                    <Button
+                      variant="primary"
+                      id="cart-btn-disabled"
+                      disabled 
+                    >
+                      Added!
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="primary"
+                      id="cart-btn"
+                      onClick={CartUpdate}
+                    >
+                      Add to cart
+                    </Button>
+                  )}
                 </Col>
               </Row>
             </Col>
@@ -225,7 +281,7 @@ function Product() {
           <Row>
             <Col>
               {data?.comments.length > 0 ? (
-                data?.comments.map((comm) => (
+                data?.comments.toReversed().map((comm) => (
                   <Row key={comm._id} className="comment-container">
                     <p className="comment-username">{comm.userName}</p>
                     <p className="comment-text">{comm.text}</p>

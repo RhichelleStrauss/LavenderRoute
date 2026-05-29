@@ -126,6 +126,17 @@ h4 {
   font-size: 135%;
 }
 
+#cart-btn-disabled {
+  width: 100%;
+  height: 100%;
+  border-color: var(--green);
+  border-width: 2px;
+  border-radius: 20px;
+  font-size: 135%;
+  background-color: var(--green);
+  color: var(--black);
+}
+
 #cart-btn:hover {
   background-color: var(--green);
   color: var(--black);
@@ -194,4 +205,12 @@ h4 {
 
 .css-1xc33vf-MuiRating-root {
   color: #c4ff4d !important;
+}
+
+#modal-item-name{
+  margin-bottom: 2 !important;
+}
+
+#modal-image{
+  max-width: 150px;
 }
