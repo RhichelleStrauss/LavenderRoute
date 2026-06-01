@@ -8,11 +8,12 @@ import SignUp from './pages/SignUp';
 import Login from './pages/Login';
 import Navbar from './components/navbar';
 import LetterGlitch from './components/LetterGlitch'; 
+import LiquidEther from './components/LiquidEther';
 import ReflectiveCard from './components/pokemonCard'; 
+import Footer from './components/Footer';
 import './App.css';
 
 const Home = () => {
-  
   const [teamPokemon, setTeamPokemon] = useState([]);
 
   useEffect(() => {
@@ -24,7 +25,7 @@ const Home = () => {
           setTeamPokemon(data.slice(0, 3)); 
         }
       } catch (error) {
-        console.error("The backend is shy today:", error);
+        console.error(error);
       }
     };
     getPokemon();
@@ -32,14 +33,21 @@ const Home = () => {
 
   return (
     <div className="home-fullscreen-container">
+      
       <div className="glitch-bg-wrapper">
-        <LetterGlitch
-          glitchColors={["#7C3AED", "#A855F7"]}
-          glitchSpeed={50}
-          centerVignette={false}
-          outerVignette={false}
-          smooth={true}
-        />
+        <div className="bg-layer bottom-layer">
+          <LiquidEther /> 
+        </div>
+
+        <div className="bg-layer top-layer">
+          <LetterGlitch
+            glitchColors={["#7C3AED", "#A855F7"]}
+            glitchSpeed={50}
+            centerVignette={false}
+            outerVignette={false}
+            smooth={true}
+          />
+        </div>
       </div>
       
       <Navbar />
@@ -47,7 +55,6 @@ const Home = () => {
       <main className="home-main-content">
         <div className="top-split">
           <div className="left-column">
-            
             <section className="misty-glass-panel">
               <h2 className="pixel-heading">About us</h2>
               <p className="body-text">
@@ -57,25 +64,10 @@ const Home = () => {
 
             <section className="misty-glass-panel featured-panel">
               <h2 className="pixel-heading">Featured products</h2>
-              
-              <div className="products-grid" style={{ 
-                display: 'grid', 
-                gridTemplateColumns: 'repeat(3, 1fr)', 
-                gap: '10px', 
-                marginTop: '20px',
-                width: '100%',
-                marginBottom: '-60px'
-              }}>
-                
+              <div className="products-grid">
                 {teamPokemon.length > 0 ? (
                   teamPokemon.map((poke) => (
-                    <div key={poke._id} style={{ 
-                      transform: 'scale(0.85)', 
-                      transformOrigin: 'top center', 
-                      width: '100%', 
-                      display: 'flex', 
-                      justifyContent: 'center' 
-                    }}>
+                    <div key={poke._id} className="card-wrapper">
                       <ReflectiveCard
                         pokemonName={poke.name}
                         level={poke.level}
@@ -88,15 +80,14 @@ const Home = () => {
                     </div>
                   ))
                 ) : (
-                  <p className="pixel-text" style={{ color: '#050505', gridColumn: 'span 3', textAlign: 'center' }}>
+                  <p className="pixel-text" style={{ color: '#050505', gridColumn: '1 / -1', textAlign: 'center' }}>
                     Scanning for lifeforms...
                   </p>
                 )}
-
               </div>
             </section>
-
           </div>
+
           <div className="right-column">
             <img 
               src={gengarSprite} 
@@ -104,6 +95,7 @@ const Home = () => {
               className="giant-sprite" 
             />
           </div>
+
         </div>
 
         <section className="misty-glass-panel bottom-panel">
@@ -116,7 +108,11 @@ const Home = () => {
             When a buyer purchases, the platform holds payment in escrow. The seller completes the in-game trade within the agreed window and provides proof of delivery. After the buyer confirms, funds are released.
           </p>
         </section>
+
       </main>
+
+      <Footer />
+
     </div>
   );
 };
