@@ -12,7 +12,7 @@ const Footer = () => {
         <div className="footer-section">
           <div className="footer-brand-header">
             <img src={gengarLogo} alt="LavendarRoute Logo" className="footer-logo" />
-            <h3 className="pixel-heading footer-title text-purple">LavendarRoute</h3>
+            <h3 className="pixel-heading footer-title text-purple">LavenderRoute</h3>
           </div>
           <p className="slogan-text">
             The premier darknet marketplace for buying, selling, and smuggling rare Pokémon. Encrypted trades, anonymous transactions, and zero traces.

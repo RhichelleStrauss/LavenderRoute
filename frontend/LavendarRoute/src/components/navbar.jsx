@@ -22,7 +22,7 @@ const Navbar = () => {
       <div className="nav-logo clickable-logo" onClick={() => { navigate('/'); closeMenu(); }}>
         <img src={gengarLogo} alt="LavendarRoute Logo" className="nav-icon" />
         <h1 className="nav-brand">
-          <span className="text-purple">LAVENDAR</span> <span className="text-lime">ROUTE</span>
+          <span className="text-purple">LAVENDER</span> <span className="text-lime">ROUTE</span>
         </h1>
       </div>
 
