@@ -1,5 +1,3 @@
-
-
 import PokemonAddForm from "../components/PokemonAddForm.jsx";
 
 import React, { useState, useEffect } from 'react'; // Added useEffect import
