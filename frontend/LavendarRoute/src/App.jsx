@@ -1,36 +1,60 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import gengarSprite from './assets/gengar-sprite.png';
 
 import Catalog from './pages/Catalog'; 
 import PokemonAdd from './pages/PokemonAdd';
 import SignUp from './pages/SignUp';
+import Login from './pages/Login';
 import Navbar from './components/navbar';
 import LetterGlitch from './components/LetterGlitch'; 
+import LiquidEther from './components/LiquidEther';
+import ReflectiveCard from './components/pokemonCard'; 
+import Footer from './components/Footer';
 import './App.css';
 
 const Home = () => {
+  const [teamPokemon, setTeamPokemon] = useState([]);
+
+  useEffect(() => {
+    const getPokemon = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/pokemon'); 
+        const data = await response.json();
+        if (data && data.length > 0) {
+          setTeamPokemon(data.slice(0, 3)); 
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getPokemon();
+  }, []);
+
   return (
     <div className="home-fullscreen-container">
       
       <div className="glitch-bg-wrapper">
-        <LetterGlitch
-          glitchColors={["#7C3AED", "#A855F7"]}
-          glitchSpeed={50}
-          centerVignette={false}
-          outerVignette={false}
-          smooth={true}
-        />
+        <div className="bg-layer bottom-layer">
+          <LiquidEther /> 
+        </div>
+
+        <div className="bg-layer top-layer">
+          <LetterGlitch
+            glitchColors={["#7C3AED", "#A855F7"]}
+            glitchSpeed={50}
+            centerVignette={false}
+            outerVignette={false}
+            smooth={true}
+          />
+        </div>
       </div>
       
-       <Navbar />
+      <Navbar />
 
       <main className="home-main-content">
-        
         <div className="top-split">
-          
           <div className="left-column">
-            
             <section className="misty-glass-panel">
               <h2 className="pixel-heading">About us</h2>
               <p className="body-text">
@@ -41,9 +65,27 @@ const Home = () => {
             <section className="misty-glass-panel featured-panel">
               <h2 className="pixel-heading">Featured products</h2>
               <div className="products-grid">
+                {teamPokemon.length > 0 ? (
+                  teamPokemon.map((poke) => (
+                    <div key={poke._id} className="card-wrapper">
+                      <ReflectiveCard
+                        pokemonName={poke.name}
+                        level={poke.level}
+                        type={poke.type}
+                        gender={poke.gender}
+                        height={poke.height}
+                        weight={poke.weight}
+                        imgUrl={poke.imagePokemon}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <p className="pixel-text" style={{ color: '#050505', gridColumn: '1 / -1', textAlign: 'center' }}>
+                    Scanning for lifeforms...
+                  </p>
+                )}
               </div>
             </section>
-
           </div>
 
           <div className="right-column">
@@ -68,20 +110,22 @@ const Home = () => {
         </section>
 
       </main>
+
+      <Footer />
+
     </div>
   );
 };
 
-
 function App() {
   return (
     <BrowserRouter>
-    
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/catalog" element={<Catalog />} />
         <Route path="/add-pokemon" element={<PokemonAdd />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </BrowserRouter>
   );
