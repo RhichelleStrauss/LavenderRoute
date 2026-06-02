@@ -23,7 +23,7 @@ const Home = () => {
         />
       </div>
       
-      
+       <Navbar />
 
       <main className="home-main-content">
         
@@ -76,7 +76,7 @@ const Home = () => {
 function App() {
   return (
     <BrowserRouter>
-    <Navbar />
+    
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/catalog" element={<Catalog />} />
