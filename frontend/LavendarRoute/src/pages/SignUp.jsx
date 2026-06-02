@@ -32,6 +32,7 @@ function SignUp() {
   const [dob, setDob] = useState('');
   const [password, setPassword] = useState('')
   const [authPattern, setAuthPattern] = useState('')
+  const [adminPasskey, setAdminPasskey] = useState('')
 
   const navigate = useNavigate()
   const [tokenPattern, setTokenPattern] = useState([]);
@@ -70,21 +71,30 @@ function SignUp() {
       return alert('Pattern must be at least 6 tokens');
     }
     const authPatternString = tokenPattern.join('-');
+
+    let rolesArray = [];
+    if (role === 'buyer') rolesArray = ['buyer'];
+    if (role === 'seller') rolesArray = ['seller'];
+    if (role === 'hybrid') rolesArray = ['buyer', 'seller'];
+    if (role === 'admin') rolesArray = ['admin'];
+
   try {
     const response = await axios.post('http://localhost:5000/api/auth/register', {
-      role,
+      roles: rolesArray,
       firstName,
       lastName,
       email,
       password,
       dob,
-      authPattern: authPatternString
+      authPattern: authPatternString,
+      adminPasskey: role === 'admin' ? adminPasskey : undefined
     });
 
       alert(response.data.message);
       navigate('/login');
 
     } catch (err) {
+      console.log("WHY IS IT BREAKINF", err);
       alert(err.response?.data?.message || "Registration failed");
     }
   }
@@ -106,6 +116,7 @@ const renderStepContent = (step) => {
               <option value="buyer">Buyer</option>
               <option value="seller">Seller</option>
               <option value="hybrid">Hybrid (Buyer & Seller)</option>
+              <option value="admin">Admin</option>
             </select>
           </div>
         );
@@ -146,6 +157,20 @@ const renderStepContent = (step) => {
 
       return (
           <>
+          {role === 'admin' && (
+              <div className="input-group" style={{ marginBottom: '15px' }}>
+                <label htmlFor="adminPasskey" style={{ color: '#BA8CFF' }}>Secret Admin Passkey</label>
+                <input 
+                  type="password" 
+                  id="adminPasskey" 
+                  placeholder="admin passkey" 
+                  value={adminPasskey} 
+                  onChange={(e) => setAdminPasskey(e.target.value)} 
+                  style={{ border: '1px solid #BA8CFF' }}
+                />
+              </div>
+            )}
+
             <div className="input-group">
               <label htmlFor="password">Password</label>
               <input type="password" id="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} />

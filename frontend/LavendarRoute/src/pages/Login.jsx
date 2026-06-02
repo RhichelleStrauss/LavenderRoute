@@ -14,6 +14,7 @@ function Login() {
  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [tokenPattern, setTokenPattern] = useState([]);
+  const [adminPasskey, setAdminPasskey] = useState('');
 
 
   const handleLogin = async (e) => {
@@ -26,7 +27,8 @@ function Login() {
     const response = await axios.post('http://localhost:5000/api/auth/login', {
       email,
       password,
-      authPattern: authPatternString
+      authPattern: authPatternString,
+      adminPasskey: needsAdminKey ? adminPasskey : undefined
     });
     localStorage.setItem('token', response.data.token);
     

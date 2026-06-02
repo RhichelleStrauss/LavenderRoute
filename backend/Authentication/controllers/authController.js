@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 
 exports.register = async (req, res) => {
     try {
-        const { firstName, lastName, email, password, authPattern, dob, role } = req.body;
+        const { firstName, lastName, email, password, authPattern, dob, roles, adminPasskey } = req.body;
 
         if (!firstName || !lastName || !email || !password || !authPattern) {
             return res.status(400).json({ message: 'Please fill in all fields' });
@@ -17,15 +17,20 @@ exports.register = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 12);
         const hashedAuthPattern = await bcrypt.hash(authPattern, 12);
+        let hashedAdminPasskey = undefined;
+        if (adminPasskey) {
+            hashedAdminPasskey = await bcrypt.hash(adminPasskey, 12);
+        }
 
         const user = await User.create({
             firstName,
             lastName,
             email,
             dob,
-            role: [role],
+            roles,
             password: hashedPassword,
-            authPattern: hashedAuthPattern
+            authPattern: hashedAuthPattern,
+            adminPasskey: hashedAdminPasskey
         });
 
         res.status(201).json({ message: 'Account created successfully!' });
@@ -37,7 +42,7 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
     try {
-        const { email, password, authPattern } = req.body;
+        const { email, password, authPattern, adminPasskey} = req.body;
 
         if (!email || !password || !authPattern) {
             return res.status(400).json({ message: 'Please provide email and password' });
@@ -61,15 +66,30 @@ exports.login = async (req, res) => {
 
         }
 
+        if (user.roles.includes('admin')) {
+            if (!adminPasskey) {
+                return res.status(202).json({ 
+                    message: 'welcome god, enter password to prove youre a god',
+                    requiresAdminPasskey: true
+                    });
+            }
+
+            const isPasskeyMatch = await bcrypt.compare(adminPasskey, user.adminPasskey);
+            if (!isPasskeyMatch) {
+                return res.status(401).json({ message: 'Invalid Admin Passkey' });
+            }
+        }
+
         const token = jwt.sign(
-            { id: user._id, firstName: user.firstName },
+            { id: user._id, firstName: user.firstName, roles: user.roles },
             process.env.JWT_SECRET_KEY,
             { expiresIn: '1d' }
         );
 
-        res.status(200).json({
-            token,
-            firstName: user.firstName,
+        res.status(200).json({ 
+            token, 
+            firstName: user.firstName, 
+            roles: user.roles 
         });
 
     } catch (err) {
