@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react"; // Added useEffect import
 import LiquidEther from "../components/LiquidEther.jsx";
 import ReflectiveCard from "../components/pokemonCard.jsx";
-import "../css/catalog.css";
+import SearchCapsule from "../components/SearchCapsule.jsx";
 import PokemonAddForm from "../components/PokemonAddForm.jsx";
-
+import filterIcon from "../assets/icons/FilterIconRectangle.png";
+import searchIcon from "../assets/icons/SortIcon.png";
+import magnify from "../assets/icons/MagnifyGlassIcon.png";
 import CrossIcon from "../assets/icons/CrossIcon.png";
+import "../css/catalog.css";
 
 export default function PokemonAdd() {
-
   const [teamPokemon, setTeamPokemon] = useState([
     {
       _id: "test123",
@@ -26,6 +28,14 @@ export default function PokemonAdd() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPokemon, setSelectedPokemon] = useState(null);
   // ᓚᘏᗢ
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedType, setSelectedType] = useState("");
+  const [selectedGender, setSelectedGender] = useState("");
+  const [selectedShiny, setSelectedShiny] = useState("");
+  // ᓚᘏᗢ Tracks if the sliding filter drawer is visible
+  const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
+  const [sortBy, setSortBy] = useState("");
 
   useEffect(() => {
     const getPokemon = async () => {
@@ -57,27 +67,27 @@ export default function PokemonAdd() {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(updatedData),
-        },
+        }
       );
 
       if (response.ok) {
         setTeamPokemon((prev) =>
-          prev.map((p) => (p._id === updatedData._id ? updatedData : p)),
+          prev.map((p) => (p._id === updatedData._id ? updatedData : p))
         );
         setIsModalOpen(false);
         setSelectedPokemon(null);
       }
     } catch (error) {
-      console.error("np updatey:", error);
+      console.error("np updated:", error);
     }
   };
   //put - updates
-  //map looks at data edited, looks through list - if matching what was uodated UI gets upated
+  //map looks at data edited, looks through list - if matching what was updated UI gets upated
   //ᓚᘏᗢ
 
-  //handle delte post ᓚᘏᗢ
+  //handle delete post ᓚᘏᗢ
   const handleDeletePokemon = async (id) => {
-    if (!window.confirm("suresies you want to delete this cutie pokeman"))
+    if (!window.confirm("serious you want to delete this cutie pokemon"))
       return;
 
     try {
@@ -94,20 +104,37 @@ export default function PokemonAdd() {
       console.error("no delete:", error);
     }
   };
-  //filter removes deleted pokemon, make new list wihgout the poor thing
+  //filter removes deleted pokemon, make new list without the poor thing
+
+  const filteredPokemon = [...teamPokemon]
+    .sort((a, b) => {
+      if (sortBy === "level-asc") return a.level - b.level;
+      if (sortBy === "level-desc") return b.level - a.level;
+      if (sortBy === "name-asc") return a.name.localeCompare(b.name);
+      if (sortBy === "name-desc") return b.name.localeCompare(a.name);
+      return 0;
+    })
+    .filter((poke) => {
+      const matchesSearch = poke.name
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+
+      const matchesType =
+        selectedType === "" || (poke.type && poke.type.includes(selectedType));
+
+      const matchesGender =
+        selectedGender === "" || poke.gender === selectedGender;
+
+      const matchesShiny =
+        selectedShiny === "" ||
+        (selectedShiny === "Shiny" ? poke.shiny === true : poke.shiny === false);
+
+      return matchesSearch && matchesType && matchesGender && matchesShiny;
+    });
 
   return (
     <>
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100vw",
-          height: "100vh",
-          zIndex: -1,
-        }}
-      >
+      <div className="background-ether-wrapper">
         <LiquidEther
           mouseForce={20}
           cursorSize={100}
@@ -122,11 +149,28 @@ export default function PokemonAdd() {
         />
       </div>
 
+      <SearchCapsule
+        filterIcon={filterIcon}
+        searchIcon={searchIcon}
+        magnify={magnify}
+        isFilterDrawerOpen={isFilterDrawerOpen}
+        setIsFilterDrawerOpen={setIsFilterDrawerOpen}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        selectedType={selectedType}
+        setSelectedType={setSelectedType}
+        selectedGender={selectedGender}
+        setSelectedGender={setSelectedGender}
+        selectedShiny={selectedShiny}
+        setSelectedShiny={setSelectedShiny}
+      />
+
       <div className="catalog-grid">
-        {teamPokemon.length > 0 ? (
-          teamPokemon.map((poke) => (
+        {filteredPokemon.length > 0 ? (
+          filteredPokemon.map((poke) => (
             <ReflectiveCard
-              id={poke._id}
               key={poke._id}
               pokemonName={poke.name}
               level={poke.level}
@@ -135,6 +179,7 @@ export default function PokemonAdd() {
               height={poke.height}
               weight={poke.weight}
               imgUrl={poke.imagePokemon}
+              shiny={poke.shiny}
               //edit button - onclick handle function
               onEdit={() => handleEditClick(poke)}
             />
@@ -145,6 +190,7 @@ export default function PokemonAdd() {
           </p>
         )}
       </div>
+
       {isModalOpen && (
         <div
           style={{
