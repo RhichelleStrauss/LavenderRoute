@@ -1,28 +1,9 @@
-.catalog-container {
-  width: 100%;
-  max-width: 1100px; /* This keeps the grid from getting too wide */
-  margin: 0 auto; /* Centers the entire container */
-  padding: 40px 20px;
-}
-
-.catalog-title {
-  font-family: "vt323", monospace;
-  color: #c4ff4d;
-  font-size: 48px;
-  margin-bottom: 30px;
-  text-align: center;
-}
-
 .catalog-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  column-gap: 0px;
-  row-gap: 60px;
-  width: 100%;
-  padding: clamp(0px, 10vw, 200px);
-}
-
-.search-capsule-container {
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: 24px;
+  padding: 24px;
+  justify-items: center;
   max-width: 1200px;
   margin: 40px auto auto auto;
   padding: 0 20px;
@@ -167,4 +148,17 @@
   background-color: #1a1024;
   font-family: "Courier New", monospace;
   padding: 12px;
+
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.background-ether-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
 }
