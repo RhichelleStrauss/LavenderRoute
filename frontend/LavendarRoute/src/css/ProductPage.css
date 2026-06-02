@@ -1,9 +1,15 @@
+@import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
+
 :root {
   --grey: #4d4d4d;
   --black: #1a1a1a;
   --purple: #ba8cff;
   --dark-purple: #2a1a3a;
   --green: #c4ff4d;
+}
+
+.font-vt{
+   font-family: "VT323", monospace;
 }
 
 .text-grey {
@@ -34,21 +40,47 @@
   text-align: right;
 }
 
-#root {
-  border-inline: none;
-  /* padding: 0px 100px 0px 100px; */
-  width: 100vw;
+.text-20{
+      padding: 0;
+    font-size: clamp(18px, 2vw, 20px) !important;
 }
+
+.text-24{
+    padding: 0;
+    font-size: clamp(18px, 2vw, 24px) !important;
+}
+
+.text-28{
+    padding: 0;
+    font-size: clamp(18px, 2vw, 28px) !important;
+}
+
+.text-32{
+    padding: 0;
+    font-size: clamp(18px, 2vw, 32px) !important;
+}
+
+.text-36{
+    padding: 0;
+    font-size: clamp(18px, 2vw, 36px) !important;
+}
+
+.text-38{
+    padding: 0;
+    font-size: clamp(18px, 2vw, 38px) !important;
+}
+
+.text-42{
+    padding: 0;
+    font-size: clamp(24px, 2vw, 42px) !important;
+}
+
 
 body {
   background-color: rgb(33, 37, 41) !important;
 }
 
-p,
-h1,
-h2,
-h3,
-h4 {
+p{
   margin: 0 !important;
 }
 
@@ -67,8 +99,9 @@ h4 {
 }
 
 .pokemon-image {
-  height: 90% !important;
-  width: auto !important;
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
 #pokemon-details {
@@ -112,10 +145,6 @@ h4 {
     padding: 2%;
 }
 
-#price-num {
-  font-size: 175%;
-}
-
 #cart-btn {
   width: 100%;
   height: 100%;
@@ -124,7 +153,6 @@ h4 {
   border-width: 2px;
   border-radius: 20px;
   color: var(--green);
-  font-size: 135%;
 }
 
 #cart-btn-disabled {
@@ -133,7 +161,6 @@ h4 {
   border-color: var(--green);
   border-width: 2px;
   border-radius: 20px;
-  font-size: 135%;
   background-color: var(--green);
   color: var(--black);
 }
@@ -159,7 +186,6 @@ h4 {
   border-width: 2px;
   border-radius: 16px;
   color: var(--purple);
-  font-size: 135%;
 }
 
 #comment-btn:hover {
@@ -190,13 +216,11 @@ h4 {
 
 .comment-username {
   font-weight: 700;
-  font-size: 120%;
   margin-top: 1% !important;
   margin-bottom: 1% !important;
 }
 
 .comment-text {
-  font-size: 100%;
   margin-bottom: 1% !important;
 }
 

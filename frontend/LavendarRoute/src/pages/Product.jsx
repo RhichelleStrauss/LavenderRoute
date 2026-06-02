@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 
-function Product({ _setCartContent }) {
+function Product() {
   const navigate = useNavigate();
 
   const { id } = useParams(); //id of Pokemon to display.
@@ -33,6 +33,23 @@ function Product({ _setCartContent }) {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
+
+  const AddToCart = (_pokemon) => {
+    let cartArray = JSON.parse(localStorage.getItem("Cart") || []);
+    cartArray.push(_pokemon);
+    localStorage.setItem("Cart", JSON.stringify(cartArray));
+    console.log(localStorage.getItem("Cart"));
+  };
+
+  const CheckCart = (_pokemonId) => {
+    if (!added) {
+      let cartArray = JSON.parse(localStorage.getItem("Cart"));
+      console.log(typeof cartArray);
+      console.log(cartArray);
+      let pokemonMatch = cartArray.some((pokemon) => pokemon._id == _pokemonId);
+      if (pokemonMatch) setAdded(true);
+    }
+  };
 
   //Fetched the selected Pokemon's details.
   useEffect(() => {
@@ -95,6 +112,9 @@ function Product({ _setCartContent }) {
     return <h1>Loading...</h1>;
   } else {
     console.log(data.comments);
+
+    CheckCart(data._id);
+
     return (
       <>
         <Navbar />
@@ -107,8 +127,8 @@ function Product({ _setCartContent }) {
 
         <Container id="product-content" className="text-white pt-5">
           <Row>
-            <Col id="poke-card" className="col-5 d-grid row-gap-2">
-              <Row className="d-flex justify-content-center">
+            <Col id="poke-card" className="col-4 d-grid row-gap-2">
+              <Row className="d-flex justify-content-center align-items-center">
                 <img className="pokemon-image" src={data?.imagePokemon}></img>
               </Row>
             </Col>
@@ -117,14 +137,14 @@ function Product({ _setCartContent }) {
               <Row id="pokemon-details" className="text-left">
                 <Col className="d-grid row-gap-2">
                   <Row className="text-green">
-                    <Col>
-                      <h3>{data?.name}</h3>
+                    <Col className="col-8">
+                      <p className="font-vt text-36">{data?.name}</p>
                     </Col>
                     <Col className="d-flex justify-content-end">
                       <StarRating></StarRating>
                     </Col>
                   </Row>
-                  <Row>
+                  <Row className="font-vt text-20">
                     <p>Sold by: PokeCatcher69</p>
                   </Row>
                   <Row>
@@ -134,41 +154,41 @@ function Product({ _setCartContent }) {
               </Row>
 
               <Row id="pokemon-info" className="text-left">
-                <Col className="d-grid row-gap-2">
+                <Col className="d-grid row-gap-2 text-20">
                   <Row>
-                    <h4>
+                    <p>
                       <span className="text-purple">Shiny: </span>
                       {String(data?.shiny)}
-                    </h4>
+                    </p>
                   </Row>
                   <Row>
-                    <h4>
+                    <p>
                       <span className="text-purple">Level: </span>
                       {data?.level}
-                    </h4>
+                    </p>
                   </Row>
                   <Row>
-                    <h4>
+                    <p>
                       <span className="text-purple">Gender: </span>
                       {data?.gender}
-                    </h4>
+                    </p>
                   </Row>
                 </Col>
-                <Col className="d-grid row-gap-2">
+                <Col className="d-grid row-gap-2 text-20">
                   <Row>
-                    <h4>
+                    <p>
                       <span className="text-purple">Weight: </span>
                       {data?.weight}kg
-                    </h4>
+                    </p>
                   </Row>
                   <Row>
-                    <h4>
+                    <p>
                       <span className="text-purple">Height: </span>
                       {data?.height}cm
-                    </h4>
+                    </p>
                   </Row>
                   <Row>
-                    <h4 className="text-purple d-flex flex-row">
+                    <p className="text-purple d-flex flex-row">
                       <span className="me-1">Type(s):</span>
                       <span className="text-white">
                         {data?.type.map((type, index) => (
@@ -178,39 +198,46 @@ function Product({ _setCartContent }) {
                           </span>
                         ))}
                       </span>
-                    </h4>
+                    </p>
                   </Row>
                 </Col>
               </Row>
 
               <Row className="d-flex flex-row justify-content-between">
-                <Col className="col-5">
-                  <Row id="pokemon-price">
+                <Col className="col-6">
+                  <Row id="pokemon-price" className="font-vt text-42">
                     <Col
                       id="price-tag"
                       className="col-3 d-flex flex-row justify-content-center align-items-center"
                     >
-                      <h2>₽</h2>
+                      <p>₽</p>
                     </Col>
                     <Col
                       id="price"
                       className="d-flex flex-row justify-content-center align-items-center"
                     >
-                      <h2 id="price-num">{formatter.format(data?.price)}</h2>
+                      <p id="price-num">{formatter.format(data?.price)}</p>
                     </Col>
                   </Row>
                 </Col>
-                <Col className="col-4 p-0">
+                <Col className="col-4 p-0 font-vt">
                   {added ? (
-                    <Button variant="primary" id="cart-btn-disabled" disabled>
+                    <Button
+                      className="text-32"
+                      variant="primary"
+                      id="cart-btn-disabled"
+                      disabled
+                    >
                       Added!
                     </Button>
                   ) : (
                     <Button
+                      className="text-32"
                       variant="primary"
                       id="cart-btn"
                       onClick={() => {
                         setShowModal(true);
+                        AddToCart(data);
                         setAdded(true);
                       }}
                     >
@@ -224,8 +251,8 @@ function Product({ _setCartContent }) {
 
           <Row className="text-left pt-5">
             <Col>
-              <Row className="text-green">
-                <h2>Reviews</h2>
+              <Row className="text-green font-vt">
+                <p>Reviews</p>
               </Row>
               <Row className="mt-3">
                 <Col
@@ -259,7 +286,7 @@ function Product({ _setCartContent }) {
               {data?.comments.length > 0 ? (
                 data?.comments.toReversed().map((comm) => (
                   <Row key={comm._id} className="comment-container">
-                    <p className="comment-username">{comm.userName}</p>
+                    <p className="comment-username font-vt">{comm.userName}</p>
                     <p className="comment-text">{comm.text}</p>
                   </Row>
                 ))
