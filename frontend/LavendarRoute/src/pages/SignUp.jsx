@@ -1,27 +1,50 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import gengarLogo from '../assets/gengar-logo.png' 
+import axios from 'axios';
 
-import '../css/SignUp.css' 
+import gengarLogo from '../assets/gengar-logo.png'
 
-import LetterGlitch from '../components/LetterGlitch' 
+import '../css/SignUp.css'
+import PokePattern from '../components/PokePattern';
+import LetterGlitch from '../components/LetterGlitch'
 
 function SignUp() {
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [specialCode, setSpecialCode] = useState('')
+  const [authPattern, setAuthPattern] = useState('')
 
   const navigate = useNavigate()
+  const [tokenPattern, setTokenPattern] = useState([]);
 
-  const handleSignUp = (e) => {
-    e.preventDefault()
-    navigate('/') 
+  const handleSignUp = async (e) => {
+  e.preventDefault();
+  if (tokenPattern.length < 6) {
+      return alert('Pattern must be at least 6 tokens');
+    }
+    const authPatternString = tokenPattern.join('-');
+  try {
+    const response = await axios.post('http://localhost:5000/api/auth/register', {
+      firstName,
+      lastName,
+      email,
+      password,
+      authPattern: authPatternString
+    });
+
+      alert(response.data.message);
+      navigate('/login');
+
+    } catch (err) {
+      alert(err.response?.data?.message || "Registration failed");
+    }
   }
 
-  return (
+
+
+return (
     <div className="signup-outer-wrapper" style={{ 
       display: 'flex', 
       justifyContent: 'center', 
@@ -98,10 +121,7 @@ function SignUp() {
                 <input type="password" id="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} />
               </div>
 
-              <div className="input-group">
-                <label htmlFor="specialCode">Insert your own special code (Nells auth)</label>
-                <input type="text" id="specialCode" placeholder="Enter Nells auth code" value={specialCode} onChange={(e) => setSpecialCode(e.target.value)} />
-              </div>
+              <PokePattern pattern={tokenPattern} setPattern={setTokenPattern} />
 
               <button type="submit" className="submit-btn">Sign Up</button>
               

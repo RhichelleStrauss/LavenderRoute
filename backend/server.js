@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
 
-
+const authRoutes = require('./Authentication/routes/authRoutes');
 const pokemonRoutes = require("./routes/pokemon"); 
 const verifyToken = require('./Authentication/middleware/verifyToken');
 
@@ -19,6 +19,7 @@ app.get("/", (req, res) => {
 
 
 app.use("/api/pokemon", pokemonRoutes);
+app.use('/api/auth', authRoutes);
 
 
 mongoose.connect(process.env.MONGO_URI)
