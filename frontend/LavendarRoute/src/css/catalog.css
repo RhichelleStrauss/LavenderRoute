@@ -19,13 +19,17 @@
   column-gap: 0px;
   row-gap: 60px;
   width: 100%;
-  padding: clamp(0px, 10vw, 200px);
+  padding: 10px clamp(20px, 5vw, 100px) 150px clamp(20px, 5vw, 100px);
+  position: relative;
+  z-index: 10; 
 }
 
 .search-capsule-container {
   max-width: 1200px;
-  margin: 40px auto 20px auto;
+  margin: 130px auto 20px auto; 
   padding: 0 20px;
+  position: relative; 
+  z-index: 10; 
 }
 
 .search-pill-bar {
@@ -38,7 +42,7 @@
   padding: 8px 24px;
   backdrop-filter: blur(8px);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  margin-top: 80px;
+  margin-top: 0; 
 }
 
 .filter-toggle-btn {

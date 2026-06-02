@@ -2,9 +2,13 @@ import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import gengarLogo from '../assets/gengar-logo.png'; 
 import AddIcon from '../assets/icons/AddIcon.png';
+import profileIcon from '../assets/icons/ProfileIcon.png';
+import cartIcon from '../assets/icons/CartIcon.png';
+import settingsIcon from '../assets/icons/SettingsIcon.png';
+import heartIcon from '../assets/icons/HeartNotFilledIcon.png';
 import '../css/Navbar.css';
 
-const Navbar = () => {
+const Navbar = ({ userRole }) => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -57,26 +61,39 @@ const Navbar = () => {
             onClick={() => { navigate('/add-pokemon'); closeMenu(); }} 
           />
 
-          <svg className="action-icon text-lime" title="Shadow Network Alerts" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="9" cy="21" r="1"></circle>
-            <circle cx="20" cy="21" r="1"></circle>
-            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-          </svg>
+          <img 
+            src={heartIcon} 
+            alt="Wishlist" 
+            title="Wishlist"
+            className="action-icon action-icon-png"
+            onClick={() => { navigate('/wishlist'); closeMenu(); }}
+          />
+
+          <img 
+            src={cartIcon} 
+            alt="Cart" 
+            title="Cart"
+            className="action-icon action-icon-png" 
+          />
           
-          <svg 
-            onClick={() => { navigate('/signup'); closeMenu(); }}
-            className="action-icon text-lime" 
+          <img 
+            src={profileIcon} 
+            alt="Profile" 
             title="Trainer Login / Encrypted Access"
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="2.5" 
-            strokeLinecap="round" 
-            strokeLinejoin="round"
-          >
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
-          </svg>
+            className="action-icon action-icon-png"
+            onClick={() => { navigate('/signup'); closeMenu(); }}
+          />
+
+          {(userRole === 'admin' || userRole === 'seller') && (
+            <img 
+              src={settingsIcon} 
+              alt="Dashboard Settings" 
+              title="Trainer Dashboard"
+              className="action-icon action-icon-png"
+              onClick={() => { navigate('/dashboard'); closeMenu(); }}
+            />
+          )}
+          
         </div>
 
       </div>

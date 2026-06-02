@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"; // Added useEffect import
+import React, { useState, useEffect } from "react";
 import LiquidEther from "../components/LiquidEther.jsx";
 import ReflectiveCard from "../components/pokemonCard.jsx";
 import SearchCapsule from "../components/SearchCapsule.jsx";
@@ -8,6 +8,7 @@ import searchIcon from "../assets/icons/SortIcon.png";
 import magnify from "../assets/icons/MagnifyGlassIcon.png";
 import CrossIcon from "../assets/icons/CrossIcon.png";
 import "../css/catalog.css";
+import Navbar from "../components/navbar.jsx";
 
 export default function PokemonAdd() {
   const [teamPokemon, setTeamPokemon] = useState([
@@ -133,7 +134,10 @@ export default function PokemonAdd() {
     });
 
   return (
-    <>
+    <div style={{ position: 'relative', minHeight: '100vh', width: '100vw', overflowX: 'hidden' }}>
+
+      <Navbar />
+
       <div className="background-ether-wrapper">
         <LiquidEther
           mouseForce={20}
@@ -242,6 +246,6 @@ export default function PokemonAdd() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }

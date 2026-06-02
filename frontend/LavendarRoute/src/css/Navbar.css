@@ -6,16 +6,18 @@
   box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
   border-radius: 15px;
   
-  position: fixed; 
+  position: absolute; 
   top: 25px;
   left: 20px;
   right: 20px; 
   max-width: 1780px;
   margin: 0 auto;
   box-sizing: border-box;
-  z-index: 999; 
   
-  display: flex;
+  z-index: 100; 
+  
+  display: flex !important;
+  flex-direction: row !important;
   justify-content: space-between;
   align-items: center;
   padding: 15px 40px;
