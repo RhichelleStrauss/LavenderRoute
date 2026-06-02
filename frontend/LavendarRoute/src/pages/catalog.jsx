@@ -10,6 +10,13 @@ import CrossIcon from "../assets/icons/CrossIcon.png";
 import "../css/catalog.css";
 
 export default function PokemonAdd() {
+import "../css/catalog.css";
+import PokemonAddForm from "../components/PokemonAddForm.jsx";
+
+import CrossIcon from "../assets/icons/CrossIcon.png";
+
+export default function PokemonAdd() {
+
   const [teamPokemon, setTeamPokemon] = useState([
     {
       _id: "test123",

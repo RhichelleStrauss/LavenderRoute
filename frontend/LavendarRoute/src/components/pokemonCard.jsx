@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import "../css/reflectiveCard.css";
 
+import { useNavigate } from "react-router-dom";
+
+
 const ReflectiveCard = ({
   pokemonName,
+  id,
   level,
   type = [],
   gender,
@@ -54,8 +58,17 @@ const ReflectiveCard = ({
         willChange: 'transform'
       }}
     >
+  const navigate = useNavigate();
+
+  return (
+
+   
+    <div className="reflective-card-container"
+    onClick={() => navigate(`/pokemon/${id}`)}
+    style={{ cursor: 'pointer' }}>
 
       <div className="holo-shimmer-layer" />
+
 
       <div className="card-glass-background" />
 
