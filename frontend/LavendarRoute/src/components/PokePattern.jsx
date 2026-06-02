@@ -10,6 +10,19 @@ import ZoroarkToken from '../assets/tokens/ZoroarkToken.png'
 
 import BinIcon from '../assets/icons/BinIcon.png';
 
+//braindump - rhi
+//on sign up there will be 2-3 'steps', select type of user then name, surname, date of birth (verifying over 18), 
+// if thats good then next step, set password and patterns
+// admins have their own secret "pin" based on their fav pokemon, try to get each admin to have their own?
+//want - having users to setup their account with "avatar" - token with pokemon
+//username displayed will be sliced first name - only first letter displays 
+//buyers-can view, review, add to cart, add comments and wishlsit
+//sellers - view, comment, post, view listings 
+//admin - view everything, delete posts, approve posts, delete comments, users
+//review system- if seller has submitted 3 successful posts according to rules, future posts dont need admin approval
+//vice versa, 3 bad posts - restricted account??
+//hybrid-seller+buyer
+
 export default function PokePattern({ pattern, setPattern }) {
   const availableTokens = ['zoroark', 'squirtle', 'ogerpon', 'rayquaza', 'sableye', 'zekrom'];
 

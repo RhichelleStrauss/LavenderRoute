@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 
 exports.register = async (req, res) => {
     try {
-        const { firstName, lastName, email, password, authPattern } = req.body;
+        const { firstName, lastName, email, password, authPattern, dob, role } = req.body;
 
         if (!firstName || !lastName || !email || !password || !authPattern) {
             return res.status(400).json({ message: 'Please fill in all fields' });
@@ -22,6 +22,8 @@ exports.register = async (req, res) => {
             firstName,
             lastName,
             email,
+            dob,
+            role: [role],
             password: hashedPassword,
             authPattern: hashedAuthPattern
         });

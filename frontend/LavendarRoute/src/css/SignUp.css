@@ -201,7 +201,7 @@ input::placeholder {
   margin: 10px auto 0 auto;
   display: block;
   padding: 12px;
-  background-color: #92d050;
+  background-color: #C4FF4D;
   color: #1a1a1a;
   border: none;
   border-radius: 8px;
@@ -212,6 +212,27 @@ input::placeholder {
 
 .submit-btn:hover {
   box-shadow: 0 0 15px rgba(163, 230, 53, 0.4);
+  transform: translateY(-1px);
+}
+
+.back-btn{
+  font-family: 'VT323', monospace;
+  font-size: 1.5rem;
+  width: 60%;
+  margin: 10px auto 0 auto;
+  display: block;
+  padding: 12px;
+  background-color: #4D4D4D;
+  color: #1a1a1a;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+}
+
+.back-btn:hover{
+box-shadow: 0 0 15px rgba(186, 140, 255, 0.4);
   transform: translateY(-1px);
 }
 

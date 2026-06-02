@@ -51,7 +51,7 @@
   -webkit-backdrop-filter: blur(3px);
   box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
  display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   overflow-x: auto;
   align-items: center;
   padding: 12px;
@@ -104,6 +104,6 @@ bin-icon-mask {
 }
 
 .selected-token-wrapper:hover .bin-icon-mask {
-  opacity: 1;
+  opacity: 1; 
 }
 

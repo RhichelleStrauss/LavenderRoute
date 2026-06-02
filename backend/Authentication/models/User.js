@@ -22,7 +22,17 @@ const UserSchema = new mongoose.Schema({
     authPattern: {
         type: String,
         required: true
-    }
+    },
+    role: {
+        type: String, 
+        required: true,
+        enum: ['buyer', 'seller', 'admin'],
+        default: ['buyer']
+    },
+    dob: {
+    type: String,
+    required: true
+  },
 },
 { timestamps: true }
 );
