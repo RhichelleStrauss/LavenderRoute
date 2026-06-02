@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from "react"; // Added useEffect import
-import LiquidEther from "../components/LiquidEther.jsx";
-import ReflectiveCard from "../components/pokemonCard.jsx";
-import SearchCapsule from "../components/SearchCapsule.jsx";
 import PokemonAddForm from "../components/PokemonAddForm.jsx";
+
+import React, { useState, useEffect } from 'react'; // Added useEffect import
+import LiquidEther from '../components/LiquidEther.jsx'
+import ReflectiveCard from '../components/pokemonCard.jsx';
+import '../css/catalog.css'
+
+import Navbar from '../components/navbar.jsx';
+
 import filterIcon from "../assets/icons/FilterIconRectangle.png";
-import searchIcon from "../assets/icons/SortIcon.png";
-import magnify from "../assets/icons/MagnifyGlassIcon.png";
 import CrossIcon from "../assets/icons/CrossIcon.png";
-import "../css/catalog.css";
-import Navbar from "../components/navbar.jsx";
+
 
 export default function PokemonAdd() {
   const [teamPokemon, setTeamPokemon] = useState([
@@ -36,7 +37,6 @@ export default function PokemonAdd() {
   const [selectedShiny, setSelectedShiny] = useState("");
 
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
-  const [sortBy, setSortBy] = useState("");
 
   useEffect(() => {
     const getPokemon = async () => {
@@ -52,83 +52,37 @@ export default function PokemonAdd() {
   }, []);
 
 
-  //put request handling ᓚᘏᗢ
-  const handleUpdatePokemon = async (updatedData) => {
-    try {
-      const response = await fetch(
-        `http://localhost:5000/api/pokemon/${updatedData._id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(updatedData),
-        }
-      );
 
-      if (response.ok) {
-        setTeamPokemon((prev) =>
-          prev.map((p) => (p._id === updatedData._id ? updatedData : p))
-        );
-        setIsModalOpen(false);
-        setSelectedPokemon(null);
-      }
-    } catch (error) {
-      console.error("np updated:", error);
-    }
-  };
-  //put - updates
-  //map looks at data edited, looks through list - if matching what was updated UI gets upated
-  //ᓚᘏᗢ
+  const filteredPokemon = teamPokemon.filter((poke) => {
+    const matchesSearch = poke.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
 
-  //handle delete post ᓚᘏᗢ
-  const handleDeletePokemon = async (id) => {
-    if (!window.confirm("serious you want to delete this cutie pokemon"))
-      return;
+    const matchesType =
+      selectedType === "" || (poke.type && poke.type.includes(selectedType));
 
-    try {
-      const response = await fetch(`http://localhost:5000/api/pokemon/${id}`, {
-        method: "DELETE",
-      });
+    const matchesGender =
+      selectedGender === "" || poke.gender === selectedGender;
 
-      if (response.ok) {
-        setTeamPokemon((prev) => prev.filter((p) => p._id !== id));
-        setIsModalOpen(false);
-        setSelectedPokemon(null);
-      }
-    } catch (error) {
-      console.error("no delete:", error);
-    }
-  };
-  //filter removes deleted pokemon, make new list without the poor thing
+    const matchesShiny =
+      selectedShiny === "" ||
+      (selectedShiny === "Shiny" ? poke.shiny === true : poke.shiny === false);
 
-  const filteredPokemon = [...teamPokemon]
-    .sort((a, b) => {
-      if (sortBy === "level-asc") return a.level - b.level;
-      if (sortBy === "level-desc") return b.level - a.level;
-      if (sortBy === "name-asc") return a.name.localeCompare(b.name);
-      if (sortBy === "name-desc") return b.name.localeCompare(a.name);
-      return 0;
-    })
-    .filter((poke) => {
-      const matchesSearch = poke.name
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
-
-      const matchesType =
-        selectedType === "" || (poke.type && poke.type.includes(selectedType));
-
-      const matchesGender =
-        selectedGender === "" || poke.gender === selectedGender;
-
-      const matchesShiny =
-        selectedShiny === "" ||
-        (selectedShiny === "Shiny" ? poke.shiny === true : poke.shiny === false);
-
-      return matchesSearch && matchesType && matchesGender && matchesShiny;
-    });
+    return matchesSearch && matchesType && matchesGender && matchesShiny;
+  });
 
   return (
     <>
-      <div className="background-ether-wrapper">
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          zIndex: -1,
+        }}
+      >
         <LiquidEther
           mouseForce={20}
           cursorSize={100}
@@ -256,7 +210,6 @@ export default function PokemonAdd() {
               height={poke.height}
               weight={poke.weight}
               imgUrl={poke.imagePokemon}
-              shiny={poke.shiny}
               //edit button - onclick handle function
               onEdit={() => handleEditClick(poke)}
             />
@@ -267,7 +220,6 @@ export default function PokemonAdd() {
           </p>
         )}
       </div>
-
       {isModalOpen && (
         <div
           style={{
