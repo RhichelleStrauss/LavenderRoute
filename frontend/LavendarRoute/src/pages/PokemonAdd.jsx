@@ -34,9 +34,7 @@ export default function PokemonAdd() {
   />
   </div>
 
-      <Navbar />
-
-  <Container style={{ position: 'relative', zIndex: 1, paddingTop: '100px', paddingBottom: '60px' }}>
+  <Container style={{ position: 'relative', zIndex: 1, paddingTop: '60px', paddingBottom: '60px' }}>
      
 
         <PokemonAddForm />

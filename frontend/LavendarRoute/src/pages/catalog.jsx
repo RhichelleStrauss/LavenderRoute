@@ -34,7 +34,7 @@ export default function PokemonAdd() {
   const [selectedType, setSelectedType] = useState("");
   const [selectedGender, setSelectedGender] = useState("");
   const [selectedShiny, setSelectedShiny] = useState("");
-
+  // ᓚᘏᗢ Tracks if the sliding filter drawer is visible
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
   const [sortBy, setSortBy] = useState("");
 
@@ -51,6 +51,13 @@ export default function PokemonAdd() {
     getPokemon();
   }, []);
 
+  // opening modal with the correct data from card/backedn
+  //opens when card is clicked - modalopeem true
+  const handleEditClick = (pokemon) => {
+    setSelectedPokemon(pokemon);
+    setIsModalOpen(true);
+  };
+  // ᓚᘏᗢ
 
   //put request handling ᓚᘏᗢ
   const handleUpdatePokemon = async (updatedData) => {
