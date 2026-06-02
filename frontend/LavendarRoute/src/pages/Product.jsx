@@ -3,6 +3,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import LiquidEther from "../components/LiquidEther.jsx";
 import StarRating from "../components/StarRating.jsx";
+import Navbar from "../components/navbar.jsx";
+import CartAddModal from "../components/CartAddModal.jsx";
 
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -12,14 +14,10 @@ import TextField from "@mui/material/TextField";
 import Modal from "react-bootstrap/Modal";
 
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 
-const displayModal = () => {
-  setShow(true);
-};
-
-function Product({_setCartContent}) {
+function Product({ _setCartContent }) {
   const navigate = useNavigate();
 
   const { id } = useParams(); //id of Pokemon to display.
@@ -27,23 +25,14 @@ function Product({_setCartContent}) {
   const [loading, setLoading] = useState(true); //variable controls when to display the finished loaded page.
   const [comment, setComment] = useState(null); //saves the current typed comment.
 
-  const [show, setShow] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [added, setAdded] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
   const formatter = new Intl.NumberFormat("en-US", {
     //formats the price into an accounting format.
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
-
-  const CartUpdate = () =>{
-    handleShow();
-    setAdded(true);
-    _setCartContent(prevItems => [...prevItems, {data}]);
-  }
 
   //Fetched the selected Pokemon's details.
   useEffect(() => {
@@ -108,25 +97,13 @@ function Product({_setCartContent}) {
     console.log(data.comments);
     return (
       <>
-        <Modal show={show} onHide={handleClose}>
-          <Modal.Header closeButton>
-            <Modal.Title>Pokémon added to cart</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <div className="d-flex flex-row">
-              <div>
-                <img id="modal-image" src={data?.imagePokemon}></img>
-              </div>
-              <div>
-                <h1 id="modal-item-name">{data?.name}</h1>
-                <p>Level: {data?.level}</p>
-                <p>Shiny: {String(data?.shiny)}</p>
-              </div>
-            </div>
+        <Navbar />
 
-            <Button onClick={() => navigate('/cart')}>View Cart</Button>
-          </Modal.Body>
-        </Modal>
+        <CartAddModal
+          show={showModal}
+          handleClose={() => setShowModal(false)}
+          _data={data}
+        />
 
         <Container id="product-content" className="text-white pt-5">
           <Row>
@@ -225,18 +202,17 @@ function Product({_setCartContent}) {
                 </Col>
                 <Col className="col-4 p-0">
                   {added ? (
-                    <Button
-                      variant="primary"
-                      id="cart-btn-disabled"
-                      disabled 
-                    >
+                    <Button variant="primary" id="cart-btn-disabled" disabled>
                       Added!
                     </Button>
                   ) : (
                     <Button
                       variant="primary"
                       id="cart-btn"
-                      onClick={CartUpdate}
+                      onClick={() => {
+                        setShowModal(true);
+                        setAdded(true);
+                      }}
                     >
                       Add to cart
                     </Button>

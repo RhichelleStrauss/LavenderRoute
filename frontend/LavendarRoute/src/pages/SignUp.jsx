@@ -1,120 +1,172 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import gengarLogo from '../assets/gengar-logo.png' 
+import axios from "axios";
 
-import '../css/SignUp.css' 
+import gengarLogo from "../assets/gengar-logo.png";
 
-import LetterGlitch from '../components/LetterGlitch' 
+import "../css/SignUp.css";
+import PokePattern from "../components/PokePattern";
+import LetterGlitch from "../components/LetterGlitch";
 
 function SignUp() {
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [specialCode, setSpecialCode] = useState('')
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [authPattern, setAuthPattern] = useState("");
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const [tokenPattern, setTokenPattern] = useState([]);
 
-  const handleSignUp = (e) => {
-    e.preventDefault()
-    navigate('/') 
-  }
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    if (tokenPattern.length < 6) {
+      return alert("Pattern must be at least 6 tokens");
+    }
+    const authPatternString = tokenPattern.join("-");
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/register",
+        {
+          firstName,
+          lastName,
+          email,
+          password,
+          authPattern: authPatternString,
+        },
+      );
+
+      alert(response.data.message);
+      navigate("/login");
+    } catch (err) {
+      alert(err.response?.data?.message || "Registration failed");
+    }
+  };
 
   return (
-    <div className="signup-outer-wrapper" style={{ 
-      display: 'flex', 
-      justifyContent: 'center', 
-      alignItems: 'center', 
-      minHeight: '100vh', 
-      width: '100vw',
-      backgroundColor: '#050505' 
-    }}>
-    
-    <div className="page-container">
-      <header className="page-header">
-        <div className="logo-wrapper">
-          <img 
-            src={gengarLogo} 
-            alt="Lavender Route Gengar Logo" 
-            width="45" 
-            height="45" 
-            className="logo-image"
-          />
-          <h1 className="brand-name">
-            <span className="text-green">LAVENDER</span> <span className="text-purple">ROUTE</span>
-          </h1>
-        </div>
-      </header>
-
-      <main className="content-card-layout">
-        <section className="left-image-panel">
-          <div className="panel-glitch-wrapper">
-            <LetterGlitch
-              glitchColors={["#7C3AED", "#A855F7"]}
-              glitchSpeed={50}
-              centerVignette={false}
-              outerVignette={false}
-              smooth={true}
+    <div
+      className="signup-outer-wrapper"
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "100vh",
+        width: "100vw",
+        backgroundColor: "#050505",
+      }}
+    >
+      <div className="page-container">
+        <header className="page-header">
+          <div className="logo-wrapper">
+            <img
+              src={gengarLogo}
+              alt="Lavender Route Gengar Logo"
+              width="45"
+              height="45"
+              className="logo-image"
             />
+            <h1 className="brand-name">
+              <span className="text-green">LAVENDER</span>{" "}
+              <span className="text-purple">ROUTE</span>
+            </h1>
           </div>
+        </header>
 
-          <div className="panel-text">
-            <h2>LAVENDER ROUTE</h2>
-            <p>Get started with us</p>
-          </div>
-        </section>
-
-        <section className="right-form-panel">
-          <div className="form-container">
-            <div className="form-header">
-              <h2>Create Account</h2>
-              <p>Please enter your details to create an account</p>
+        <main className="content-card-layout">
+          <section className="left-image-panel">
+            <div className="panel-glitch-wrapper">
+              <LetterGlitch
+                glitchColors={["#7C3AED", "#A855F7"]}
+                glitchSpeed={50}
+                centerVignette={false}
+                outerVignette={false}
+                smooth={true}
+              />
             </div>
-            
-            <form onSubmit={handleSignUp}>
-              <div className="input-row">
-                <div className="input-group">
-                  <label htmlFor="firstName">First Name</label>
-                  <input type="text" id="firstName" placeholder="e.g. Ash" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+
+            <div className="panel-text">
+              <h2>LAVENDER ROUTE</h2>
+              <p>Get started with us</p>
+            </div>
+          </section>
+
+          <section className="right-form-panel">
+            <div className="form-container">
+              <div className="form-header">
+                <h2>Create Account</h2>
+                <p>Please enter your details to create an account</p>
+              </div>
+
+              <form onSubmit={handleSignUp}>
+                <div className="input-row">
+                  <div className="input-group">
+                    <label htmlFor="firstName">First Name</label>
+                    <input
+                      type="text"
+                      id="firstName"
+                      placeholder="e.g. Ash"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                    />
+                  </div>
+                  <div className="input-group">
+                    <label htmlFor="lastName">Last Name</label>
+                    <input
+                      type="text"
+                      id="lastName"
+                      placeholder="e.g. Ketchum"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                    />
+                  </div>
                 </div>
-                <div className="input-group">
-                  <label htmlFor="lastName">Last Name</label>
-                  <input type="text" id="lastName" placeholder="e.g. Ketchum" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+
+                <div className="note-text">
+                  *publicly your username will be the first letter of your name
                 </div>
-              </div>
-              
-              <div className="note-text">
-                *publicly your username will be the first letter of your name
-              </div>
 
-              <div className="input-group">
-                <label htmlFor="email">Email</label>
-                <input type="email" id="email" placeholder="trainer@pallet.town" value={email} onChange={(e) => setEmail(e.target.value)} />
-              </div>
+                <div className="input-group">
+                  <label htmlFor="email">Email</label>
+                  <input
+                    type="email"
+                    id="email"
+                    placeholder="trainer@pallet.town"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
 
-              <div className="input-group">
-                <label htmlFor="password">Password</label>
-                <input type="password" id="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} />
-              </div>
+                <div className="input-group">
+                  <label htmlFor="password">Password</label>
+                  <input
+                    type="password"
+                    id="password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </div>
 
-              <div className="input-group">
-                <label htmlFor="specialCode">Insert your own special code (rhisauth)</label>
-                <input type="text" id="specialCode" placeholder="Enter rhis auth code" value={specialCode} onChange={(e) => setSpecialCode(e.target.value)} />
-              </div>
+                <PokePattern
+                  pattern={tokenPattern}
+                  setPattern={setTokenPattern}
+                />
 
-              <button type="submit" className="submit-btn">Sign Up</button>
-              
-              <div className="login-link">
-                Already have an account? <a href="/login">LOG IN</a>
-              </div>
-            </form>
-          </div>
-        </section>
-      </main>
+                <button type="submit" className="submit-btn">
+                  Sign Up
+                </button>
+
+                <div className="login-link">
+                  Already have an account? <a href="/login">LOG IN</a>
+                </div>
+              </form>
+            </div>
+          </section>
+        </main>
+      </div>
     </div>
-    </div>
-  )
+  );
 }
 
-export default SignUp
+export default SignUp;

@@ -36,7 +36,7 @@
 
 #root {
   border-inline: none;
-  padding: 0px 100px 0px 100px;
+  /* padding: 0px 100px 0px 100px; */
   width: 100vw;
 }
 
@@ -58,11 +58,12 @@ h4 {
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 0;
+  z-index: -1;
 }
 
 #product-content {
-  z-index: 1;
+  z-index: 0;
+  margin-top: 100px;
 }
 
 .pokemon-image {
@@ -107,8 +108,8 @@ h4 {
   color: var(--grey);
 }
 
-#price {
-  padding: 2%;
+#price{
+    padding: 2%;
 }
 
 #price-num {
@@ -199,18 +200,21 @@ h4 {
   margin-bottom: 1% !important;
 }
 
-.css-9xw0na-MuiRating-icon {
-  color: #c4ff4d !important;
-}
-
-.css-1xc33vf-MuiRating-root {
-  color: #c4ff4d !important;
-}
-
 #modal-item-name{
   margin-bottom: 2 !important;
 }
 
 #modal-image{
   max-width: 150px;
+}
+.css-1xc33vf-MuiRating-root{
+    color:#c4ff4d !important;
+}
+
+.css-9xw0na-MuiRating-icon{
+    color:#c4ff4d !important;
+}
+
+.css-1xc33vf-MuiRating-root{
+    color:#c4ff4d !important;
 }

@@ -15,8 +15,10 @@ body {
 #root {
   width: 100%;
   min-height: 100vh;
-  display: flex;
+  /* display: flex; */
   flex-direction: column;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
 }
 
 :root{
