@@ -8,6 +8,7 @@ import searchIcon from "../assets/icons/SortIcon.png";
 import magnify from "../assets/icons/MagnifyGlassIcon.png";
 import CrossIcon from "../assets/icons/CrossIcon.png";
 import "../css/catalog.css";
+import Navbar from "../components/navbar.jsx";
 
 export default function PokemonAdd() {
   const [teamPokemon, setTeamPokemon] = useState([
@@ -140,9 +141,9 @@ export default function PokemonAdd() {
           isBounce={false}
           resolution={0.5}
         />
-        <Navbar />
+     
       </div>
-    
+    <Navbar />
 
       <div className="search-capsule-container">
         <div className="search-pill-bar">
