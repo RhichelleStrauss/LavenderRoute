@@ -1,0 +1,119 @@
+:root {
+  --grey: #4d4d4d;
+  --black: #1a1a1a;
+  --purple: #ba8cff;
+  --dark-purple: #2a1a3a;
+  --green: #c4ff4d;
+}
+
+.text-grey {
+  color: rgb(156, 163, 175);
+}
+
+.text-white {
+  color: white;
+}
+
+.text-purple {
+  color: var(--purple);
+}
+
+.text-green {
+  color: var(--green);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+#root {
+  border-inline: none;
+  /* padding: 0px 100px 0px 100px; */
+  width: 100vw;
+}
+
+body {
+  background-color: rgb(33, 37, 41) !important;
+}
+
+p,
+h1,
+h2,
+h3,
+h4 {
+  margin: 0 !important;
+}
+
+#liquid-ether {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+}
+
+#product-content {
+  z-index: 1;
+}
+
+.pokemon-image {
+  height: 90% !important;
+  width: auto !important;
+}
+
+#pokemon-details {
+  background-color: rgba(196, 255, 77, 0.08);
+  border-style: solid;
+  border-width: 2px;
+  border-color: var(--green);
+  border-radius: 20px;
+  padding: 2%;
+}
+
+#pokemon-info {
+  background-color: rgba(186, 140, 255, 0.08);
+  border-style: solid;
+  border-width: 2px;
+  border-color: var(--purple);
+  border-radius: 20px;
+  padding: 2%;
+}
+
+#pokemon-price {
+  background-color: rgba(186, 140, 255, 0.08);
+  border-style: solid;
+  border-width: 2px;
+  border-color: var(--purple);
+  border-radius: 20px;
+}
+
+#price-tag {
+  background-color: var(--purple);
+  padding: 2%;
+  border-style: solid;
+  border-width: 2px;
+  border-color: var(--purple);
+  border-radius: 16px;
+  color: var(--grey);
+}
+
+#price{
+    padding: 2%;
+}
+
+.css-9xw0na-MuiRating-icon{
+    color:#c4ff4d !important;
+}
+
+.css-1xc33vf-MuiRating-root{
+    color:#c4ff4d !important;
+}
