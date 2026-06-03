@@ -3,8 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import gengarLogo from '../assets/gengar-logo.png'; 
 import '../App.css';
 import AddIcon from '../assets/icons/AddIcon.png';
+import profileIcon from '../assets/icons/ProfileIcon.png';
+import cartIcon from '../assets/icons/CartIcon.png';
+import settingsIcon from '../assets/icons/SettingsIcon.png';
+import heartIcon from '../assets/icons/HeartNotFilledIcon.png';
+import '../css/Navbar.css';
 
-const Navbar = () => {
+const Navbar = ({ userRole }) => {
   const navigate = useNavigate();
 
   return (
@@ -25,33 +30,46 @@ const Navbar = () => {
         <img 
           src={AddIcon} 
           alt="Add Pokemon" 
+          title="List an Asset"
           className="action-icon-png" 
           onClick={() => navigate('/add-pokemon')} 
           style={{ cursor: 'pointer', width: '28px', height: '28px' }}
         />
-        </div>
+        
+        <img 
+          src={heartIcon} 
+          alt="Wishlist" 
+          title="Wishlist"
+          className="action-icon action-icon-png"
+          onClick={() => navigate('/wishlist')}
+          style={{ cursor: 'pointer' }}
+        />
 
-      <div className="nav-actions">
-        <svg className="action-icon text-lime" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <svg className="action-icon text-lime" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" onClick={() => navigate('/cart')} style={{ cursor: 'pointer', width: '28px', height: '28px' }}>
           <circle cx="9" cy="21" r="1"></circle>
           <circle cx="20" cy="21" r="1"></circle>
           <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
         </svg>
-        
-        <svg 
+
+        <img 
+          src={profileIcon} 
+          alt="Profile" 
+          title="Trainer Login / Encrypted Access"
+          className="action-icon action-icon-png"
           onClick={() => navigate('/signup')}
-          className="action-icon text-lime" 
           style={{ cursor: 'pointer' }}
-          viewBox="0 0 24 24" 
-          fill="none" 
-          stroke="currentColor" 
-          strokeWidth="2.5" 
-          strokeLinecap="round" 
-          strokeLinejoin="round"
-        >
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-          <circle cx="12" cy="7" r="4"></circle>
-        </svg>
+        />
+
+        {(userRole === 'admin' || userRole === 'seller') && (
+          <img 
+            src={settingsIcon} 
+            alt="Dashboard Settings" 
+            title="Trainer Dashboard"
+            className="action-icon action-icon-png"
+            onClick={() => navigate('/dashboard')}
+            style={{ cursor: 'pointer' }}
+          />
+        )}
       </div>
     </nav>
   );

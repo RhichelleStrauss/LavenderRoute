@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"; // Added useEffect import
+import React, { useState, useEffect } from "react";
 import LiquidEther from "../components/LiquidEther.jsx";
 import ReflectiveCard from "../components/pokemonCard.jsx";
 import SearchCapsule from "../components/SearchCapsule.jsx";
@@ -24,16 +24,13 @@ export default function PokemonAdd() {
     },
   ]);
 
-  //modal for editing ᓚᘏᗢ
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPokemon, setSelectedPokemon] = useState(null);
-  // ᓚᘏᗢ
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState("");
   const [selectedGender, setSelectedGender] = useState("");
   const [selectedShiny, setSelectedShiny] = useState("");
-  // ᓚᘏᗢ Tracks if the sliding filter drawer is visible
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
   const [sortBy, setSortBy] = useState("");
 
@@ -50,15 +47,11 @@ export default function PokemonAdd() {
     getPokemon();
   }, []);
 
-  // opening modal with the correct data from card/backedn
-  //opens when card is clicked - modalopeem true
   const handleEditClick = (pokemon) => {
     setSelectedPokemon(pokemon);
     setIsModalOpen(true);
   };
-  // ᓚᘏᗢ
 
-  //put request handling ᓚᘏᗢ
   const handleUpdatePokemon = async (updatedData) => {
     try {
       const response = await fetch(
@@ -67,12 +60,12 @@ export default function PokemonAdd() {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(updatedData),
-        }
+        },
       );
 
       if (response.ok) {
         setTeamPokemon((prev) =>
-          prev.map((p) => (p._id === updatedData._id ? updatedData : p))
+          prev.map((p) => (p._id === updatedData._id ? updatedData : p)),
         );
         setIsModalOpen(false);
         setSelectedPokemon(null);
@@ -81,11 +74,7 @@ export default function PokemonAdd() {
       console.error("np updated:", error);
     }
   };
-  //put - updates
-  //map looks at data edited, looks through list - if matching what was updated UI gets upated
-  //ᓚᘏᗢ
 
-  //handle delete post ᓚᘏᗢ
   const handleDeletePokemon = async (id) => {
     if (!window.confirm("serious you want to delete this cutie pokemon"))
       return;
@@ -104,18 +93,19 @@ export default function PokemonAdd() {
       console.error("no delete:", error);
     }
   };
-  //filter removes deleted pokemon, make new list without the poor thing
 
   const filteredPokemon = [...teamPokemon]
     .sort((a, b) => {
       if (sortBy === "level-asc") return a.level - b.level;
       if (sortBy === "level-desc") return b.level - a.level;
-      if (sortBy === "name-asc") return a.name.localeCompare(b.name);
-      if (sortBy === "name-desc") return b.name.localeCompare(a.name);
+      if (sortBy === "name-asc")
+        return (a.name || "").localeCompare(b.name || "");
+      if (sortBy === "name-desc")
+        return (b.name || "").localeCompare(a.name || "");
       return 0;
     })
     .filter((poke) => {
-      const matchesSearch = poke.name
+      const matchesSearch = (poke.name || "")
         .toLowerCase()
         .includes(searchQuery.toLowerCase());
 
@@ -127,13 +117,23 @@ export default function PokemonAdd() {
 
       const matchesShiny =
         selectedShiny === "" ||
-        (selectedShiny === "Shiny" ? poke.shiny === true : poke.shiny === false);
+        (selectedShiny === "Shiny"
+          ? poke.shiny === true
+          : poke.shiny === false);
 
       return matchesSearch && matchesType && matchesGender && matchesShiny;
     });
 
   return (
-    <>
+    <div
+      style={{
+        position: "relative",
+        minHeight: "100vh",
+        width: "100vw",
+        overflowX: "hidden",
+        paddingTop: "100px",
+      }}
+    >
       <div className="background-ether-wrapper">
         <LiquidEther
           mouseForce={20}
@@ -180,7 +180,6 @@ export default function PokemonAdd() {
               weight={poke.weight}
               imgUrl={poke.imagePokemon}
               shiny={poke.shiny}
-              //edit button - onclick handle function
               onEdit={() => handleEditClick(poke)}
             />
           ))
@@ -229,6 +228,7 @@ export default function PokemonAdd() {
             >
               <img
                 src={CrossIcon}
+                alt="Close"
                 style={{ width: "34px", height: "34px", objectFit: "contain" }}
               />
             </button>
@@ -242,6 +242,6 @@ export default function PokemonAdd() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }

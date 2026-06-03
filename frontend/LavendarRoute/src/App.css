@@ -208,25 +208,6 @@
     margin-top: 30px;
   }
 }
-.navBar {
-  border: 2px solid var(--grey, #4d4d4d);
-  background-color: rgba(217, 217, 217, 0.1);
-  backdrop-filter: blur(5px);
-  border-radius: 10px;
-  padding: 20px;
-  margin: 10px auto;
-  width: 90%;
-  height: 70px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.navBar .pageLinks {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-}
 
 .page-container,
 .catalog-grid,
@@ -237,3 +218,18 @@
 .catalog-grid {
   padding-top: 50px; 
 }
+
+@media (max-width: 768px) {
+  .giant-sprite {
+    max-width: 300px;
+  }
+  
+  .misty-glass-panel {
+    padding: 20px;
+  }
+  
+  .home-fullscreen-container {
+    padding: 20px; 
+  }
+}
+
