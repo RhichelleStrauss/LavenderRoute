@@ -23,8 +23,8 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    role: {
-        type: String, 
+    roles: {
+        type: [String], 
         required: true,
         enum: ['buyer', 'seller', 'admin'],
         default: ['buyer']
@@ -32,6 +32,28 @@ const UserSchema = new mongoose.Schema({
     dob: {
     type: String,
     required: true
+  },
+  adminPasskey: {
+    type: String,
+    required: false
+  },
+
+  approvalStreak: { type: Number,
+    default: 0
+  },
+
+  denyStreak: {type: Number,
+    default: 0
+  },
+
+  isDeniedFromPosting: {
+    type: Boolean,
+    default: false
+  },
+  
+  wishlist:{
+    type: [mongoose.Schema.Types.Mixed], 
+    default: []
   },
 },
 { timestamps: true }

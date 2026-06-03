@@ -14,6 +14,8 @@ function Login() {
  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [tokenPattern, setTokenPattern] = useState([]);
+  const [needsAdminKey, setNeedsAdminKey] = useState(false);
+  const [adminPasskey, setAdminPasskey] = useState('');
 
 
   const handleLogin = async (e) => {
@@ -26,14 +28,24 @@ function Login() {
     const response = await axios.post('http://localhost:5000/api/auth/login', {
       email,
       password,
-      authPattern: authPatternString
+      authPattern: authPatternString,
+      adminPasskey: needsAdminKey ? adminPasskey : undefined
     });
+
+    if (response.status === 202 && response.data.requiresAdminPasskey) {
+        setNeedsAdminKey(true);
+        return;
+    }
     localStorage.setItem('token', response.data.token);
+    const rolesToSave = response.data.user?.roles || response.data.roles || [];
+      localStorage.setItem('userRoles', JSON.stringify(rolesToSave));
+      
+      console.log("Welcome back,", response.data.firstName || "Trainer");
+      navigate('/dashboard');
     
-    console.log("Welcome back,", response.data.firstName);
-    navigate('/catalog');
 
   } catch (err) {
+    console.log(err);
     alert(err.response?.data?.message || "Login failed");
   }
 };
@@ -121,6 +133,8 @@ function Login() {
                 <button type="submit" className="submit-btn" style={{ marginTop: '20px' }}>
                   Enter Route
                 </button>
+
+                
                 
                 <div className="login-link">
                   Don't have an account?{' '}

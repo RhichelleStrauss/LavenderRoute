@@ -5,6 +5,7 @@ require("dotenv").config();
 
 const authRoutes = require('./Authentication/routes/authRoutes');
 const pokemonRoutes = require("./routes/pokemon"); 
+const userRoutes = require("./routes/users");
 const verifyToken = require('./Authentication/middleware/verifyToken');
 
 const app = express();
@@ -20,6 +21,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/pokemon", pokemonRoutes);
 app.use('/api/auth', authRoutes);
+app.use("/api/users", userRoutes);
 
 
 mongoose.connect(process.env.MONGO_URI)

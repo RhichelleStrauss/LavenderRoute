@@ -30,6 +30,9 @@ const Navbar = () => {
           style={{ cursor: 'pointer', width: '28px', height: '28px' }}
         />
         </div>
+        <div>
+          <p onClick={() => navigate('/wishlist')}>Wishlist</p>
+        </div>
 
       <div className="nav-actions">
         <svg className="action-icon text-lime" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"

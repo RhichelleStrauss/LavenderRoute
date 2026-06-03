@@ -13,10 +13,11 @@ import Product from "./pages/Product";
 import Cart from "./pages/Cart";
 import LiquidEther from "./components/LiquidEther";
 import "./App.css";
+import Wishlist from "./pages/Wishlist";
 
 const Home = () => {
   const [teamPokemon, setTeamPokemon] = useState([]);
-
+  
   useEffect(() => {
     const getPokemon = async () => {
       try {
@@ -152,6 +153,7 @@ function App() {
         <Route path="/pokemon/:id" element={<Product />} />
         <Route path="/login" element={<Login />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/wishlist" element={<Wishlist/>} />
       </Routes>
     </BrowserRouter>
   );
