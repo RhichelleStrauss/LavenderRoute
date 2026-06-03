@@ -8,7 +8,6 @@ import searchIcon from "../assets/icons/SortIcon.png";
 import magnify from "../assets/icons/MagnifyGlassIcon.png";
 import CrossIcon from "../assets/icons/CrossIcon.png";
 import "../css/catalog.css";
-import Navbar from "../components/navbar.jsx";
 
 export default function PokemonAdd() {
   const [teamPokemon, setTeamPokemon] = useState([
@@ -34,7 +33,7 @@ export default function PokemonAdd() {
   const [selectedType, setSelectedType] = useState("");
   const [selectedGender, setSelectedGender] = useState("");
   const [selectedShiny, setSelectedShiny] = useState("");
-
+  // ᓚᘏᗢ Tracks if the sliding filter drawer is visible
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
   const [sortBy, setSortBy] = useState("");
 
@@ -51,6 +50,13 @@ export default function PokemonAdd() {
     getPokemon();
   }, []);
 
+  // opening modal with the correct data from card/backedn
+  //opens when card is clicked - modalopeem true
+  const handleEditClick = (pokemon) => {
+    setSelectedPokemon(pokemon);
+    setIsModalOpen(true);
+  };
+  // ᓚᘏᗢ
 
   //put request handling ᓚᘏᗢ
   const handleUpdatePokemon = async (updatedData) => {
@@ -141,108 +147,25 @@ export default function PokemonAdd() {
           isBounce={false}
           resolution={0.5}
         />
-     
       </div>
-    <Navbar />
 
-      <div className="search-capsule-container">
-        <div className="search-pill-bar">
-          <button
-            type="button"
-            className={`filter-toggle-btn ${isFilterDrawerOpen ? "active" : ""}`}
-            onClick={() => setIsFilterDrawerOpen(!isFilterDrawerOpen)}
-            aria-label="Toggle Filters"
-          >
-            <img
-              src={filterIcon}
-              alt="Toggle Filters"
-              style={{ width: "24px", height: "24px" }}
-            />
-          </button>
-
-          <div className="search-input-wrapper">
-            <input
-              type="text"
-              placeholder="search..."
-              className="capsule-search"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <span className="search-icon">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
-            </span>
-          </div>
-        </div>
-
-        <div className={`filter-drawer ${isFilterDrawerOpen ? "open" : ""}`}>
-          <div className="drawer-inner-grid">
-            <div className="drawer-field">
-              <label>ELEMENTAL TYPE</label>
-              <select
-                value={selectedType}
-                onChange={(e) => setSelectedType(e.target.value)}
-              >
-                <option value="">ALL TYPES</option>
-                <option value="Normal">NORMAL</option>
-                <option value="Fire">FIRE</option>
-                <option value="Water">WATER</option>
-                <option value="Grass">GRASS</option>
-                <option value="Electric">ELECTRIC</option>
-                <option value="Ice">ICE</option>
-                <option value="Fighting">FIGHTING</option>
-                <option value="Poison">POISON</option>
-                <option value="Ground">GROUND</option>
-                <option value="Flying">FLYING</option>
-                <option value="Psychic">PSYCHIC</option>
-                <option value="Bug">BUG</option>
-                <option value="Rock">ROCK</option>
-                <option value="Ghost">GHOST</option>
-                <option value="Dragon">DRAGON</option>
-                <option value="Dark">DARK</option>
-                <option value="Steel">STEEL</option>
-                <option value="Fairy">FAIRY</option>
-                <option value="Stellar">STELLAR</option>
-              </select>
-            </div>
-
-            <div className="drawer-field">
-              <label>GENDER SPECS</label>
-              <select
-                value={selectedGender}
-                onChange={(e) => setSelectedGender(e.target.value)}
-              >
-                <option value="">ALL GENDERS</option>
-                <option value="Male">MALE</option>
-                <option value="Female">FEMALE</option>
-                <option value="Genderless">GENDERLESS</option>
-              </select>
-            </div>
-
-            <div className="drawer-field">
-              <label>GENETIC VARIANT</label>
-              <select
-                value={selectedShiny}
-                onChange={(e) => setSelectedShiny(e.target.value)}
-              >
-                <option value="">ALL VARIANTS</option>
-                <option value="Basic">BASIC FORM</option>
-                <option value="Shiny">SHINY VARIANT</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
-    
+      <SearchCapsule
+        filterIcon={filterIcon}
+        searchIcon={searchIcon}
+        magnify={magnify}
+        isFilterDrawerOpen={isFilterDrawerOpen}
+        setIsFilterDrawerOpen={setIsFilterDrawerOpen}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        selectedType={selectedType}
+        setSelectedType={setSelectedType}
+        selectedGender={selectedGender}
+        setSelectedGender={setSelectedGender}
+        selectedShiny={selectedShiny}
+        setSelectedShiny={setSelectedShiny}
+      />
 
       <div className="catalog-grid">
         {filteredPokemon.length > 0 ? (
