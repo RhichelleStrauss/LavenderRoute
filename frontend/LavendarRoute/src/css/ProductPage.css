@@ -256,3 +256,18 @@ p{
   transform: scale(1.25);
   content: url("../assets/icons/HeartIcon.png");
 }
+
+#product-modal-btn{
+  font-size: 24px;
+  height: 100%;
+  background-color: var(--purple) !important;
+  border-color: var(--purple);
+  border-width: 2px;
+  border-radius: clamp(8px,2vw,8px);
+  color: var(--grey);
+}
+
+#product-modal-btn:hover{
+  background-color: transparent !important;
+  color: var(--purple);
+}
