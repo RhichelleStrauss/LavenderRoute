@@ -28,10 +28,13 @@ function Product() {
   const userRoles = JSON.parse(localStorage.getItem('userRoles') || '[]');
   const canEdit = userRoles.includes('admin') || userRoles.includes('seller') || userRoles.includes('hybrid');
 
-  console.log(id);
 
   useEffect(() => {
     async function getData() {
+      if(!id){
+        console.error(`Pokemon id is null`);
+        return;
+      }
       const url = `http://localhost:5000/api/pokemon/${id}`;
 
       try {
@@ -45,6 +48,7 @@ function Product() {
 
         setData(pokemons);
       } catch (error) {
+        console.error("We have encountered a skibidi error")
         console.error(error.message);
       }
 

@@ -7,6 +7,7 @@ import CrossIcon from '../assets/icons/CrossIcon.png';
 import LiquidEther from '../components/LiquidEther.jsx';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import "../css/catalog.css";
 
 // const MOCK_PENDING = [
 //   { _id: '1', name: 'GENGAR', level: 45, type: ['Ghost', 'Poison'], gender: 'Male', imgUrl: 'https://archives.bulbagarden.net/media/upload/thumb/4/47/0094Gengar.png/375px-0094Gengar.png' },
@@ -22,7 +23,7 @@ const AdminDashboard = () => {
 
   const [activeTab, setActiveTab] = useState('approval');
   const [selectedPost, setSelectedPost] = useState(null);
-  const [adminFeedback, setAdminFeedback] = useState("");
+  const [adminNotes, setAdminNotes] = useState("");
   const [isEditing, setIsEditing] = useState(false);
 
   const [pendingPosts, setPendingPosts] = useState([]);
@@ -45,7 +46,14 @@ const AdminDashboard = () => {
   };
 
   const handleReview = async (action) => {
-    if (action === 'reject' && !adminFeedback) {
+
+    await axios.post('http://localhost:5000/api/auth/review-post', {
+  postId: selectedPost._id,
+  action: action,
+  adminNotes: adminNotes
+  }, { headers: { Authorization: `Bearer ${token}` } });
+
+    if (action === 'reject' && !adminNotes) {
       return toast.error("You must provide feedback to deny a post.");
     }
 
@@ -54,7 +62,7 @@ const AdminDashboard = () => {
       await axios.post('http://localhost:5000/api/auth/review-post', {
         postId: selectedPost._id,
         action: action,
-        adminFeedback: action === 'reject' ? adminFeedback : ""
+        adminNotes: action === 'reject' ? adminNotes : ""
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -64,7 +72,7 @@ const AdminDashboard = () => {
       );
 
       setSelectedPost(null);
-      setAdminFeedback("");
+      setAdminNotes("");
       fetchPendingPosts();
 
     } catch (err) {
@@ -86,7 +94,7 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '30px', justifyContent: 'flex-start' }}>
+      <div className="catalog-grid">
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
 
           {activeTab === 'approval' ? (
@@ -118,7 +126,7 @@ const AdminDashboard = () => {
               </div>
             )) : <p style={{ color: '#888' }}>Queue is empty.</p>
           ) : (
-            <p style={{ color: '#ff4d4d' }}>No flagged listings.</p>
+            <p style={{ color: '#660019' }}>No flagged listings.</p>
           )}
         </div>
 
@@ -164,11 +172,11 @@ const AdminDashboard = () => {
 
                   <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '15px' }}>
                     <h3 style={{ color: '#fff', fontFamily: "'VT323', monospace" }}>Review: {selectedPost.name}</h3>
-                    <p style={{ color: '#888', fontFamily: "'VT323', monospace" }}>Seller: User ID: {selectedPost.sellerId || "Unknown"}</p>
+                    <p style={{ color: '#888', fontFamily: "'VT323', monospace" }}>Seller: {selectedPost.sellerId?.firstName || "Unknown"}</p>
 
                     <textarea
                       placeholder="Feedback (required if denying)..."
-                      value={adminFeedback}
+                      value={adminNotes}
                       onChange={(e) => setAdminFeedback(e.target.value)}
                       style={{ width: '100%', height: '80px', background: 'rgba(42, 26, 58, 0.3)', border: '1px solid #2A1A3A', color: 'white', padding: '10px', borderRadius: '8px' }}
                     />
@@ -204,15 +212,20 @@ const SellerDashboard = () => {
 
   const [myActivePosts, setMyActivePosts] = useState([]);
   const [myPendingPosts, setMyPendingPosts] = useState([]);
+  const [myRejectedPosts, setMyRejectedPosts] = useState([]);
 
   useEffect(() => {
     const fetchSellerPosts = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/pokemon');
-        const allPosts = response.data;
+      const response = await axios.get('http://localhost:5000/api/pokemon', {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        });
+      const allPosts = response.data;
+
 
         setMyActivePosts(allPosts.filter(p => p.status === 'approved'));
         setMyPendingPosts(allPosts.filter(p => p.status === 'pending'));
+        setMyRejectedPosts(allPosts.filter(p => p.status === 'rejected'));
       } catch (error) {
         console.error("Failed to fetch seller posts:", error);
       }
@@ -230,10 +243,21 @@ const SellerDashboard = () => {
         <div style={{ display: 'flex', gap: '5px', background: 'rgba(42, 26, 58, 0.3)', padding: '6px', borderRadius: '12px', border: '1px solid #2A1A3A' }}>
           <button onClick={() => setActiveTab('active')} style={{ background: activeTab === 'active' ? '#C4FF4D' : 'transparent', color: activeTab === 'active' ? '#050505' : '#C4FF4D', border: 'none', padding: '8px 20px', borderRadius: '12px', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.3s ease', fontFamily: "'VT323', monospace", }}>Active Listings</button>
           <button onClick={() => setActiveTab('pending')} style={{ background: activeTab === 'pending' ? '#C4FF4D' : 'transparent', color: activeTab === 'pending' ? '#050505' : '#C4FF4D', border: 'none', padding: '8px 20px', borderRadius: '12px', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.3s ease', fontFamily: "'VT323', monospace", }}>Pending</button>
+          <button 
+    onClick={() => setActiveTab('rejected')} 
+    style={{ 
+      background: activeTab === 'rejected' ? '#8f0024' : 'transparent', 
+      color: activeTab === 'rejected' ? '#050505' : '#8f0024', 
+      border: 'none', padding: '8px 20px', borderRadius: '12px', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.3s ease', fontFamily: "'VT323', monospace", 
+    }}
+  >
+    Needs Revision
+  </button>
+
         </div>
       </div>
 
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+     <div className="catalog-grid">
         {activeTab === 'active' ? (
           myActivePosts.length > 0 ? myActivePosts.map(pokemon => (
             <ReflectiveCard
@@ -251,8 +275,8 @@ const SellerDashboard = () => {
                 setSelectedPost(pokemon);
               }}
             />
-          )) : <p style={{ color: '#888' }}>You have no active listings.</p>
-        ) : (
+          )) : <p style={{ color: '#4D4D4D' }}>You have no active listings.</p>
+        ) : activeTab === 'pending' ? (
           myPendingPosts.length > 0 ? myPendingPosts.map(pokemon => (
             <ReflectiveCard
               key={pokemon._id}
@@ -263,6 +287,7 @@ const SellerDashboard = () => {
               gender={pokemon.gender}
               height={pokemon.height}
               weight={pokemon.weight}
+              shiny={pokemon.shiny}
               imgUrl={pokemon.imagePokemon || pokemon.imgUrl}
               onEditClick={(e) => {
                 e.stopPropagation();
@@ -270,8 +295,39 @@ const SellerDashboard = () => {
               }}
             />
           )) : <p style={{ color: '#888' }}>You have no pending listings.</p>
+        ) : (
+          myRejectedPosts.length > 0 ? myRejectedPosts.map(pokemon => (
+            <div key={pokemon._id} style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '300px' }}>
+              <ReflectiveCard
+                pokemonName={pokemon.name}
+                id={pokemon._id}
+                level={pokemon.level}
+                type={pokemon.type}
+                gender={pokemon.gender}
+                height={pokemon.height}
+                weight={pokemon.weight}
+                shiny={pokemon.shiny}
+                imgUrl={pokemon.imagePokemon || pokemon.imgUrl}
+                onEditClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedPost(pokemon);
+                }}
+              />
+              <div style={{ 
+                padding: '10px', 
+                background: 'rgba(200, 0, 0, 0.2)', 
+                border: '1px solid #8f0024',
+                borderRadius: '8px',
+                color: '#8f0024',
+                fontFamily: "'VT323', monospace"
+              }}>
+                <strong>Admin Feedback:</strong> {pokemon.adminNotes || "No feedback provided."}
+              </div>
+            </div>
+          )) : <p style={{ color: '#888' }}>No rejected listings. Great job!</p>
         )}
       </div>
+
       {selectedPost && (
         <div style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", backgroundColor: "rgba(0, 0, 0, 0.8)", zIndex: 999, display: "flex", justifyContent: "center", alignItems: "center", backdropFilter: "blur(5px)", padding: "20px" }}>
           <div style={{ position: "relative", width: "100%", maxWidth: "800px" }}>

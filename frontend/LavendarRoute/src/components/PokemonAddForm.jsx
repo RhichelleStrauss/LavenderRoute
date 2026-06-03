@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import Card from 'react-bootstrap/Card';  
 import BinIcon from '../assets/icons/BinIcon.png';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const API = "http://localhost:5000/api/pokemon";
 

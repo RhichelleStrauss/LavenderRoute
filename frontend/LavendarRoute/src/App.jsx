@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Toaster } from 'react-hot-toast';
 import gengarSprite from './assets/gengar-sprite.png';
 
 import Catalog from './pages/Catalog'; 
@@ -8,16 +9,12 @@ import SignUp from './pages/SignUp';
 import Login from './pages/Login';
 import Navbar from './components/navbar';
 import LetterGlitch from './components/LetterGlitch'; 
-import ReflectiveCard from './components/pokemonCard'; 
-import Product from './pages/Product';
 import LiquidEther from './components/LiquidEther';
-import Dashboard from './pages/Dashboard';
+import ReflectiveCard from './components/pokemonCard'; 
+import Footer from './components/Footer';
 import './App.css';
-import { Toaster } from 'react-hot-toast';
-
 
 const Home = () => {
-  
   const [teamPokemon, setTeamPokemon] = useState([]);
 
   useEffect(() => {
@@ -29,7 +26,7 @@ const Home = () => {
           setTeamPokemon(data.slice(0, 3)); 
         }
       } catch (error) {
-        console.error("The backend is shy today:", error);
+        console.error(error);
       }
     };
     getPokemon();
@@ -37,24 +34,28 @@ const Home = () => {
 
   return (
     <div className="home-fullscreen-container">
-      <div className="glitch-bg-wrapper">
-       
-        <LetterGlitch
-          glitchColors={["#7C3AED", "#A855F7"]}
-          glitchSpeed={50}
-          centerVignette={false}
-          outerVignette={false}
-          smooth={true}
-        />
-
-      </div>
       
+      <div className="glitch-bg-wrapper">
+        <div className="bg-layer bottom-layer">
+          <LiquidEther /> 
+        </div>
+
+        <div className="bg-layer top-layer">
+          <LetterGlitch
+            glitchColors={["#7C3AED", "#A855F7"]}
+            glitchSpeed={50}
+            centerVignette={false}
+            outerVignette={false}
+            smooth={true}
+          />
+        </div>
+      </div>
+
       <Navbar />
 
       <main className="home-main-content">
         <div className="top-split">
           <div className="left-column">
-            
             <section className="misty-glass-panel">
               <h2 className="pixel-heading">About us</h2>
               <p className="body-text">
@@ -64,25 +65,10 @@ const Home = () => {
 
             <section className="misty-glass-panel featured-panel">
               <h2 className="pixel-heading">Featured products</h2>
-              
-              <div className="products-grid" style={{ 
-                display: 'grid', 
-                gridTemplateColumns: 'repeat(3, 1fr)', 
-                gap: '10px', 
-                marginTop: '20px',
-                width: '100%',
-                marginBottom: '-60px'
-              }}>
-                
+              <div className="products-grid">
                 {teamPokemon.length > 0 ? (
                   teamPokemon.map((poke) => (
-                    <div key={poke._id} style={{ 
-                      transform: 'scale(0.85)', 
-                      transformOrigin: 'top center', 
-                      width: '100%', 
-                      display: 'flex', 
-                      justifyContent: 'center' 
-                    }}>
+                    <div key={poke._id} className="card-wrapper">
                       <ReflectiveCard
                         pokemonName={poke.name}
                         level={poke.level}
@@ -95,15 +81,14 @@ const Home = () => {
                     </div>
                   ))
                 ) : (
-                  <p className="pixel-text" style={{ color: '#050505', gridColumn: 'span 3', textAlign: 'center' }}>
+                  <p className="pixel-text" style={{ color: '#050505', gridColumn: '1 / -1', textAlign: 'center' }}>
                     Scanning for lifeforms...
                   </p>
                 )}
-
               </div>
             </section>
-
           </div>
+
           <div className="right-column">
             <img 
               src={gengarSprite} 
@@ -111,6 +96,7 @@ const Home = () => {
               className="giant-sprite" 
             />
           </div>
+
         </div>
 
         <section className="misty-glass-panel bottom-panel">
@@ -123,66 +109,38 @@ const Home = () => {
             When a buyer purchases, the platform holds payment in escrow. The seller completes the in-game trade within the agreed window and provides proof of delivery. After the buyer confirms, funds are released.
           </p>
         </section>
+
       </main>
+
+      <Footer />
+
     </div>
   );
 };
 
 function App() {
   return (
-    <>
-   <Toaster 
-        position="top-center"
-        reverseOrder={false}
+    <BrowserRouter>
+    <Toaster 
+        position="bottom-right" 
         toastOptions={{
           style: {
-            background: 'rgba(10, 6, 14, 0.4)',
-            backdropFilter: 'blur(5px)',
-            WebkitBackdropFilter: 'blur(5px)',
-            border: '1px solid #BA8CFF', 
-            color: '#4D4D4D', 
-            padding: '16px',
-            borderRadius: '12px',
-            boxShadow: '0 4px 16px 0 rgba(0, 0, 0, 0.4)',
-            fontFamily: '"VT323", monospace', 
-            fontSize: '1.2rem',
-            letterSpacing: '1px'
-          },
-          success: {
-            iconTheme: {
-              primary: '#A3E635', 
-              secondary: '#0A060E',
-            },
-          },
-          error: {
-            iconTheme: {
-              primary: '#ef4444', 
-              secondary: '#0A060E',
-            },
-            style: {
-              border: '1px solid #ef4444',
-              background: 'rgba(10, 6, 14, 0.4)',
-              backdropFilter: 'blur(5px)',
-              WebkitBackdropFilter: 'blur(5px)',
-              color: '#660019', 
-            }
-          },
-        }}
+            background: '#2A1A3A',
+            color: '#BA8CFF',
+            border: '1px solid #BA8CFF',
+            fontFamily: "'VT323', monospace",
+            fontSize: '1.2rem'
+          }
+        }} 
       />
-
-    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/catalog" element={<Catalog />} />
-        <Route path='/Dashboard' element={<Dashboard />} />
         <Route path="/add-pokemon" element={<PokemonAdd />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/pokemon/:id" element={<Product />} />
         <Route path="/login" element={<Login />} />
-
       </Routes>
     </BrowserRouter>
-    </>
   );
 }
 
