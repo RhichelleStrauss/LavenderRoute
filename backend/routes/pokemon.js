@@ -22,6 +22,15 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/pending", async (req, res) => {
+  try {
+    const pendingPokemon = await Pokemon.find({ status: 'pending' });
+    res.status(200).json(pendingPokemon);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 router.get("/:id", async (req, res) => {
   try {
     const pokemon = await Pokemon.findById(req.params.id);

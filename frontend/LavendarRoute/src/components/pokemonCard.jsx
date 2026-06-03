@@ -12,15 +12,22 @@ const ReflectiveCard = ({
   stage = "Basic",
   height,
   weight,
-  imgUrl
+  imgUrl,
+  isInteractive = true
 }) => {
   const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    if (isInteractive) {
+      navigate(`/pokemon/${id}`);
+    }
+  };
 
   return (
 
     <div className="reflective-card-container"
-    onClick={() => navigate(`/pokemon/${id}`)}
-    style={{ cursor: 'pointer' }}>
+    onClick={handleCardClick}
+    style={{ cursor: 'pointer', position: 'relative' }}>
 
 
       <div className="card-glass-background" />

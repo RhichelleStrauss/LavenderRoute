@@ -18,37 +18,43 @@ function Login() {
   const [adminPasskey, setAdminPasskey] = useState('');
 
 
-  const handleLogin = async (e) => {
-  e.preventDefault();
-  if (tokenPattern.length < 6) {
-      return alert('Pattern must be at least 6 tokens');
-    }
-    const authPatternString = tokenPattern.join('-');
-  try {
-    const response = await axios.post('http://localhost:5000/api/auth/login', {
-      email,
-      password,
-      authPattern: authPatternString,
-      adminPasskey: needsAdminKey ? adminPasskey : undefined
-    });
-
-    if (response.status === 202 && response.data.requiresAdminPasskey) {
-        setNeedsAdminKey(true);
-        return;
-    }
-    localStorage.setItem('token', response.data.token);
-    const rolesToSave = response.data.user?.roles || response.data.roles || [];
-      localStorage.setItem('userRoles', JSON.stringify(rolesToSave));
-      
-      console.log("Welcome back,", response.data.firstName || "Trainer");
-      navigate('/dashboard');
+ const handleLogin = async (e) => {
+    e.preventDefault();
     
+    const authPatternString = tokenPattern.join('-');
+    console.log("Attempting login with:", { email, authPattern: authPatternString });
 
-  } catch (err) {
-    console.log(err);
-    alert(err.response?.data?.message || "Login failed");
-  }
-};
+    try {
+      const response = await axios.post('http://localhost:5000/api/auth/login', {
+        email,
+        password,
+        authPattern: authPatternString,
+        adminPasskey: needsAdminKey ? adminPasskey : undefined
+      });
+
+      console.log("SERVER RESPONSE DATA:", response.data);
+
+      if (response.status === 202 && response.data.requiresAdminPasskey) {
+        setNeedsAdminKey(true);
+        console.log("Server requested passkey.");
+        return; 
+      }
+
+      if (response.data.token) {
+        console.log("Login success! Saving token and navigating...");
+        localStorage.setItem('token', response.data.token);
+        const rolesToSave = response.data.user?.roles || response.data.roles || [];
+        localStorage.setItem('userRoles', JSON.stringify(rolesToSave));
+        navigate('/dashboard');
+      } else {
+        console.log("⚠️ Server responded 200, but no token was found in the data!");
+      }
+
+    } catch (err) {
+      console.error("LOGIN ERROR:", err.response?.data || err.message);
+      alert(err.response?.data?.message || "Login failed");
+    }
+  };
 
   return (
     <div className="signup-outer-wrapper" style={{ 
@@ -128,14 +134,27 @@ function Login() {
                   />
                 </div>
 
-                <PokePattern pattern={tokenPattern} setPattern={setTokenPattern} />
+                {needsAdminKey && (
+  <div className="input-group" style={{ border: '2px solid #BA8CFF', padding: '10px', borderRadius: '8px', marginBottom: '20px' }}>
+    <label htmlFor="adminPasskey" style={{ color: '#BA8CFF' }}>Admin Passkey</label>
+    <input 
+      type="password" 
+      id="adminPasskey" 
+      placeholder="Enter sacred passkey..." 
+      value={adminPasskey} 
+      onChange={(e) => setAdminPasskey(e.target.value)} 
+      required
+    />
+  </div>
+)}
+
+<PokePattern pattern={tokenPattern} setPattern={setTokenPattern} />
 
                 <button type="submit" className="submit-btn" style={{ marginTop: '20px' }}>
                   Enter Route
                 </button>
 
-                
-                
+              
                 <div className="login-link">
                   Don't have an account?{' '}
                   <span onClick={() => navigate('/signup')} style={{ cursor: 'pointer', color: 'var(--lavender-purple)', textDecoration: 'underline' }}>

@@ -42,7 +42,10 @@ export default function PokemonAdd() {
       try {
         const response = await fetch("http://localhost:5000/api/pokemon");
         const data = await response.json();
-        setTeamPokemon(data);
+
+        const approvedPokemon = data.filter(poke => poke.status === 'approved');
+        setTeamPokemon(approvedPokemon);
+
       } catch (error) {
         console.error("The backend is shy today:", error);
       }

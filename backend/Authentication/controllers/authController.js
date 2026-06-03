@@ -2,6 +2,9 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+
+const Pokemon = require('../../models/pokemon');
+
 exports.register = async (req, res) => {
     try {
         const { firstName, lastName, email, password, authPattern, dob, roles, adminPasskey } = req.body;
@@ -96,3 +99,28 @@ exports.login = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 };
+
+exports.reviewPost = async (req, res) => {
+    try {
+      const { postId, action, adminFeedback } = req.body;
+
+      const post = await Pokemon.findById(postId);
+  
+      if (!post) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+      if (action === 'approve') {
+        post.status = 'approved';
+      } else if (action === 'reject') {
+        post.status = 'rejected';
+        post.adminFeedback = adminFeedback || "No feedback provided by admin.";
+      }
+
+      await post.save();
+  
+      res.status(200).json({ message: `Post successfully ${action}d!` });
+    } catch (error) {
+      console.error("Review error:", error);
+      res.status(500).json({ message: "Server error during review." });
+    }
+  };

@@ -65,10 +65,10 @@ const PokemonSchema = new mongoose.Schema(
                 required: false
         },
 
-        // sellerId: { type: mongoose.Schema.Types.ObjectId,
-        //         ref: 'User',
-        //         required: true
-        // },
+        sellerId: { type: mongoose.Schema.Types.ObjectId,
+                ref: 'User',
+                required: true
+        },
         
     },
     {timestamps : true}

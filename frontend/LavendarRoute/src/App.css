@@ -224,3 +224,16 @@
 .page-container, .catalog-grid {
   padding-top: 100px;
 }
+.profile-container {
+  overflow: visible !important;
+}
+.profile-container:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+.profile-container img, 
+.profile-container svg {
+  width: 32px !important;
+  height: 32px !important;
+  transition: all 0.2s ease;
+}

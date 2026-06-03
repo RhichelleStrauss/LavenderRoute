@@ -24,6 +24,9 @@ function Product() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPokemon, setSelectedPokemon] = useState(null);
 
+  const userRoles = JSON.parse(localStorage.getItem('userRoles') || '[]');
+  const canEdit = userRoles.includes('admin') || userRoles.includes('seller') || userRoles.includes('hybrid');
+
   console.log(id);
 
   useEffect(() => {
@@ -88,6 +91,7 @@ function Product() {
 
   //handle delte post ᓚᘏᗢ
   const handleDeletePokemon = async (id) => {
+    
     if (!window.confirm("suresies you want to delete this cutie pokeman"))
       return;
 
@@ -100,6 +104,7 @@ function Product() {
         setTeamPokemon((prev) => prev.filter((p) => p._id !== id));
         setIsModalOpen(false);
         setSelectedPokemon(null);
+        navigate('/catalog');
       }
     } catch (error) {
       console.error("no delete:", error);
@@ -136,36 +141,38 @@ function Product() {
               </Row>
 
               <Col className="d-grid row-gap-3" style={{ position: 'relative' }}>
- <button
-                onClick={() => {
-                  setSelectedPokemon(data);
-                  setIsModalOpen(true);
-                }}
-                style={{
-                  position: 'absolute',
-                  top: '-170px',
-                  right: '20px',
-                  zIndex: 10,
-                  background: 'rgba(20, 20, 20, 0.8)',
-                  border: '1px solid #BA8CFF',
-                  borderRadius: '14px',
-                  width: '45px',
-                  height: '45px',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  cursor: 'pointer',
-                  fontSize: '20px',
-                  transition: 'all 0.2s ease'
-                }}
-                className="edit-pencil-btn"
-              >
-                <img 
-                  src={PencilIcon} 
-                  alt="Edit" 
-                  style={{ width: '22px', height: '22px', objectFit: 'contain' }} 
-                />
-              </button>
+ {canEdit && (
+                <button
+                  onClick={() => {
+                    setSelectedPokemon(data);
+                    setIsModalOpen(true);
+                  }}
+                  style={{
+                    position: 'absolute',
+                    top: '-24rem',
+                    right: '20px',
+                    zIndex: 10,
+                    background: 'rgba(20, 20, 20, 0.8)',
+                    border: '1px solid #BA8CFF',
+                    borderRadius: '14px',
+                    width: '45px',
+                    height: '45px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    cursor: 'pointer',
+                    fontSize: '20px',
+                    transition: 'all 0.2s ease'
+                  }}
+                  className="edit-pencil-btn"
+                >
+                  <img 
+                    src={PencilIcon} 
+                    alt="Edit" 
+                    style={{ width: '22px', height: '22px', objectFit: 'contain' }} 
+                  />
+                </button>
+              )}
               </Col>
 
               {/* <Row>
