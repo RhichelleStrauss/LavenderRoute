@@ -11,6 +11,7 @@ import LetterGlitch from './components/LetterGlitch';
 import ReflectiveCard from './components/pokemonCard'; 
 import Product from './pages/Product';
 import LiquidEther from './components/LiquidEther';
+import Dashboard from './pages/Dashboard';
 import './App.css';
 
 const Home = () => {
@@ -131,10 +132,12 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/catalog" element={<Catalog />} />
+        <Route path='/Dashboard' element={<Dashboard />} />
         <Route path="/add-pokemon" element={<PokemonAdd />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/pokemon/:id" element={<Product />} />
         <Route path="/login" element={<Login />} />
+
       </Routes>
     </BrowserRouter>
   );

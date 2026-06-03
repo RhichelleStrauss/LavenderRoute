@@ -4,7 +4,7 @@ const Pokemon = require("../models/pokemon");
 
 router.post("/", async (req, res) => {
   try {
-    const newPokemon = new Pokemon(req.body);
+    const newPokemon = await Pokemon.create(req.body);
     const saved = await newPokemon.save();
 
     res.status(200).json(saved);

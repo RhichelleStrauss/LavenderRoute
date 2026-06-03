@@ -1,3 +1,5 @@
+//copy pasted from reactbits 
+
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import '../css/LiquidEther.css';

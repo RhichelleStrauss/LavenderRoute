@@ -9,15 +9,20 @@ import Col from "react-bootstrap/Col";
 import Navbar from "../components/navbar.jsx"
 import BinIcon from '../assets/icons/BinIcon.png';
 import PokemonAddForm from '../components/PokemonAddForm.jsx'
+import CrossIcon from '../assets/icons/CrossIcon.png'
+import PencilIcon from '../assets/icons/PencilIcon.png'
 
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
+
 function Product() {
   const {id} = useParams();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPokemon, setSelectedPokemon] = useState(null);
 
   console.log(id);
 
@@ -113,6 +118,8 @@ function Product() {
         <Navbar />
       </div>
             <Col id="poke-card" className="col-5 d-grid row-gap-2">
+
+           
               {/* <Row className="d-flex justify-content-between">
                 <Col className="col-6">
                   <h4>{data.gender}</h4>
@@ -127,6 +134,39 @@ function Product() {
               <Row className="d-flex justify-content-center">
                 <img className="pokemon-image" src={data?.imagePokemon}></img>
               </Row>
+
+              <Col className="d-grid row-gap-3" style={{ position: 'relative' }}>
+ <button
+                onClick={() => {
+                  setSelectedPokemon(data);
+                  setIsModalOpen(true);
+                }}
+                style={{
+                  position: 'absolute',
+                  top: '-170px',
+                  right: '20px',
+                  zIndex: 10,
+                  background: 'rgba(20, 20, 20, 0.8)',
+                  border: '1px solid #BA8CFF',
+                  borderRadius: '14px',
+                  width: '45px',
+                  height: '45px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  cursor: 'pointer',
+                  fontSize: '20px',
+                  transition: 'all 0.2s ease'
+                }}
+                className="edit-pencil-btn"
+              >
+                <img 
+                  src={PencilIcon} 
+                  alt="Edit" 
+                  style={{ width: '22px', height: '22px', objectFit: 'contain' }} 
+                />
+              </button>
+              </Col>
 
               {/* <Row>
                 <h3>{data.name}</h3>
@@ -261,6 +301,23 @@ function Product() {
             resolution={0.5}
           />
         </div>
+
+        {isModalOpen && (
+          <div style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", backgroundColor: "rgba(0, 0, 0, 0.8)", zIndex: 999, display: "flex", justifyContent: "center", alignItems: "center", backdropFilter: "blur(5px)", padding: "20px" }}>
+            <div style={{ position: "relative", width: "100%", maxWidth: "800px" }}>
+              <button onClick={() => setIsModalOpen(false)} style={{ position: "absolute", top: "20px", right: "20px", background: "transparent", border: "none", zIndex: 1000, cursor: "pointer" }}>
+                <img src={CrossIcon} style={{ width: "30px", height: "30px" }} alt="Close" />
+              </button>
+              
+              <PokemonAddForm 
+                initialData={selectedPokemon} 
+                isModal={true} 
+                onSave={handleUpdatePokemon} 
+                onDelete={handleDeletePokemon} 
+              />
+            </div>
+          </div>
+        )}
         
       </>
     );

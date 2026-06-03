@@ -33,10 +33,25 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+
   adminPasskey: {
     type: String,
     required: false
   },
+
+  approvalStreak: { type: Number,
+    default: 0
+  },
+
+  denyStreak: {type: Number,
+    default: 0
+  },
+
+  isDeniedFromPosting: {
+    type: Boolean,
+    default: false
+  },
+  
 },
 { timestamps: true }
 );

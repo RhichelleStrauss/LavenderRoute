@@ -25,6 +25,8 @@ const ReflectiveCard = ({
 
       <div className="card-glass-background" />
 
+     
+
       <div className="reflective-content">
         <div className="card-header">
           <div className="pokemon-tags">
