@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import LiquidEther from "../components/LiquidEther.jsx";
 import ReflectiveCard from "../components/pokemonCard.jsx";
-import SearchCapsule from "../components/SearchCapsule.jsx";
+import SearchCapsule from "../components/searchCapsule.jsx";
 import PokemonAddForm from "../components/PokemonAddForm.jsx";
 import filterIcon from "../assets/icons/FilterIconRectangle.png";
 import searchIcon from "../assets/icons/SortIcon.png";

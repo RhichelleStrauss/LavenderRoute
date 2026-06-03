@@ -84,7 +84,7 @@ const Navbar = ({ userRole }) => {
             onClick={() => { navigate('/signup'); closeMenu(); }}
           />
 
-          {(userRole === 'admin' || userRole === 'seller') && (
+          {/* {(userRole === 'admin' || userRole === 'seller') && ( */}
             <img 
               src={settingsIcon} 
               alt="Dashboard Settings" 
@@ -92,7 +92,7 @@ const Navbar = ({ userRole }) => {
               className="action-icon action-icon-png"
               onClick={() => { navigate('/dashboard'); closeMenu(); }}
             />
-          )}
+          {/* )} */}
           
         </div>
 

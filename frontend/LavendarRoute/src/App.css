@@ -187,7 +187,7 @@
 .giant-sprite {
   width: 100%; 
   max-width: 650px;
-  transform: scale(1.2); 
+  transform: scale(1.14); 
   transform-origin: center;
   height: auto;
   object-fit: contain;
@@ -219,7 +219,18 @@
   zoom: 0.9; 
 }
 
-@media (max-width: 1250px) {
+@media (max-width: 1600px) and (min-width: 901px) {
+  .products-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)) !important; 
+    gap: 15px !important;
+  }
+  
+  .card-wrapper {
+    zoom: 0.75 !important; 
+  }
+}
+
+@media (max-width: 900px) {
   .top-split {
     display: flex;
     flex-direction: column;
