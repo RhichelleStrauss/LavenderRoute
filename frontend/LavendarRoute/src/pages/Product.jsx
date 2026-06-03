@@ -166,7 +166,7 @@ function Product() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            pokemon: pokemon,
+            pokemon: wishArray,
           }),
         },
       );
