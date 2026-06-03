@@ -1,5 +1,6 @@
 import React from 'react';
 import '../css/PokePattern.css';
+import PokeballOpen from './PokeballOpen.jsx'
 
 import OgerponToken from '../assets/tokens/OgerponToken.png'
 import RayquazaToken from '../assets/tokens/RayquazaToken.png'
@@ -48,18 +49,29 @@ export default function PokePattern({ pattern, setPattern }) {
   return (
     <div className="w-full flex flex-col gap-2 mt-4">
       <label style={{ marginBottom: '5px' }}>Pokémon Pattern (Choose 6-12 tokens):</label>
-      <div className="token-selection-row">
+
+      <div 
+        style={{ 
+          display: 'flex', 
+          gap: '12px', 
+          flexWrap: 'nowrap',
+          justifyContent: 'center', 
+          marginBottom: '20px',
+          width: '100%',
+          height: '100%'
+        }}
+      >
         {availableTokens.map((token, index) => (
-          <img
+          <PokeballOpen
             key={index}
-            src={tokenDisplay[token]}
-            alt={token}
-            onClick={() => handleTokenClick(token)}
-            className="token-img"
+            tokenName={token}
+            tokenImage={tokenDisplay[token]} 
+            onTokenSelect={handleTokenClick}
           />
         ))}
       </div>
 
+    
       <div className="pattern-display-box">
         {pattern.length === 0 ? (
           <span className="empty-pattern-text">Your pattern will appear here...</span>
@@ -70,13 +82,12 @@ export default function PokePattern({ pattern, setPattern }) {
               onClick={() => handleRemoveToken(index)}
               className="selected-token-wrapper"
             >
-
-                <img
+              <img
                 src={tokenDisplay[token]}
                 alt={token}
                 className="selected-token-img"
               />
-              <div 
+              <div
                 className="bin-icon-mask"
                 style={{
                   maskImage: `url(${BinIcon})`,
@@ -96,4 +107,4 @@ export default function PokePattern({ pattern, setPattern }) {
     </div>
   );
 }
-      
+    
