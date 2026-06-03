@@ -5,7 +5,7 @@ import '../css/SignUp.css';
 import LetterGlitch from '../components/LetterGlitch';
 import PokePattern from '../components/PokePattern';
 import axios from 'axios';
-
+import toast from 'react-hot-toast';
 
 
 function Login() {
@@ -36,23 +36,30 @@ function Login() {
 
       if (response.status === 202 && response.data.requiresAdminPasskey) {
         setNeedsAdminKey(true);
+
+        toast('Admin Passkey Required', { icon: '🔐' });
+
         console.log("Server requested passkey.");
         return; 
       }
 
       if (response.data.token) {
+
         console.log("Login success! Saving token and navigating...");
         localStorage.setItem('token', response.data.token);
         const rolesToSave = response.data.user?.roles || response.data.roles || [];
         localStorage.setItem('userRoles', JSON.stringify(rolesToSave));
+
+        toast.success("Welcome back to the LavenderRoute!");
         navigate('/dashboard');
+
       } else {
         console.log("⚠️ Server responded 200, but no token was found in the data!");
       }
 
     } catch (err) {
       console.error("LOGIN ERROR:", err.response?.data || err.message);
-      alert(err.response?.data?.message || "Login failed");
+      toast.error(err.response?.data?.message || "Login failed");
     }
   };
 

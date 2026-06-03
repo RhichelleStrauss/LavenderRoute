@@ -11,6 +11,7 @@ import BinIcon from '../assets/icons/BinIcon.png';
 import PokemonAddForm from '../components/PokemonAddForm.jsx'
 import CrossIcon from '../assets/icons/CrossIcon.png'
 import PencilIcon from '../assets/icons/PencilIcon.png'
+import toast from 'react-hot-toast';
 
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from "react";

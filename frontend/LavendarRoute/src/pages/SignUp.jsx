@@ -8,6 +8,7 @@ import gengarLogo from '../assets/gengar-logo.png'
 import '../css/SignUp.css'
 import PokePattern from '../components/PokePattern';
 import LetterGlitch from '../components/LetterGlitch'
+import toast from 'react-hot-toast';
 
 //stepper imports
 import * as React from 'react';
@@ -52,10 +53,10 @@ function SignUp() {
   const handleNext = () => {
     if (activeStep === 1) {
       if (!firstName || !lastName || !email || !dob) {
-        return alert("Please fill in all fields.");
+        return toast.error("Please fill in all fields.");
       }
       if (!checkAge(dob)) {
-        return alert("You must be 18 or older to enter the Lavender Route.");
+        return toast.error("You must be 18 or older to enter the Lavender Route.");
       }
     }
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -68,7 +69,7 @@ function SignUp() {
   const handleSignUp = async (e) => {
   e.preventDefault();
   if (tokenPattern.length < 6) {
-      return alert('Pattern must be at least 6 tokens');
+      return toast.error('Pattern must be at least 6 tokens');
     }
     const authPatternString = tokenPattern.join('-');
 
@@ -90,12 +91,12 @@ function SignUp() {
       adminPasskey: role === 'admin' ? adminPasskey : undefined
     });
 
-      alert(response.data.message);
+      toast.success(response.data.message || "Account created successfully!");
       navigate('/login');
 
     } catch (err) {
       console.log("WHY IS IT BREAKINF", err);
-      alert(err.response?.data?.message || "Registration failed");
+      toast.error(err.response?.data?.message || "Registration failed");
     }
   }
 

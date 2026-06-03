@@ -59,7 +59,7 @@ const POKEMON_TYPE = [
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (form.type.length === 0) return alert("Select at least 1 type!");
+    if (form.type.length === 0) return toast.error("Select at least 1 type!");
     //if no types selected this alert pops up
 
     try {
@@ -82,7 +82,7 @@ const POKEMON_TYPE = [
         await axios.post(API, payload, {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         });
-        alert("New Pokémon added!");
+       toast.success("New Pokémon added to the LavenderRoute!");
       }
 
       if (onSave) {
@@ -95,9 +95,9 @@ const POKEMON_TYPE = [
       } catch (err) {
       console.error("SUBMIT ERROR FULL OBJECT:", err);
       if (err.response) {
-        alert("Backend refused the listing: " + err.response.data.message);
+        toast.error("Backend refused the listing: " + err.response.data.message);
       } else {
-        alert("Request failed completely. Is the server running?");
+        toast.error("Request failed completely. Is the server running?");
       }
     }
   };
@@ -110,7 +110,7 @@ const POKEMON_TYPE = [
       await axios.delete(`${API}/${initialData._id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
-      alert("Pokémon deleted permanently!");
+     toast.success("Pokémon deleted permanently!");
       
       if (onDelete) {
         onDelete();
@@ -121,7 +121,7 @@ const POKEMON_TYPE = [
       }
     } catch (err) {
       console.error("DELETE ERROR:", err);
-      alert("Failed to delete. It may have already been removed.");
+     toast.error("Failed to delete. It may have already been removed.");
     }
   };
 

@@ -6,6 +6,7 @@ import PokemonAddForm from '../components/PokemonAddForm.jsx';
 import CrossIcon from '../assets/icons/CrossIcon.png';
 import LiquidEther from '../components/LiquidEther.jsx';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 // const MOCK_PENDING = [
 //   { _id: '1', name: 'GENGAR', level: 45, type: ['Ghost', 'Poison'], gender: 'Male', imgUrl: 'https://archives.bulbagarden.net/media/upload/thumb/4/47/0094Gengar.png/375px-0094Gengar.png' },
@@ -45,7 +46,7 @@ const AdminDashboard = () => {
 
   const handleReview = async (action) => {
     if (action === 'reject' && !adminFeedback) {
-      return alert("You must provide feedback to deny a post.");
+      return toast.error("You must provide feedback to deny a post.");
     }
 
     try {
@@ -58,12 +59,16 @@ const AdminDashboard = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
 
+      toast.success(
+        `Listing ${action === 'approve' ? 'approved' : 'rejected'} successfully!`
+      );
+
       setSelectedPost(null);
       setAdminFeedback("");
       fetchPendingPosts();
 
     } catch (err) {
-      alert("Review failed: " + err.response?.data?.message);
+      toast.error(err.response?.data?.message || "Review failed.");
     }
   };
 

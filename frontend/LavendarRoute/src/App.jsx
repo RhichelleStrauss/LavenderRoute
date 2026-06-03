@@ -13,6 +13,8 @@ import Product from './pages/Product';
 import LiquidEther from './components/LiquidEther';
 import Dashboard from './pages/Dashboard';
 import './App.css';
+import { Toaster } from 'react-hot-toast';
+
 
 const Home = () => {
   
@@ -128,6 +130,46 @@ const Home = () => {
 
 function App() {
   return (
+    <>
+   <Toaster 
+        position="top-center"
+        reverseOrder={false}
+        toastOptions={{
+          style: {
+            background: 'rgba(10, 6, 14, 0.4)',
+            backdropFilter: 'blur(5px)',
+            WebkitBackdropFilter: 'blur(5px)',
+            border: '1px solid #BA8CFF', 
+            color: '#4D4D4D', 
+            padding: '16px',
+            borderRadius: '12px',
+            boxShadow: '0 4px 16px 0 rgba(0, 0, 0, 0.4)',
+            fontFamily: '"VT323", monospace', 
+            fontSize: '1.2rem',
+            letterSpacing: '1px'
+          },
+          success: {
+            iconTheme: {
+              primary: '#A3E635', 
+              secondary: '#0A060E',
+            },
+          },
+          error: {
+            iconTheme: {
+              primary: '#ef4444', 
+              secondary: '#0A060E',
+            },
+            style: {
+              border: '1px solid #ef4444',
+              background: 'rgba(10, 6, 14, 0.4)',
+              backdropFilter: 'blur(5px)',
+              WebkitBackdropFilter: 'blur(5px)',
+              color: '#660019', 
+            }
+          },
+        }}
+      />
+
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -140,6 +182,7 @@ function App() {
 
       </Routes>
     </BrowserRouter>
+    </>
   );
 }
 

@@ -9,6 +9,7 @@ import Navbar from '../components/navbar.jsx';
 
 import filterIcon from "../assets/icons/FilterIconRectangle.png";
 import CrossIcon from "../assets/icons/CrossIcon.png";
+import toast from 'react-hot-toast';
 
 export default function PokemonAdd() {
   const [teamPokemon, setTeamPokemon] = useState([
