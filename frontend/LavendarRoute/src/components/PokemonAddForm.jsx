@@ -11,17 +11,18 @@ const API = "http://localhost:5000/api/pokemon";
 const POKEMON_TYPE = [
     'Normal', 'Fire', 'Water', 'Electric', 'Grass', 'Ice', 'Fighting', 'Poison', 'Ground', 'Flying',
     'Psychic', 'Bug', 'Rock', 'Ghost', 'Dragon', 'Dark', 'Steel', 'Fairy'
-]; 
+];
+
 //pokemon types for dropdown
 
 //braindump?
 //if editing (on catalog page), the form sends the data to the catalog component via onsave
-//if adding the form sends data out to api, redirects uou to catalog on sibmit 
+//if adding the form sends data out to api, redirects uou to catalog on sibmit
 // payload is a bundle of info about a pokemon sendinf to database\
 //before sending data, create a payload object that takes values on form
-//certain objets convert strings into numbers 
+//certain objets convert strings into numbers
 //payload is stringified into a json string, and placed into bpody of fetch to server on api https
-//modal not open 
+//modal not open
 
 
 //initialdata: on addpokemon page nothing, on catalog stores pokemons when clicking card
@@ -32,8 +33,8 @@ const POKEMON_TYPE = [
   const typeRef = useRef(null);
 
   const [form, setForm] = useState(initialData || {
-    name: "", level: "", price: "", height: "", weight: "", 
-    description: "", imagePokemon: "", type: [], gender: "Genderless", shiny: false 
+    name: "", level: "", price: "", height: "", weight: "",
+    description: "", imagePokemon: "", type: [], gender: "Genderless", shiny: false
   });
 
   //set key value - helper function
@@ -89,16 +90,15 @@ const POKEMON_TYPE = [
       }
     }
   };
-  
 
 const styles = {
-    card: { width: "100%", maxWidth: 800, margin:isModal ? "0 auto" : "40px auto", border: "1px solid #C4FF4D", borderRadius: "16px", backgroundColor: "#1a1a1ab5)", padding: "40px", boxSizing: "border-box", fontFamily: "'Poppins', sans-serif", color: "#BA8CFF", boxShadow: "0 0 40px #1a1a1a80",maxHeight: isModal ? "90vh" : "none", 
+    card: { width: "100%", maxWidth: 800, margin:isModal ? "0 auto" : "40px auto", border: "1px solid #C4FF4D", borderRadius: "16px", backgroundColor: "rgba(42, 26, 58, 0.50)", padding: "40px", boxSizing: "border-box", fontFamily: "'Poppins', sans-serif", color: "#BA8CFF", boxShadow: "0 0 40px #1a1a1a80",maxHeight: isModal ? "90vh" : "none",
     overflowY: isModal ? "auto" : "visible"},
     header: { margin: "0 0 32px 0", fontSize: 24, fontWeight: 800, color: "#BA8CFF", letterSpacing: "2px", textTransform: "uppercase", fontFamily: "'VT323', monospace", textShadow: "2px 2px 0px rgba(#1a1a1a80)" },
     row: { display: "flex", gap: "24px", marginBottom: "20px" },
     col: { flex: 1, position: "relative" },
     label: { display: "block", fontSize: "14px", color: "#BA8CFF", marginBottom: "8px" },
-    input: { width: "100%", boxSizing: "border-box", padding: "12px 16px", border: "1px solid #BA8CFF", borderRadius: "12px", backgroundColor: "rgba(186, 140, 255, 0.2)", color: "#BA8CFF", fontSize: "14px", outline: "none" },
+    input: { width: "100%", boxSizing: "border-box", padding: "12px 16px", border: "1px solid #BA8CFF", borderRadius: "12px", backgroundColor: "rgba(186, 140, 255, 0.2)", color: "#ffffff", fontSize: "14px", outline: "none" },
     textarea: { width: "100%", boxSizing: "border-box", padding: "12px 16px", border: "1px solid #BA8CFF", borderRadius: "12px", backgroundColor: "rgba(186, 140, 255, 0.2)", color: "#BA8CFF", fontSize: "14px", outline: "none", minHeight: "100px", resize: "vertical" },
     imageArea: { width: "100%", boxSizing: "border-box", padding: "12px 16px", border: "1px dashed #BA8CFF", borderRadius: "12px", backgroundColor: "rgba(186, 140, 255, 0.2)", color: "#BA8CFF", fontSize: "14px", outline: "none", minHeight: "140px", resize: "vertical" },
     typeContainer: { minHeight: "44px", display: "flex", flexWrap: "wrap", gap: "8px", alignItems: "center", cursor: "pointer", border: "1px solid #BA8CFF", borderRadius: "12px", padding: "8px 12px", backgroundColor: "rgba(186, 140, 255, 0.2)" },
@@ -124,7 +124,6 @@ const styles = {
 
       <form onSubmit={handleSubmit}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px 20px" }}>
-          
           {/* ᓚᘏᗢ name */}
           <Field.Root style={{ ...styles.field, gridColumn: "1 / -1" }}>
             <Field.Label style={styles.label}>Pokémon name:</Field.Label>
@@ -151,7 +150,7 @@ const styles = {
                 </span>
               ))}
             </div>
-            
+
             {isTypeMenuOpen && form.type.length < 2 && (
               <div style={{ position: "absolute", top: "100%", left: 0, right: 0, zIndex: 50, marginTop: "4px", backgroundColor: "rgb(186, 140, 255)", color: "#BA8CFF", border: "2px solid #1A1A1A", maxHeight: "180px", overflowY: "auto", padding: "4px"}}>
                 {POKEMON_TYPE.filter(t => !form.type.includes(t)).map(t => (
@@ -162,7 +161,7 @@ const styles = {
               </div>
             )}
           </Field.Root>
-          
+
            {/* ᓚᘏᗢ gender */}
           <Field.Root style={styles.field}>
             <Field.Label style={styles.label}>Gender:</Field.Label>
@@ -217,9 +216,9 @@ const styles = {
 
              {/* ᓚᘏᗢ shiny toggle, shiny or no shiny */}
           <Field.Root style={{ ...styles.field, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: '10px' }}>
-            <Field.Label style={{ ...styles.label, cursor: 'pointer' }}>Shiny Variant</Field.Label>
-            <Switch.Root checked={form.shiny} onCheckedChange={(c) => set("shiny", c)} style={{ width: '48px', height: '26px', backgroundColor: form.shiny ? 'black' : 'white', border: '2px solid black', borderRadius: '9999px', position: 'relative', cursor: 'pointer', padding: 0 }}>
-              <Switch.Thumb style={{ display: 'block', width: '18px', height: '18px', backgroundColor: form.shiny ? 'white' : 'black', borderRadius: '9999px', transition: 'transform 0.2s', transform: `translateX(${form.shiny ? '24px' : '2px'})`, marginTop: '2px' }} />
+            <Field.Label style={{ ...styles.label, cursor: 'pointer', marginBottom: 0 }}>Shiny Variant</Field.Label>
+            <Switch.Root checked={form.shiny} onCheckedChange={(c) => set("shiny", c)} style={{ width: '50px', height: '28px', backgroundColor: form.shiny ? 'rgba(196, 255, 77, 0.2)' : '#121212', border: `1px solid ${form.shiny ? '#C4FF4D' : 'rgba(186, 140, 255, 0.3)'}`, borderRadius: '9999px', position: 'relative', cursor: 'pointer', padding: 0, transition: 'all 0.3s' }}>
+              <Switch.Thumb style={{ display: 'block', width: '20px', height: '20px', backgroundColor: form.shiny ? '#C4FF4D' : 'rgba(186, 140, 255, 0.5)', borderRadius: '9999px', transition: 'transform 0.2s', transform: `translateX(${form.shiny ? '26px' : '3px'})`, marginTop: '3px' }} />
             </Switch.Root>
           </Field.Root>
 
@@ -248,28 +247,27 @@ const styles = {
           <button type="submit" style={styles.btnSubmit}>
             {initialData ? "Save Changes" : "Add Product"}
           </button>
-          
+
           {/* delete button only appears when on catalog page, editing */}
           {initialData && (
-            <button 
-              type="button" 
-              style={styles.btnDeleteIcon} 
+            <button
+              type="button"
+              style={styles.btnDeleteIcon}
               onClick={() => onDelete(initialData._id)}
             >
-              <img 
-                src={BinIcon} 
-                style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
+              <img
+                src={BinIcon}
+                style={{ width: '100%', height: '100%', objectFit: 'contain' }}
               />
             </button>
           )}
         </div>
-
       </form>
     </div>
   );
 }
 
-export default PokemonAddForm;
+export default PokemonAddForm; 
 
 
 
