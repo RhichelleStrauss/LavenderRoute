@@ -28,8 +28,11 @@ const Navbar = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userRoles');
     localStorage.removeItem('userId');
+    localStorage.removeItem('cart');
+    localStorage.removeItem('wishlist');
     navigate('/');
     window.location.reload();
+
   };
 
   return (

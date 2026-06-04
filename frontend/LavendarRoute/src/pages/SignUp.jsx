@@ -117,7 +117,6 @@ const renderStepContent = (step) => {
               <option value="buyer">Buyer</option>
               <option value="seller">Seller</option>
               <option value="hybrid">Hybrid (Buyer & Seller)</option>
-              <option value="admin">Admin</option>
             </select>
           </div>
         );

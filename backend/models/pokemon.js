@@ -78,6 +78,7 @@ const PokemonSchema = new mongoose.Schema(
                 required: true
         },
         
+        comments: [commentSchema]
     },
     {timestamps : true}
 );

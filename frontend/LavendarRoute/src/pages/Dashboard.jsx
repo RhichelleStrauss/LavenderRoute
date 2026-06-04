@@ -1,3 +1,9 @@
+//onload checks localstorage for users roles
+//if its admin, admin dash is loaded, and loads admin dash, fetches all pending posts 
+//if seller, seller dash is loaded, fethces users pokemon
+
+
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/navbar.jsx';

@@ -320,7 +320,7 @@ const [showModal, setShowModal] = useState(false);
                     </Col>
                   </Row>
                   <Row className="font-vt text-20">
-                    <p>Sold by: PokeCatcher69</p>
+                     <p>Sold by: {pokemon?.sellerId.firstName || "PokéCatcher"}</p>
                   </Row>
                   <Row>
                     <p>{pokemon?.description}</p>
@@ -400,14 +400,10 @@ const [showModal, setShowModal] = useState(false);
                     <Button
                     className="text-32"
                     variant="primary"
-                    id="cart-btn"
-                    onClick={() => {
-                      setShowModal(true);
-                      AddToCart(pokemon);
-                      setAdded(true);
-                    }}
+                    id="cart-btn-disabled"
+                    disabled
                   >
-                    Add to cart
+                    Added
                   </Button>
                   ) : (
                     <Button
@@ -431,7 +427,7 @@ const [showModal, setShowModal] = useState(false);
           <Row className="text-left pt-5">
             <Col>
               <Row className="text-green font-vt text-36">
-                <p>Reviews</p>
+                <p>Comments</p>
               </Row>
               {!token ? (
                 <></>
@@ -475,7 +471,7 @@ const [showModal, setShowModal] = useState(false);
       ))
     ) : (
       <div className="font-vt text-20 text-white mt-3 ps-2">
-        No reviews yet. Be the first to review this Pokémon!
+        No comments yet. Be the first to review this Pokémon!
       </div>
     )}
   </Col>

@@ -2,6 +2,11 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+//data entry; user enters details
+//react sends info to server, server hashes password, and ensures it matches in mongodb
+//if password matches, server creates jwt 
+//server sends token back to react, react stores it in localstorage
+//when logging out the token is removed from local storage
 
 const Pokemon = require('../../models/pokemon');
 
