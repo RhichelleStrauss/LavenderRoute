@@ -1,7 +1,7 @@
 <div align="center">
   
 # Lavender Route
-<img src="../LavenderRoute/frontend/LavendarRoute/src/assets/Banner_LavenderRoute.png">
+<img src="https://github.com/RhichelleStrauss/LavenderRoute/blob/main/frontend/LavendarRoute/src/assets/Banner_LavenderRoute.png">
 
 **A shadowy hub for serious Pokémon traders, where rare finds and elite builds change hands fast.**
 
@@ -19,7 +19,8 @@ In the standard digital asset and Pokémon trading space, platforms often feel g
 ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
 ![Base UI](https://img.shields.io/badge/Base%20UI-007FFF?style=for-the-badge&logo=mui&logoColor=white)
 
-<img src="../LavenderRoute/frontend/LavendarRoute/src/assets/HomePageLavRoute.jpg">
+<img src="https://github.com/RhichelleStrauss/LavenderRoute/blob/main/frontend/LavendarRoute/src/assets/HomePageLavRoute.jpg">
+
 
 ---
 
@@ -65,10 +66,10 @@ The idea was to create a digital marketplace that didn't feel like a standard e-
 ## Wireframes
 
 <div align="center">
-  <img src="../LavenderRoute/frontend/LavendarRoute/src/assets/LavenderRoute_Wireframe_HomePage.png" width="24%">
-  <img src="../LavenderRoute/frontend/LavendarRoute/src/assets/Catalog_wireframe.png" width="24%">
-  <img src="../LavenderRoute/frontend/LavendarRoute/src/assets/Modal_wireframe.png" width="24%">
-  <img src="../LavenderRoute/frontend/LavendarRoute/src/assets/ProductAdd_Wireframe.png" width="24%">
+  <img src="https://github.com/RhichelleStrauss/LavenderRoute/blob/main/frontend/LavendarRoute/src/assets/LavenderRoute_Wireframe_HomePage.png" width="24%">
+  <img src="https://github.com/RhichelleStrauss/LavenderRoute/blob/main/frontend/LavendarRoute/src/assets/Catalog_wireframe.png" width="24%">
+  <img src="https://github.com/RhichelleStrauss/LavenderRoute/blob/main/frontend/LavendarRoute/src/assets/Modal_wireframe.png" width="24%">
+  <img src="https://github.com/RhichelleStrauss/LavenderRoute/blob/main/frontend/LavendarRoute/src/assets/ProductAdd_Wireframe.png" width="24%">
 </div>
 
 ---
@@ -101,8 +102,8 @@ To achieve our highly specific "Misty Glass" cyberpunk aesthetic, standard UI li
 
 ## Mockups
 
-![Lavender Route Mockup](../LavenderRoute/frontend/LavendarRoute/src/assets/LavRouteMockupDashboard.png)
-![Lavender Route Mockup](../LavenderRoute/frontend/LavendarRoute/src/assets/DesktopMockup.png)
+![Lavender Route Mockup](https://github.com/RhichelleStrauss/LavenderRoute/blob/main/frontend/LavendarRoute/src/assets/LavRouteMockupDashboard.png)
+![Lavender Route Mockup](https://github.com/RhichelleStrauss/LavenderRoute/blob/main/frontend/LavendarRoute/src/assets/DesktopMockup.png)
 
 ## Demonstration
 
