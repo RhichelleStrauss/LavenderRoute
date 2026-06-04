@@ -68,6 +68,8 @@ The idea was to create a digital marketplace that didn't feel like a standard e-
   <img src="../LavenderRoute/frontend/LavendarRoute/src/assets/Post Creation Form.png" width="25%">
 </div>
 
+<img src="https://github.com/RhichelleStrauss/LavenderRoute/blob/main/frontend/LavendarRoute/src/assets/HOME%20PAGE.png">
+
 ---
 
 ## Development Process & Challenges
