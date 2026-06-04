@@ -1,15 +1,6 @@
-//onload initial data is passed into form
-//initial data is empty, form is blank, and is storing things
-//if clicking edit button, initial data contains pokemons info, and fills in the stored things
-
-
-//form creates a payload-copies all text data, but transofms price, lvelem height and weight into numbers
-//put is edit - form gets edited with new payload
-//post, sends axis post to create listing 
-//it attaches auth to ensure the user can make these changes
-
-//base ui imports
+//base ui imports------
 import { Field, Switch, NumberField } from '@base-ui/react';
+//-------
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from 'react-bootstrap/Card';  
@@ -197,9 +188,9 @@ const styles = {
           </Field.Root>
 
              {/* ᓚᘏᗢ height */}
-             {/* pokemon height are in meters */}
+             {/* pokemon height are in inches */}
           <Field.Root style={styles.field}>
-            <Field.Label style={styles.label}>Height (m):</Field.Label>
+            <Field.Label style={styles.label}>Height (inches):</Field.Label>
             <NumberField.Root value={form.height === "" ? null : Number(form.height)} onValueChange={v => set("height", v ?? "")} step={0.1} min={0} required>
               <NumberField.Group style={styles.numberGroup}>
                 <NumberField.Decrement style={styles.numberBtn}>-</NumberField.Decrement>
@@ -243,9 +234,9 @@ const styles = {
           </Field.Root>
 
              {/* ᓚᘏᗢ img url*/}
-          <Field.Root style={{ ...styles.field, gridColumn: "1 / -1", opacity: isRestrictedEdit ? 0.6 : 1 }}>
-            <Field.Label style={styles.label}>Image URL(please copy image addres from bulbagarden for transparency)</Field.Label>
-            <Field.Control disabled={isRestrictedEdit} required type="url" style={{...styles.input, cursor: isRestrictedEdit ? 'not-allowed' : 'text'}} value={form.imagePokemon} onChange={e => set("imagePokemon", e.target.value)} placeholder="https://..." />
+          <Field.Root style={{ ...styles.field, gridColumn: "1 / -1" }}>
+            <Field.Label style={styles.label}>Image URL</Field.Label>
+            <Field.Control required type="url" style={styles.input} value={form.imagePokemon} onChange={e => set("imagePokemon", e.target.value)} placeholder="https://..." />
             <Field.Error style={styles.error} match="valueMissing">Image URL is required.</Field.Error>
           </Field.Root>
 
