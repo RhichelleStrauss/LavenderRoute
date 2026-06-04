@@ -15,6 +15,8 @@ import Footer from './components/Footer';
 import './App.css';
 import Product from './pages/Product';
 import Dashboard from './pages/Dashboard';
+import Wishlist from './pages/Wishlist';
+import Cart from './pages/Cart'
 
 const Home = () => {
   const [teamPokemon, setTeamPokemon] = useState([]);
@@ -160,6 +162,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/pokemon/:id" element={<Product />} />
          <Route path='/Dashboard' element={<Dashboard />} />
+         <Route path='/Wishlist' element={<Wishlist />} />
+         <Route path='/Cart' element={<Cart />} />
       </Routes>
     </BrowserRouter>
   );

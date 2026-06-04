@@ -75,6 +75,37 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+router.post("/:id/comments", async (req, res) => { //calls to post comments to the pokemon model.
+  try {
+
+    const pokemon = await Pokemon.findByIdAndUpdate(
+      req.params.id,
+      {
+        $push: {
+          comments: req.body,
+        },
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    if (!pokemon) {
+      return res.status(404).json({
+        message: "Pokemon not found",
+      });
+    }
+
+    res.status(200).json(pokemon);
+
+  } catch (error) {
+    res.status(400).json({
+      message: error.message,
+    });
+  }
+});
+
 router.delete("/:id", async (req, res) => {
   try {
     const deletePokemon = await Pokemon.findByIdAndDelete(req.params.id);

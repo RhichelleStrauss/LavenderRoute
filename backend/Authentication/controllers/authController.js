@@ -102,25 +102,29 @@ exports.login = async (req, res) => {
 
 exports.reviewPost = async (req, res) => {
     try {
-      const { postId, action, adminFeedback } = req.body;
+        const { postId, action, adminNotes } = req.body;
 
-      const post = await Pokemon.findById(postId);
+        const newStatus = action === 'approve' ? 'approved' : 'rejected';
+      const newNotes = action === 'reject' ? (adminNotes || "No feedback provided by admin.") : "";
+
+      const post = await Pokemon.findByIdAndUpdate(
+        postId, 
+        { 
+            status: newStatus, 
+            adminNotes: newNotes 
+        },
+        { new: true }
+        );
   
       if (!post) {
         return res.status(404).json({ message: "Post not found" });
       }
-      if (action === 'approve') {
-        post.status = 'approved';
-      } else if (action === 'reject') {
-        post.status = 'rejected';
-        post.adminFeedback = adminFeedback || "No feedback provided by admin.";
-      }
-
-      await post.save();
   
       res.status(200).json({ message: `Post successfully ${action}d!` });
     } catch (error) {
       console.error("Review error:", error);
       res.status(500).json({ message: "Server error during review." });
     }
-  };
+};
+
+      

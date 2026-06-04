@@ -157,7 +157,7 @@ const styles = {
         {initialData ? "Edit Pokémon" : "Add New Pokémon"}
       </h2>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px 20px" }}>
           
           {/* ᓚᘏᗢ name */}

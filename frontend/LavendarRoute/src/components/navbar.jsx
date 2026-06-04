@@ -89,6 +89,7 @@ const Navbar = () => {
             alt="Cart" 
             title="Cart"
             className="action-icon action-icon-png" 
+            onClick={() => { navigate('/Cart'); closeMenu(); }}
           />
 
           {isAuthorized && (
