@@ -5,7 +5,6 @@ require("dotenv").config();
 
 
 const pokemonRoutes = require("./routes/pokemon"); 
-const verifyToken = require('./Authentication/middleware/verifyToken');
 
 const app = express();
 

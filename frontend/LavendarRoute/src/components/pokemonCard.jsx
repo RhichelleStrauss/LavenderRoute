@@ -1,10 +1,7 @@
 import { useState } from 'react';
 import "../css/reflectiveCard.css";
-import { useState } from 'react';
-import { useNavigate } from "react-router-dom";
 
 const ReflectiveCard = ({
-  id,
   pokemonName,
   level,
   type = [],
@@ -14,44 +11,8 @@ const ReflectiveCard = ({
   weight,
   imgUrl,
   onEdit,
-  shiny,
-  isInteractive = true
+  shiny
 }) => {
-  const rotateAmplitude = 14;
-  const scaleOnHover = 1.04;
-  
-  const [rotateX, setRotateX] = useState(0);
-  const [rotateY, setRotateY] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
-
-  const handleMouseMove = (e) => {
-    const card = e.currentTarget;
-    const box = card.getBoundingClientRect();
-    
-    const mouseX = e.clientX - box.left;
-    const mouseY = e.clientY - box.top;
-    
-    const xPct = mouseX / box.width - 0.5;
-    const yPct = mouseY / box.height - 0.5;
-    
-    setRotateX(yPct * -rotateAmplitude);
-    setRotateY(xPct * rotateAmplitude);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-    setRotateX(0);
-    setRotateY(0);
-  };
-
-  const handleCardClick = () => {
-    if (isInteractive) {
-      // console.log(id);
-      // console.log(`Hello, [${pokemonName}]!`); 
-      navigate(`/pokemon/${id}`);
-    }
-  };
-
   const rotateAmplitude = 14;
   const scaleOnHover = 1.04;
   
@@ -82,11 +43,10 @@ const ReflectiveCard = ({
   return (
     <div 
       className={`reflective-card-container ${shiny ? 'card-shiny' : 'card-basic'}`}
-      onClick={handleCardClick}
+      onClick={onEdit}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={handleMouseLeave}
-      
       style={{ 
         cursor: 'pointer', 
         position: 'relative',

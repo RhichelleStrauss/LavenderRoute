@@ -3,64 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import gengarLogo from '../assets/gengar-logo.png';
 import '../css/SignUp.css'; 
 import LetterGlitch from '../components/LetterGlitch';
-import PokePattern from '../components/PokePattern';
-import axios from 'axios';
-import toast from 'react-hot-toast';
-
 
 function Login() {
   const navigate = useNavigate();
   
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [tokenPattern, setTokenPattern] = useState([]);
-  const [needsAdminKey, setNeedsAdminKey] = useState(false);
-  const [adminPasskey, setAdminPasskey] = useState('');
+  const [specialCode, setSpecialCode] = useState(''); 
 
-
- const handleLogin = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
-    
-    const authPatternString = tokenPattern.join('-');
-    console.log("Attempting login with:", { email, authPattern: authPatternString });
-
-    try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', {
-        email,
-        password,
-        authPattern: authPatternString,
-        adminPasskey: needsAdminKey ? adminPasskey : undefined
-      });
-
-      console.log("SERVER RESPONSE DATA:", response.data);
-
-      if (response.status === 202 && response.data.requiresAdminPasskey) {
-        setNeedsAdminKey(true);
-
-        toast('Admin Passkey Required', { icon: '🔐' });
-
-        console.log("Server requested passkey.");
-        return; 
-      }
-
-      if (response.data.token) {
-
-        console.log("Login success! Saving token and navigating...");
-        localStorage.setItem('token', response.data.token);
-        const rolesToSave = response.data.user?.roles || response.data.roles || [];
-        localStorage.setItem('userRoles', JSON.stringify(rolesToSave));
-
-        toast.success("Welcome back to the LavenderRoute!");
-        navigate('/dashboard');
-
-      } else {
-        console.log("⚠️ Server responded 200, but no token was found in the data!");
-      }
-
-    } catch (err) {
-      console.error("LOGIN ERROR:", err.response?.data || err.message);
-      toast.error(err.response?.data?.message || "Login failed");
-    }
+    console.log("Logging in with:", username, password, specialCode);
+    navigate('/catalog');
   };
 
   return (
@@ -141,29 +95,22 @@ function Login() {
                   />
                 </div>
 
-                {needsAdminKey && (
-  <div className="input-group" style={{ border: '2px solid #BA8CFF', padding: '10px', borderRadius: '8px', marginBottom: '20px' }}>
-    <label htmlFor="adminPasskey" style={{ color: '#BA8CFF' }}>Admin Passkey</label>
-    <input 
-      type="password" 
-      id="adminPasskey" 
-      placeholder="Enter sacred passkey..." 
-      value={adminPasskey} 
-      onChange={(e) => setAdminPasskey(e.target.value)} 
-      required
-    />
-  </div>
-)}
-
-<PokePattern pattern={tokenPattern} setPattern={setTokenPattern} />
-
-<div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                <div className="input-group">
+                  <label htmlFor="specialCode">Special Access Code</label>
+                  <input 
+                    type="text" 
+                    id="specialCode" 
+                    placeholder="Enter auth code" 
+                    value={specialCode} 
+                    onChange={(e) => setSpecialCode(e.target.value)} 
+                    required
+                  />
+                </div>
 
                 <button type="submit" className="submit-btn" style={{ marginTop: '20px' }}>
                   Enter Route
                 </button>
-</div>
-              
+                
                 <div className="login-link">
                   Don't have an account?{' '}
                   <span onClick={() => navigate('/signup')} style={{ cursor: 'pointer', color: 'var(--lavender-purple)', textDecoration: 'underline' }}>

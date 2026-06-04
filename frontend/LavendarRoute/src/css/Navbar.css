@@ -13,11 +13,9 @@
   max-width: 1780px;
   margin: 0 auto;
   box-sizing: border-box;
+  z-index: 100;
   
-  z-index: 100; 
-  
-  display: flex !important;
-  flex-direction: row !important;
+  display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 15px 40px;
@@ -65,7 +63,7 @@
   cursor: pointer;
   font-family: 'VT323', monospace;
   font-size: 2rem;
-  color: #FFFFFF;
+  color: var(--lavender-purple, #c084fc);
   text-decoration: none;
   transition: all 0.2s;
 }

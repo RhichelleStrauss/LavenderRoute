@@ -17,10 +17,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(186, 140, 255, 0.1); 
-  backdrop-filter: blur(3px); 
-  -webkit-backdrop-filter: blur(3px);
-  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
+  background-color: #9d4edd42;
   padding: 16px;
   border-radius: 12px;
   margin-bottom: 8px;
@@ -29,8 +26,8 @@
   }
 
 .token-img {
-  width: 23%;
-  height: 23%;
+  width: 70px;
+  height: 70px;
   cursor: pointer;
   transition: transform 0.2s ease-in-out;
   flex-shrink: 0;
@@ -40,23 +37,18 @@
   transform: scale(1.1);
 }
 
-
-.pattern-display-box{
+.pattern-display-box {
   width: 100%;
   min-height: 120px;
-  border: 2px dashed #9D4EDD;
+  border: 4px dashed #9D4EDD;
   border-radius: 12px;
-  background: rgba(186, 140, 255, 0.1); 
-  backdrop-filter: blur(3px); 
-  -webkit-backdrop-filter: blur(3px);
-  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
- display: flex;
-  flex-wrap: wrap;
+  background-color: #9d4edd42;
+  display: flex;
+  flex-wrap: nowrap;
   overflow-x: auto;
   align-items: center;
   padding: 12px;
   gap: 12px;
-  z-index: 10;
 }
 
 .empty-pattern-text {
@@ -104,6 +96,9 @@ bin-icon-mask {
 }
 
 .selected-token-wrapper:hover .bin-icon-mask {
-  opacity: 1; 
+  opacity: 1;
 }
 
+.bin-icon-mask:hover {
+  transform: scale(1.1);
+}

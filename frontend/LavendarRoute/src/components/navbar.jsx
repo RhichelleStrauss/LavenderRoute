@@ -2,34 +2,18 @@ import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import gengarLogo from '../assets/gengar-logo.png'; 
 import AddIcon from '../assets/icons/AddIcon.png';
-import profileIcon from '../assets/icons/ProfileIcon.png';
-import cartIcon from '../assets/icons/CartIcon.png';
-import settingsIcon from '../assets/icons/SettingsIcon.png';
-import heartIcon from '../assets/icons/HeartNotFilledIcon.png';
-import LogoutIcon from '../assets/icons/LogoutIcon.png'; 
-
 import '../css/Navbar.css';
 
 const Navbar = () => {
   const navigate = useNavigate();
-  
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
-  const [showLogout, setShowLogout] = useState(false);
 
-  const roles = JSON.parse(localStorage.getItem('userRoles') || '[]');
-  const isAuthorized = roles.includes('admin') || roles.includes('seller') || roles.includes('hybrid');
-  const isLoggedIn = !!localStorage.getItem('token');
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-  const closeMenu = () => setIsMenuOpen(false);
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userRoles');
-    localStorage.removeItem('userId');
-    navigate('/');
-    window.location.reload();
+  const closeMenu = () => {
+    setIsMenuOpen(false);
   };
 
   return (
@@ -59,81 +43,42 @@ const Navbar = () => {
       
       <div className={`nav-content ${isMenuOpen ? 'open' : ''}`}>
         
-        <div className="nav-links" style={{color: '#FFFFFF'}}>
+        <div className="nav-links">
           <NavLink to="/" className="nav-link-btn" onClick={closeMenu}>HOME</NavLink>
           <NavLink to="/catalog" className="nav-link-btn" onClick={closeMenu}>INVENTORY</NavLink>
         </div>
 
-
         <div className="nav-actions">
-          {isAuthorized && (
-            <img 
-              src={AddIcon} 
-              alt="Add Asset" 
-              title="List an Asset"
-              className="action-icon action-icon-png" 
-              onClick={() => { navigate('/add-pokemon'); closeMenu(); }} 
-            />
-          )}
-
           <img 
-            src={heartIcon} 
-            alt="Wishlist" 
-            title="Wishlist"
-            className="action-icon action-icon-png"
-            onClick={() => { navigate('/wishlist'); closeMenu(); }}
-          />
-
-          <img 
-            src={cartIcon} 
-            alt="Cart" 
-            title="Cart"
+            src={AddIcon} 
+            alt="Add Asset" 
+            title="List an Asset"
             className="action-icon action-icon-png" 
-            onClick={() => { navigate('/Cart'); closeMenu(); }}
+            onClick={() => { navigate('/add-pokemon'); closeMenu(); }} 
           />
 
-          {isAuthorized && (
-            <img 
-              src={settingsIcon} 
-              alt="Dashboard Settings" 
-              title="Trainer Dashboard"
-              className="action-icon action-icon-png"
-              onClick={() => { navigate('/dashboard'); closeMenu(); }}
-            />
-          )}
-
-          <div 
-            className="profile-container" 
-            onMouseEnter={() => setShowLogout(true)} 
-            onMouseLeave={() => setShowLogout(false)}
-            onClick={() => {
-              if (isLoggedIn) {
-                handleLogout();
-              } else {
-                navigate('/signup');
-                closeMenu();
-              }
-            }}
-            style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+          <svg className="action-icon text-lime" title="Shadow Network Alerts" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+          
+          <svg 
+            onClick={() => { navigate('/signup'); closeMenu(); }}
+            className="action-icon text-lime" 
+            title="Trainer Login / Encrypted Access"
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="2.5" 
+            strokeLinecap="round" 
+            strokeLinejoin="round"
           >
-            {showLogout && isLoggedIn ? (
-              <img 
-                src={LogoutIcon} 
-                alt="Logout" 
-                title="Disconnect from Network"
-                className="action-icon action-icon-png" 
-              />
-            ) : (
-              <img 
-                src={profileIcon} 
-                alt="Profile" 
-                title={isLoggedIn ? "Trainer Profile" : "Trainer Login / Encrypted Access"}
-                className="action-icon action-icon-png"
-              />
-            )}
-          </div>
-
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
         </div>
+
       </div>
     </nav>
   );

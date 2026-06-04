@@ -1,15 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
-
 :root {
   --grey: #4d4d4d;
   --black: #1a1a1a;
   --purple: #ba8cff;
   --dark-purple: #2a1a3a;
   --green: #c4ff4d;
-}
-
-.font-vt{
-   font-family: "VT323", monospace;
 }
 
 .text-grey {
@@ -40,56 +34,22 @@
   text-align: right;
 }
 
-.text-20{
-      padding: 0;
-    font-size: clamp(18px, 2vw, 20px) !important;
-}
-
-.text-24{
-    padding: 0;
-    font-size: clamp(18px, 2vw, 24px) !important;
-}
-
-.text-28{
-    padding: 0;
-    font-size: clamp(18px, 2vw, 28px) !important;
-}
-
-.text-32{
-    padding: 0;
-    font-size: clamp(18px, 2vw, 32px) !important;
-}
-
-.text-36{
-    padding: 0;
-    font-size: clamp(18px, 3vw, 36px) !important;
-}
-
-.text-38{
-    padding: 0;
-    font-size: clamp(18px, 2vw, 38px) !important;
-}
-
-.text-42{
-    padding: 0;
-    font-size: clamp(24px, 3vw, 42px) !important;
+#root {
+  border-inline: none;
+  /* padding: 0px 100px 0px 100px; */
+  width: 100vw;
 }
 
 body {
   background-color: rgb(33, 37, 41) !important;
 }
 
-p{
+p,
+h1,
+h2,
+h3,
+h4 {
   margin: 0 !important;
-}
-
-#wishlist-icon{
-  width: 15%;
-  height: fit-content;
-}
-
-#loading-text{
-  margin-top: 30%;
 }
 
 #liquid-ether {
@@ -98,18 +58,16 @@ p{
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: -1;
+  z-index: 0;
 }
 
 #product-content {
-  z-index: 0;
-  margin-top: 100px;
+  z-index: 1;
 }
 
 .pokemon-image {
-  max-width: 100%;
-  height: auto;
-  display: block;
+  height: 90% !important;
+  width: auto !important;
 }
 
 #pokemon-details {
@@ -117,7 +75,7 @@ p{
   border-style: solid;
   border-width: 2px;
   border-color: var(--green);
-  border-radius: clamp(8px,2vw,16px);
+  border-radius: 20px;
   padding: 2%;
 }
 
@@ -126,120 +84,30 @@ p{
   border-style: solid;
   border-width: 2px;
   border-color: var(--purple);
-  border-radius: clamp(8px,2vw,16px);
+  border-radius: 20px;
   padding: 2%;
 }
 
 #pokemon-price {
-  height: 100%;
   background-color: rgba(186, 140, 255, 0.08);
   border-style: solid;
   border-width: 2px;
   border-color: var(--purple);
-  border-radius: clamp(8px,2vw,16px);
+  border-radius: 20px;
 }
 
 #price-tag {
   background-color: var(--purple);
+  padding: 2%;
   border-style: solid;
   border-width: 2px;
   border-color: var(--purple);
-  border-radius: 8px 0px 0px 8px;
+  border-radius: 16px;
   color: var(--grey);
 }
 
 #price{
     padding: 2%;
-}
-
-#cart-btn {
-  width: 100%;
-  height: 100%;
-  background-color: transparent;
-  border-color: var(--green);
-  border-width: 2px;
-  border-radius: clamp(8px,2vw,16px);
-  color: var(--green);
-}
-
-#cart-btn-disabled {
-  width: 100%;
-  height: 100%;
-  border-color: var(--green);
-  border-width: 2px;
-  border-radius: clamp(8px,2vw,16px);
-  background-color: var(--green);
-  color: var(--black);
-}
-
-#cart-btn:hover {
-  background-color: var(--green);
-  color: var(--black);
-}
-
-#create-comment-section {
-  background-color: rgba(186, 140, 255, 0.08);
-  border-style: solid;
-  border-width: 2px;
-  border-color: var(--purple);
-  border-radius: clamp(8px,2vw,16px);
-}
-
-#comment-btn {
-  width: 100%;
-  height: 50%;
-  background-color: transparent;
-  border-color: var(--purple);
-  border-width: 2px;
-  border-radius: clamp(8px, 2vw, 16px);
-  color: var(--purple);
-}
-
-#comment-btn:hover {
-  background-color: var(--purple);
-  color: white;
-}
-
-.MuiInputBase-root {
-  background-color: white;
-  border-radius: clamp(8px,2vw,16px) !important;
-  border-width: 2px !important;
-  border-color: var(--purple) !important;
-}
-
-#outlined-multiline-static {
-  background-color: white;
-}
-
-.comment-container {
-  margin-top: 20px !important;
-  background-color: rgba(196, 255, 77, 0.08);
-  border-style: solid;
-  border-width: 2px;
-  border-color: var(--green);
-  border-radius: clamp(8px,2vw,16px);
-  padding: 1%;
-}
-
-.comment-username {
-  font-size: clamp(24px, 2vw ,28px);
-  margin-top: 1% !important;
-  margin-bottom: 1% !important;
-}
-
-.comment-text {
-  margin-bottom: 1% !important;
-}
-
-#modal-item-name{
-  margin-bottom: 2 !important;
-}
-
-#modal-image{
-  max-width: 150px;
-}
-.css-1xc33vf-MuiRating-root{
-    color:#c4ff4d !important;
 }
 
 .css-9xw0na-MuiRating-icon{
@@ -248,26 +116,4 @@ p{
 
 .css-1xc33vf-MuiRating-root{
     color:#c4ff4d !important;
-}
-
-#wishlist-icon:hover{
-  cursor: pointer;
-  transition: transform 0.2s;
-  transform: scale(1.25);
-  content: url("../assets/icons/HeartIcon.png");
-}
-
-#product-modal-btn{
-  font-size: 24px;
-  height: 100%;
-  background-color: var(--purple) !important;
-  border-color: var(--purple);
-  border-width: 2px;
-  border-radius: clamp(8px,2vw,8px);
-  color: var(--grey);
-}
-
-#product-modal-btn:hover{
-  background-color: transparent !important;
-  color: var(--purple);
 }

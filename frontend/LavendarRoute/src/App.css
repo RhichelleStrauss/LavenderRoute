@@ -1,10 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
 
-.page-container ::selection {
-  background-color: #a3e635 !important;
-  color: #050505;
-}
-
 .home-fullscreen-container {
   width: 100vw;
   min-height: 100vh;
@@ -192,7 +187,7 @@
 .giant-sprite {
   width: 100%; 
   max-width: 650px;
-  transform: scale(1.14); 
+  transform: scale(1.2); 
   transform-origin: center;
   height: auto;
   object-fit: contain;
@@ -224,18 +219,7 @@
   zoom: 0.9; 
 }
 
-@media (max-width: 1600px) and (min-width: 901px) {
-  .products-grid {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)) !important; 
-    gap: 15px !important;
-  }
-  
-  .card-wrapper {
-    zoom: 0.75 !important; 
-  }
-}
-
-@media (max-width: 900px) {
+@media (max-width: 1250px) {
   .top-split {
     display: flex;
     flex-direction: column;
@@ -270,4 +254,32 @@
   .home-fullscreen-container {
     padding: 20px; 
   }
+}
+
+.navBar {
+  border: 2px solid #4d4d4d;
+  background-color: rgba(217, 217, 217, 0.1);
+  backdrop-filter: blur(5px);
+  border-radius: 10px;
+  padding: 20px;
+  margin: 10px auto;
+  width: 90%;
+  height: 70px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navBar .pageLinks {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.page-container, .catalog-grid {
+  padding-top: 100px;
+}
+
+.catalog-grid {
+  padding-top: 50px; 
 }

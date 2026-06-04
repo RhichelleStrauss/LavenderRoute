@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Toaster } from 'react-hot-toast';
 import gengarSprite from './assets/gengar-sprite.png';
 
 import Catalog from './pages/Catalog'; 
@@ -13,10 +12,6 @@ import LiquidEther from './components/LiquidEther';
 import ReflectiveCard from './components/pokemonCard'; 
 import Footer from './components/Footer';
 import './App.css';
-import Product from './pages/Product';
-import Dashboard from './pages/Dashboard';
-import Wishlist from './pages/Wishlist';
-import Cart from './pages/Cart'
 
 const Home = () => {
   const [teamPokemon, setTeamPokemon] = useState([]);
@@ -55,22 +50,6 @@ const Home = () => {
         </div>
       </div>
       
-      <div className="glitch-bg-wrapper">
-        <div className="bg-layer bottom-layer">
-          <LiquidEther /> 
-        </div>
-
-        <div className="bg-layer top-layer">
-          <LetterGlitch
-            glitchColors={["#7C3AED", "#A855F7"]}
-            glitchSpeed={50}
-            centerVignette={false}
-            outerVignette={false}
-            smooth={true}
-          />
-        </div>
-      </div>
-
       <Navbar />
 
       <main className="home-main-content">
@@ -87,30 +66,17 @@ const Home = () => {
               <h2 className="pixel-heading">Featured products</h2>
               <div className="products-grid">
                 {teamPokemon.length > 0 ? (
-
                   teamPokemon.map((poke) => (
                     <div key={poke._id} className="card-wrapper">
                       <ReflectiveCard
-                      id={poke._id}
-          key={poke._id} 
-
                         pokemonName={poke.name}
-
                         level={poke.level}
-
                         type={poke.type}
-
                         gender={poke.gender}
-
                         height={poke.height}
-
                         weight={poke.weight}
-
                         imgUrl={poke.imagePokemon}
-                        shiny={poke.shiny}
-
                       />
-
                     </div>
                   ))
                 ) : (
@@ -154,28 +120,12 @@ const Home = () => {
 function App() {
   return (
     <BrowserRouter>
-    <Toaster 
-        position="bottom-right" 
-        toastOptions={{
-          style: {
-            background: '#2A1A3A',
-            color: '#BA8CFF',
-            border: '1px solid #BA8CFF',
-            fontFamily: "'VT323', monospace",
-            fontSize: '1.2rem'
-          }
-        }} 
-      />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/catalog" element={<Catalog />} />
         <Route path="/add-pokemon" element={<PokemonAdd />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/pokemon/:id" element={<Product />} />
-         <Route path='/Dashboard' element={<Dashboard />} />
-         <Route path='/Wishlist' element={<Wishlist />} />
-         <Route path='/Cart' element={<Cart />} />
       </Routes>
     </BrowserRouter>
   );
