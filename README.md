@@ -17,7 +17,7 @@ In the standard digital asset and Pokémon trading space, platforms often feel g
 ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
 ![Base UI](https://img.shields.io/badge/Base%20UI-007FFF?style=for-the-badge&logo=mui&logoColor=white)
 
-![Lavender Route Home Page Screenshot]<img src="../LavenderRoute/frontend/LavendarRoute/src/assets/HomePageLavRoute.jpg">
+![Lavender Route Home Page Screenshot]<img src="https://github.com/RhichelleStrauss/LavenderRoute/blob/main/frontend/LavendarRoute/src/assets/HomePageLavRoute.jpg">
 
 ---
 
