@@ -1,6 +1,8 @@
 <div align="center">
   
 # Lavender Route
+<img src="../LavenderRoute/frontend/LavendarRoute/src/assets/Banner_LavenderRoute.png">
+
 **A shadowy hub for serious Pokémon traders, where rare finds and elite builds change hands fast.**
 
 </div>
@@ -17,7 +19,7 @@ In the standard digital asset and Pokémon trading space, platforms often feel g
 ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
 ![Base UI](https://img.shields.io/badge/Base%20UI-007FFF?style=for-the-badge&logo=mui&logoColor=white)
 
-<img src="https://github.com/RhichelleStrauss/LavenderRoute/blob/main/frontend/LavendarRoute/src/assets/HomePageLavRoute.jpg">
+<img src="../LavenderRoute/frontend/LavendarRoute/src/assets/HomePageLavRoute.jpg">
 
 ---
 
@@ -32,13 +34,14 @@ Install all the backend dependencies and start the server:
 ```bash
 cd backend
 npm install
-npm run dev
+node server.js
 ```
 *(Ensure you have a `.env` file with your `MONGO_URI` and `JWT_SECRET`)*
 
 Open a new terminal, install frontend dependencies, and run the app:
 ```bash
 cd frontend
+cd LavendarRoute
 npm install
 npm run dev
 ```
@@ -62,10 +65,10 @@ The idea was to create a digital marketplace that didn't feel like a standard e-
 ## Wireframes
 
 <div align="center">
-  <img src="https://github.com/RhichelleStrauss/LavenderRoute/blob/main/frontend/LavendarRoute/src/assets/HOME PAGE 2.png" width="24%">
-  <img src="https://github.com/RhichelleStrauss/LavenderRoute/blob/main/frontend/LavendarRoute/src/assets/Catalog.png" width="24%">
-  <img src="https://github.com/RhichelleStrauss/LavenderRoute/blob/main/frontend/LavendarRoute/src/assets/Modal.png" width="24%">
-  <img src="https://github.com/RhichelleStrauss/LavenderRoute/blob/main/frontend/LavendarRoute/src/assets/Post Creation Form.png" width="24%">
+  <img src="../LavenderRoute/frontend/LavendarRoute/src/assets/LavenderRoute_Wireframe_HomePage.png" width="24%">
+  <img src="../LavenderRoute/frontend/LavendarRoute/src/assets/Catalog_wireframe.png" width="24%">
+  <img src="../LavenderRoute/frontend/LavendarRoute/src/assets/Modal_wireframe.png" width="24%">
+  <img src="../LavenderRoute/frontend/LavendarRoute/src/assets/ProductAdd_Wireframe.png" width="24%">
 </div>
 
 ---
@@ -98,7 +101,8 @@ To achieve our highly specific "Misty Glass" cyberpunk aesthetic, standard UI li
 
 ## Mockups
 
-![Lavender Route Mockup](https://via.placeholder.com/1000x400/050505/a3e635?text=INSERT+A+MOCKUP+OF+THE+APP+ON+A+MACBOOK+HERE)
+![Lavender Route Mockup](../LavenderRoute/frontend/LavendarRoute/src/assets/LavRouteMockupDashboard.png)
+![Lavender Route Mockup](../LavenderRoute/frontend/LavendarRoute/src/assets/DesktopMockup.png)
 
 ## Demonstration
 
