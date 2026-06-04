@@ -317,7 +317,9 @@ export default function PokemonAdd() {
               isModal={true}
             />
           </div>
+          
         </div>
+        
       )}
     </>
   );

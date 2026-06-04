@@ -56,6 +56,21 @@ const PokemonSchema = new mongoose.Schema(
                         trim: true
         },
 
+        status: {type: String,
+                enum: ['pending', 'approved', 'rejected'],
+                default: 'pending'
+        },
+
+        adminNotes: {type: String,
+                required: false
+        },
+
+        sellerId: { type: mongoose.Schema.Types.ObjectId,
+                ref: 'User',
+                required: true
+        },
+        
+        comments: [commentSchema]
     },
     {timestamps : true}
 );

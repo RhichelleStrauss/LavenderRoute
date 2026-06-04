@@ -12,8 +12,18 @@ const Navbar = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const closeMenu = () => {
-    setIsMenuOpen(false);
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const closeMenu = () => setIsMenuOpen(false);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userRoles');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('cart');
+    localStorage.removeItem('wishlist');
+    navigate('/');
+    window.location.reload();
+
   };
 
   return (

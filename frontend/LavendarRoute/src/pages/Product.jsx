@@ -94,8 +94,8 @@ function Product() {
                       <StarRating></StarRating>
                     </Col>
                   </Row>
-                  <Row>
-                    <p>Sold by: PokeCatcher69</p>
+                  <Row className="font-vt text-20">
+                     <p>Sold by: {pokemon?.sellerId.firstName || "PokéCatcher"}</p>
                   </Row>
                   <Row>
                     <p>{data?.description}</p>
@@ -157,8 +157,30 @@ function Product() {
                 <Col id="price-tag" className="col-3">
                   <h2>P</h2>
                 </Col>
-                <Col id="price">
-                  <h2>{data?.price}</h2>
+                <Col className="col-3 p-0 font-vt">
+                  {added ? (
+                    <Button
+                    className="text-32"
+                    variant="primary"
+                    id="cart-btn-disabled"
+                    disabled
+                  >
+                    Added
+                  </Button>
+                  ) : (
+                    <Button
+                      className="text-32"
+                      variant="primary"
+                      id="cart-btn"
+                      onClick={() => {
+                        setShowModal(true);
+                        AddToCart(pokemon);
+                        setAdded(true);
+                      }}
+                    >
+                      Add to cart
+                    </Button>
+                  )}
                 </Col>
               </Row>
             </Col>
@@ -166,11 +188,29 @@ function Product() {
 
           <Row className="text-left pt-5">
             <Col>
-              <Row className="text-green">
-                <h2>Comments</h2>
+              <Row className="text-green font-vt text-36">
+                <p>Comments</p>
               </Row>
               <Row></Row>
             </Col>
+          </Row>
+
+          <Row className="ps-2 pe-2">
+            <Col>
+              {pokemon?.comments?.length > 0 ? (
+      pokemon.comments.toReversed().map((comm) => (
+        <Row key={comm._id} className="comment-container ps-2 pe-2">
+          <p className="comment-username font-vt ps-2 pe-2">{comm.userName}</p>
+          <p className="comment-text">{comm.text}</p>
+        </Row>
+      ))
+    ) : (
+      <div className="font-vt text-20 text-white mt-3 ps-2">
+        No comments yet. Be the first to review this Pokémon!
+      </div>
+    )}
+  </Col>
+                      
           </Row>
         </Container>
 
