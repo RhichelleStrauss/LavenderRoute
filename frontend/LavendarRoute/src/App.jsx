@@ -13,6 +13,8 @@ import LiquidEther from './components/LiquidEther';
 import ReflectiveCard from './components/pokemonCard'; 
 import Footer from './components/Footer';
 import './App.css';
+import Product from './pages/Product';
+import Dashboard from './pages/Dashboard';
 
 const Home = () => {
   const [teamPokemon, setTeamPokemon] = useState([]);
@@ -65,19 +67,36 @@ const Home = () => {
 
             <section className="misty-glass-panel featured-panel">
               <h2 className="pixel-heading">Featured products</h2>
-              <div className="products-grid">
+             
+                <div className="products-grid">
+
                 {teamPokemon.length > 0 ? (
+
                   teamPokemon.map((poke) => (
+
                     <div key={poke._id} className="card-wrapper">
+
                       <ReflectiveCard
+                      id={poke._id}
+          key={poke._id} 
+
                         pokemonName={poke.name}
+
                         level={poke.level}
+
                         type={poke.type}
+
                         gender={poke.gender}
+
                         height={poke.height}
+
                         weight={poke.weight}
+
                         imgUrl={poke.imagePokemon}
+                        shiny={poke.shiny}
+
                       />
+
                     </div>
                   ))
                 ) : (
@@ -139,6 +158,8 @@ function App() {
         <Route path="/add-pokemon" element={<PokemonAdd />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/pokemon/:id" element={<Product />} />
+         <Route path='/Dashboard' element={<Dashboard />} />
       </Routes>
     </BrowserRouter>
   );

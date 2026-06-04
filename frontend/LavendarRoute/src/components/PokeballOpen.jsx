@@ -32,8 +32,8 @@ export default function PokeballOpen({ tokenName, tokenImage, onTokenSelect }) {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        width: '25%', 
-        height: '25%', 
+        width: '15%', 
+        height: '15%', 
         flexShrink: 0 
       }}
     >
@@ -69,8 +69,8 @@ export default function PokeballOpen({ tokenName, tokenImage, onTokenSelect }) {
           alt={tokenName}
           className="token-bounce"
           style={{ 
-            width: '80%',
-            height: '80%', 
+            width: '100%',
+            height: '100%', 
             objectFit: 'contain',
             filter: 'drop-shadow(0px 8px 8px rgba(0, 0, 0, 0.35))'
             }}

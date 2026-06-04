@@ -157,10 +157,12 @@ function Login() {
 
 <PokePattern pattern={tokenPattern} setPattern={setTokenPattern} />
 
+<div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+
                 <button type="submit" className="submit-btn" style={{ marginTop: '20px' }}>
                   Enter Route
                 </button>
-
+</div>
               
                 <div className="login-link">
                   Don't have an account?{' '}

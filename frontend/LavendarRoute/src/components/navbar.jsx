@@ -59,7 +59,7 @@ const Navbar = () => {
       
       <div className={`nav-content ${isMenuOpen ? 'open' : ''}`}>
         
-        <div className="nav-links">
+        <div className="nav-links" style={{color: '#FFFFFF'}}>
           <NavLink to="/" className="nav-link-btn" onClick={closeMenu}>HOME</NavLink>
           <NavLink to="/catalog" className="nav-link-btn" onClick={closeMenu}>INVENTORY</NavLink>
         </div>
