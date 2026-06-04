@@ -65,7 +65,7 @@ The idea was to create a digital marketplace that didn't feel like a standard e-
   <img src="https://github.com/RhichelleStrauss/LavenderRoute/blob/main/frontend/LavendarRoute/src/assets/HOME PAGE 2.png" width="24%">
   <img src="https://github.com/RhichelleStrauss/LavenderRoute/blob/main/frontend/LavendarRoute/src/assets/Catalog.png" width="24%">
   <img src="https://github.com/RhichelleStrauss/LavenderRoute/blob/main/frontend/LavendarRoute/src/assets/Modal.png" width="24%">
-  <img src="https://github.com/RhichelleStrauss/LavenderRoute/blob/main/frontend/LavendarRoute/src/assets/Post Creation Form.png" width="24>
+  <img src="https://github.com/RhichelleStrauss/LavenderRoute/blob/main/frontend/LavendarRoute/src/assets/Post Creation Form.png" width="24%">
 </div>
 
 ---
