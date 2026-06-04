@@ -62,7 +62,7 @@ The idea was to create a digital marketplace that didn't feel like a standard e-
 ## Wireframes
 
 <div align="center">
-  <img src="../LavenderRoute/frontend/LavendarRoute/src/assets/HOME PAGE.png" width="25%">
+  <img src="main/frontend/LavendarRoute/src/assets/HOME PAGE.png" width="25%">
   <img src="../LavenderRoute/frontend/LavendarRoute/src/assets/Catalog.png" width="25%">
   <img src="../LavenderRoute/frontend/LavendarRoute/src/assets/Modal.png" width="25%">
   <img src="../LavenderRoute/frontend/LavendarRoute/src/assets/Post Creation Form.png" width="25%">
