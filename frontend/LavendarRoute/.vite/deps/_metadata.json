@@ -1,0 +1,74 @@
+{
+  "hash": "04cbd4db",
+  "configHash": "4f88d1b6",
+  "lockfileHash": "e6a70d11",
+  "browserHash": "558e56fb",
+  "optimized": {
+    "@base-ui/react": {
+      "src": "../../node_modules/@base-ui/react/esm/index.js",
+      "file": "@base-ui_react.js",
+      "fileHash": "ad96287f",
+      "needsInterop": false
+    },
+    "react-bootstrap": {
+      "src": "../../node_modules/react-bootstrap/esm/index.js",
+      "file": "react-bootstrap.js",
+      "fileHash": "55c7894a",
+      "needsInterop": false
+    },
+    "react-bootstrap/Card": {
+      "src": "../../node_modules/react-bootstrap/esm/Card.js",
+      "file": "react-bootstrap_Card.js",
+      "fileHash": "9d59264d",
+      "needsInterop": false
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "3f92a6a2",
+      "needsInterop": true
+    },
+    "react-router-dom": {
+      "src": "../../node_modules/react-router-dom/dist/index.mjs",
+      "file": "react-router-dom.js",
+      "fileHash": "365baf2e",
+      "needsInterop": false
+    },
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "b90e8721",
+      "needsInterop": true
+    },
+    "react/jsx-dev-runtime": {
+      "src": "../../node_modules/react/jsx-dev-runtime.js",
+      "file": "react_jsx-dev-runtime.js",
+      "fileHash": "7062aa8e",
+      "needsInterop": true
+    },
+    "three": {
+      "src": "../../node_modules/three/build/three.module.js",
+      "file": "three.js",
+      "fileHash": "3ae3272b",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "Card-B1Minuud": {
+      "file": "Card-B1Minuud.js",
+      "isDynamicEntry": false
+    },
+    "jsx-runtime-De3RprTE": {
+      "file": "jsx-runtime-De3RprTE.js",
+      "isDynamicEntry": false
+    },
+    "react-B35R_oEX": {
+      "file": "react-B35R_oEX.js",
+      "isDynamicEntry": false
+    },
+    "react-dom-CYDThRfy": {
+      "file": "react-dom-CYDThRfy.js",
+      "isDynamicEntry": false
+    }
+  }
+}
