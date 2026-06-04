@@ -65,7 +65,7 @@
   cursor: pointer;
   font-family: 'VT323', monospace;
   font-size: 2rem;
-  color: var(--lavender-purple, #c084fc);
+  color: #ffffff;
   text-decoration: none;
   transition: all 0.2s;
 }

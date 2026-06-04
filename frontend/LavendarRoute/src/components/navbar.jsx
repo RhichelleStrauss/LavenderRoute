@@ -6,18 +6,30 @@ import profileIcon from '../assets/icons/ProfileIcon.png';
 import cartIcon from '../assets/icons/CartIcon.png';
 import settingsIcon from '../assets/icons/SettingsIcon.png';
 import heartIcon from '../assets/icons/HeartNotFilledIcon.png';
+import LogoutIcon from '../assets/icons/LogoutIcon.png'; 
+
 import '../css/Navbar.css';
 
-const Navbar = ({ userRole }) => {
+const Navbar = () => {
   const navigate = useNavigate();
+  
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+  const [showLogout, setShowLogout] = useState(false);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  const roles = JSON.parse(localStorage.getItem('userRoles') || '[]');
+  const isAuthorized = roles.includes('admin') || roles.includes('seller') || roles.includes('hybrid');
+  const isLoggedIn = !!localStorage.getItem('token');
 
-  const closeMenu = () => {
-    setIsMenuOpen(false);
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const closeMenu = () => setIsMenuOpen(false);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userRoles');
+    localStorage.removeItem('userId');
+    navigate('/');
+    window.location.reload();
   };
 
   return (
@@ -49,17 +61,20 @@ const Navbar = ({ userRole }) => {
         
         <div className="nav-links">
           <NavLink to="/" className="nav-link-btn" onClick={closeMenu}>HOME</NavLink>
-          <NavLink to="/catalog" className="nav-link-btn" onClick={closeMenu}>INVENTORY</NavLink>
+          <NavLink to="/catalog" className="nav-link-btn" onClick={closeMenu} >INVENTORY</NavLink>
         </div>
 
+
         <div className="nav-actions">
-          <img 
-            src={AddIcon} 
-            alt="Add Asset" 
-            title="List an Asset"
-            className="action-icon action-icon-png" 
-            onClick={() => { navigate('/add-pokemon'); closeMenu(); }} 
-          />
+          {isAuthorized && (
+            <img 
+              src={AddIcon} 
+              alt="Add Asset" 
+              title="List an Asset"
+              className="action-icon action-icon-png" 
+              onClick={() => { navigate('/add-pokemon'); closeMenu(); }} 
+            />
+          )}
 
           <img 
             src={heartIcon} 
@@ -75,16 +90,8 @@ const Navbar = ({ userRole }) => {
             title="Cart"
             className="action-icon action-icon-png" 
           />
-          
-          <img 
-            src={profileIcon} 
-            alt="Profile" 
-            title="Trainer Login / Encrypted Access"
-            className="action-icon action-icon-png"
-            onClick={() => { navigate('/signup'); closeMenu(); }}
-          />
 
-          {/* {(userRole === 'admin' || userRole === 'seller') && ( */}
+          {isAuthorized && (
             <img 
               src={settingsIcon} 
               alt="Dashboard Settings" 
@@ -92,10 +99,40 @@ const Navbar = ({ userRole }) => {
               className="action-icon action-icon-png"
               onClick={() => { navigate('/dashboard'); closeMenu(); }}
             />
-          {/* )} */}
-          
-        </div>
+          )}
 
+          <div 
+            className="profile-container" 
+            onMouseEnter={() => setShowLogout(true)} 
+            onMouseLeave={() => setShowLogout(false)}
+            onClick={() => {
+              if (isLoggedIn) {
+                handleLogout();
+              } else {
+                navigate('/signup');
+                closeMenu();
+              }
+            }}
+            style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+          >
+            {showLogout && isLoggedIn ? (
+              <img 
+                src={LogoutIcon} 
+                alt="Logout" 
+                title="Disconnect from Network"
+                className="action-icon action-icon-png" 
+              />
+            ) : (
+              <img 
+                src={profileIcon} 
+                alt="Profile" 
+                title={isLoggedIn ? "Trainer Profile" : "Trainer Login / Encrypted Access"}
+                className="action-icon action-icon-png"
+              />
+            )}
+          </div>
+
+        </div>
       </div>
     </nav>
   );
