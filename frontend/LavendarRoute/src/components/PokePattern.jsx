@@ -1,5 +1,6 @@
 import React from 'react';
 import '../css/PokePattern.css';
+import PokeballOpen from './PokeballOpen.jsx'
 
 import OgerponToken from '../assets/tokens/OgerponToken.png'
 import RayquazaToken from '../assets/tokens/RayquazaToken.png'
@@ -9,6 +10,19 @@ import ZekromToken from '../assets/tokens/ZekromToken.png'
 import ZoroarkToken from '../assets/tokens/ZoroarkToken.png'
 
 import BinIcon from '../assets/icons/BinIcon.png';
+
+//braindump - rhi
+//on sign up there will be 2-3 'steps', select type of user then name, surname, date of birth (verifying over 18), 
+// if thats good then next step, set password and patterns
+// admins have their own secret "pin" based on their fav pokemon, try to get each admin to have their own?
+//want - having users to setup their account with "avatar" - token with pokemon
+//username displayed will be sliced first name - only first letter displays 
+//buyers-can view, review, add to cart, add comments and wishlsit
+//sellers - view, comment, post, view listings 
+//admin - view everything, delete posts, approve posts, delete comments, users
+//review system- if seller has submitted 3 successful posts according to rules, future posts dont need admin approval
+//vice versa, 3 bad posts - restricted account??
+//hybrid-seller+buyer
 
 export default function PokePattern({ pattern, setPattern }) {
   const availableTokens = ['zoroark', 'squirtle', 'ogerpon', 'rayquaza', 'sableye', 'zekrom'];
@@ -35,18 +49,29 @@ export default function PokePattern({ pattern, setPattern }) {
   return (
     <div className="w-full flex flex-col gap-2 mt-4">
       <label style={{ marginBottom: '5px' }}>Pokémon Pattern (Choose 6-12 tokens):</label>
-      <div className="token-selection-row">
+
+      <div 
+        style={{ 
+          display: 'flex', 
+          gap: '12px', 
+          flexWrap: 'nowrap',
+          justifyContent: 'center', 
+          marginBottom: '20px',
+          width: '100%',
+          height: '100%'
+        }}
+      >
         {availableTokens.map((token, index) => (
-          <img
+          <PokeballOpen
             key={index}
-            src={tokenDisplay[token]}
-            alt={token}
-            onClick={() => handleTokenClick(token)}
-            className="token-img"
+            tokenName={token}
+            tokenImage={tokenDisplay[token]} 
+            onTokenSelect={handleTokenClick}
           />
         ))}
       </div>
 
+    
       <div className="pattern-display-box">
         {pattern.length === 0 ? (
           <span className="empty-pattern-text">Your pattern will appear here...</span>
@@ -57,13 +82,12 @@ export default function PokePattern({ pattern, setPattern }) {
               onClick={() => handleRemoveToken(index)}
               className="selected-token-wrapper"
             >
-
-                <img
+              <img
                 src={tokenDisplay[token]}
                 alt={token}
                 className="selected-token-img"
               />
-              <div 
+              <div
                 className="bin-icon-mask"
                 style={{
                   maskImage: `url(${BinIcon})`,
@@ -83,4 +107,4 @@ export default function PokePattern({ pattern, setPattern }) {
     </div>
   );
 }
-      
+    

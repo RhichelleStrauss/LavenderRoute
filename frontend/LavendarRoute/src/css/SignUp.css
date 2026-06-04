@@ -1,47 +1,35 @@
 @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-:root {
-  --primary-lavender: #c084fc;
-  --accent-lime: #a3e635;
-  --bg-pitch-black: #050505;
-  --bg-input-dark: #121212;
-  --bg-card-purple: rgba(192, 132, 252, 0.05);
+#root {
+  font-family: "Poppins", sans-serif !important;
+  font-weight: 400;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html, body, #root {
-  height: 100%;
-  width: 100%;
-  /* background-color: var(--bg-pitch-black); */
-}
-
-body {
-  font-family: 'Inter', system-ui, sans-serif;
-  color: #ffffff;
-}
-
-::selection {
-  background-color: var(--accent-lime);
+.page-container ::selection {
+  background-color: #a3e635;
   color: #050505;
 }
 
 .page-container {
-  max-width: 1100px;
-  width: 90%;
-  background: var(--bg-card-purple);
+  width: 100vw;
+  min-height: 100vh;
+  box-sizing: border-box;
+  border-radius: 0;
+  border: none;
+  font-family: 'Inter', system-ui, sans-serif;
+  color: #ffffff;
+  background: rgba(192, 132, 252, 0.05);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(192, 132, 252, 0.2);
-  border-radius: 24px;
-  padding: 40px;
+  padding: 40px 5%; 
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
   position: relative;
   z-index: 1;
+  display: flex;
+  flex-direction: column;
+  font-family: "Poppins", sans-serif !important;
+  font-weight: 400;
 }
 
 .page-header {
@@ -60,13 +48,14 @@ body {
   letter-spacing: 2px;
 }
 
-.text-green { color: var(--accent-lime); }
-.text-purple { color: var(--primary-lavender); }
+.text-green { color: #a3e635; }
+.text-purple { color: #c084fc; }
 
 .content-card-layout {
   display: flex;
-  gap: 40px;
+  gap: 60px;
   align-items: stretch;
+  flex: 1; 
 }
 
 .left-image-panel {
@@ -108,7 +97,7 @@ body {
 .panel-text h2 {
   font-family: 'VT323', monospace;
   font-size: 3.2rem;
-  color: var(--primary-lavender);
+  color: #c084fc;
   margin-bottom: 5px;
   font-weight: normal;
 }
@@ -116,7 +105,7 @@ body {
 .panel-text p {
   font-family: 'VT323', monospace;
   font-size: 1.6rem;
-  color: var(--accent-lime);
+  color: #a3e635;
   font-weight: normal;
 }
 
@@ -168,7 +157,7 @@ body {
 .input-group input {
   width: 100%;
   padding: 12px 16px;
-  background-color: var(--bg-input-dark);
+  background-color: #121212;
   border: 1px solid rgba(192, 132, 252, 0.3);
   border-radius: 8px;
   color: #ffffff;
@@ -178,7 +167,7 @@ body {
 }
 
 .input-group input:focus {
-  border-color: var(--accent-lime);
+  border-color: #a3e635;
 }
 
 input::placeholder {
@@ -187,7 +176,7 @@ input::placeholder {
 
 .note-text {
   font-size: 0.7rem;
-  color: var(--primary-lavender);
+  color: #c084fc;
   margin-top: -14px;
   margin-bottom: 18px;
   opacity: 0.8;
@@ -198,10 +187,10 @@ input::placeholder {
   font-family: 'VT323', monospace;
   font-size: 1.5rem;
   width: 60%;
-  margin: 10px auto 0 auto;
+  /* margin: 10px auto 0 auto; */
   display: block;
   padding: 12px;
-  background-color: #C4FF4D;
+  background-color: #92d050;
   color: #1a1a1a;
   border: none;
   border-radius: 8px;
@@ -219,7 +208,7 @@ input::placeholder {
   font-family: 'VT323', monospace;
   font-size: 1.5rem;
   width: 60%;
-  margin: 10px auto 0 auto;
+  /* margin: 10px auto 0 auto; */
   display: block;
   padding: 12px;
   background-color: #4D4D4D;

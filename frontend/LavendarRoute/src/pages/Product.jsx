@@ -1,42 +1,49 @@
 import "../css/ProductPage.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-
 import heartIcon from "../assets/icons/HeartNotFilledIcon.png";
 import heartIconFilled from "../assets/icons/HeartIcon.png";
-
+import BinIcon from '../assets/icons/BinIcon.png';
+import CrossIcon from '../assets/icons/CrossIcon.png';
+import PencilIcon from '../assets/icons/PencilIcon.png';
 import LiquidEther from "../components/LiquidEther.jsx";
-import StarRating from "../components/StarRating.jsx";
 import Navbar from "../components/navbar.jsx";
 import CartAddModal from "../components/CartAddModal.jsx";
-
+import PokemonAddForm from '../components/PokemonAddForm.jsx';
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import TextField from "@mui/material/TextField";
-import Modal from "react-bootstrap/Modal";
-
-import { useNavigate } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import toast from 'react-hot-toast';
 
 function Product() {
   const navigate = useNavigate();
 
-  let token = localStorage.getItem("token")
-    ? JSON.parse(atob(localStorage.getItem("token").split(".")[1]))
-    : null;
-  console.log(token);
-  // let token = null;
+  
+  let token = null;
+  try {
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) {
+      token = JSON.parse(atob(storedToken.split(".")[1]));
+    }
+  } catch (e) {
+    console.error("Error parsing token", e);
+  }
 
   const { id } = useParams(); //id of Pokemon to display.
   const [pokemon, setPokemon] = useState(null); //data fetched from server.
   const [loading, setLoading] = useState(true); //variable controls when to display the finished loaded page.
   const [comment, setComment] = useState(null); //saves the current typed comment.
-
-  const [showModal, setShowModal] = useState(false);
+const [showModal, setShowModal] = useState(false);
   const [added, setAdded] = useState(false);
   const [addedWish, setAddedWish] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPokemon, setSelectedPokemon] = useState(null);
+
+  const userRoles = JSON.parse(localStorage.getItem('userRoles') || '[]');
+  const canEdit = userRoles.includes('admin') || userRoles.includes('seller') || userRoles.includes('hybrid');
 
   const formatter = new Intl.NumberFormat("en-US", {
     //formats the price into an accounting format.
@@ -61,32 +68,36 @@ function Product() {
     if (!added) {
       let cartArray = JSON.parse(localStorage.getItem("cart") || "[]");
       let pokemonMatch = cartArray.some((pokemon) => pokemon._id == _pokemonId);
+      console.log(pokemonMatch);
       if (pokemonMatch) setAdded(true);
     }
   };
 
   const CheckWish = (_pokemonId) => {
-    let wishArray = JSON.parse(localStorage.getItem("wishlist"));
-    console.log(wishArray);
-
-    if (!token) {
-      console.log("Not logged in");
-    } else if (!wishArray) {
-      console.log("ran");
-      localStorage.setItem("wishlist", JSON.stringify(token.wishlist));
-    }
+    if (!token) return;
 
     if (!addedWish) {
-      let wishArray = JSON.parse(localStorage.getItem("wishlist") || "[]");
-      console.log(wishArray);
-      let pokemonMatch = wishArray.some((pokemon) => pokemon._id == _pokemonId);
+      let wishRaw = localStorage.getItem("wishlist");
+
+      if (!wishRaw || wishRaw === "undefined") {
+        wishRaw = JSON.stringify(token.wishlist || []);
+        localStorage.setItem("wishlist", wishRaw);
+      }
+      let wishArray = JSON.parse(wishRaw); 
+      let pokemonMatch = wishArray.some((p) => p._id === _pokemonId);
       if (pokemonMatch) setAddedWish(true);
     }
   };
+    
 
   //Fetched the selected Pokemon's details.
   useEffect(() => {
     async function getData() {
+
+      if (!id || id === 'undefined') {
+        setLoading(false);
+        return; 
+      }
       const url = `http://localhost:5000/api/pokemon/${id}`;
 
       try {
@@ -108,6 +119,13 @@ function Product() {
 
     getData();
   }, [id]);
+
+  useEffect(() => {
+    if (pokemon) {
+      CheckCart(pokemon._id);
+      CheckWish(pokemon._id);
+    }
+  }, [pokemon, added, addedWish, token]);
 
   const PostComment = async () => {
     //Posts a new comment to the server.
@@ -179,6 +197,45 @@ function Product() {
     }
   };
 
+ const handleUpdatePokemon = async (updatedData) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/pokemon/${updatedData._id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}` },
+        body: JSON.stringify(updatedData),
+      });
+
+      if (response.ok) {
+        setPokemon(updatedData);
+        setIsModalOpen(false);
+        setSelectedPokemon(null);
+        toast.success("Listing updated successfully!");
+      }
+    } catch (error) {
+      toast.error("Update failed");
+      console.error(error);
+    }
+  };
+
+  const handleDeletePokemon = async (deleteId) => {
+    if (!window.confirm("Are you sure you want to delete this Pokémon?")) return;
+    try {
+      const response = await fetch(`http://localhost:5000/api/pokemon/${deleteId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      });
+
+      if (response.ok) {
+        setIsModalOpen(false);
+        toast.success("Listing deleted!");
+        navigate('/catalog');
+      }
+    } catch (error) {
+      toast.error("Delete failed");
+      console.error(error);
+    }
+  };
+
   if (loading) {
     return (
       <>
@@ -197,10 +254,8 @@ function Product() {
       </>
     );
   } else {
-    console.log(pokemon.comments);
+   
 
-    CheckCart(pokemon._id);
-    CheckWish(pokemon._id);
 
     return (
       <>
@@ -214,10 +269,21 @@ function Product() {
 
         <Container id="product-content" className="text-white pt-5">
           <Row className="justify-content-md-start justify-content-center">
-            <Col
-              id="poke-card"
-              className="col-md-4 col-6 d-grid row-gap-2 mb-md-0 mb-3"
-            >
+           <Col id="poke-card" className="col-md-4 col-6 d-grid row-gap-2 mb-md-0 mb-3" style={{ position: 'relative' }}>
+  
+  {canEdit && (
+    <button
+      onClick={() => {
+        setSelectedPokemon(pokemon);
+        setIsModalOpen(true);
+      }}
+      style={{ position: 'absolute', top: '2px', right: '10px', zIndex: 10, background: 'rgba(20, 20, 20, 0.8)', border: '1px solid #BA8CFF', borderRadius: '14px', width: '45px', height: '45px', display: 'flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer', transition: 'all 0.2s ease' }}
+      className="edit-pencil-btn"
+    >
+      <img src={PencilIcon} alt="Edit" style={{ width: '22px', height: '22px', objectFit: 'contain' }} />
+    </button>
+  )}
+                
               <Row className="d-flex justify-content-center align-items-center">
                 <img
                   className="pokemon-image"
@@ -255,7 +321,7 @@ function Product() {
                     </Col>
                   </Row>
                   <Row className="font-vt text-20">
-                    <p>Sold by: PokeCatcher69</p>
+                    <p>Sold by: {pokemon?.sellerId.firstName || "PokéCatcher"}</p>
                   </Row>
                   <Row>
                     <p>{pokemon?.description}</p>
@@ -294,7 +360,7 @@ function Product() {
                   <Row>
                     <p>
                       <span className="text-purple">Height: &ensp;</span>
-                      {pokemon?.height}cm
+                      {pokemon?.height}m
                     </p>
                   </Row>
                   <Row>
@@ -333,13 +399,13 @@ function Product() {
                 <Col className="col-3 p-0 font-vt">
                   {added ? (
                     <Button
-                      className="text-32"
-                      variant="primary"
-                      id="cart-btn-disabled"
-                      disabled
-                    >
-                      Added!
-                    </Button>
+                    className="text-32"
+                    variant="primary"
+                    id="cart-btn-disabled"
+                    disabled
+                  >
+                    Added
+                  </Button>
                   ) : (
                     <Button
                       className="text-32"
@@ -362,7 +428,7 @@ function Product() {
           <Row className="text-left pt-5">
             <Col>
               <Row className="text-green font-vt text-36">
-                <p>Reviews</p>
+                <p>Comments</p>
               </Row>
               {!token ? (
                 <></>
@@ -397,19 +463,20 @@ function Product() {
 
           <Row className="ps-2 pe-2">
             <Col>
-              {pokemon?.comments.length > 0 ? (
-                pokemon?.comments.toReversed().map((comm) => (
-                  <Row key={comm._id} className="comment-container ps-2 pe-2">
-                    <p className="comment-username font-vt ps-2 pe-2">
-                      {comm.userName}
-                    </p>
-                    <p className="comment-text">{comm.text}</p>
-                  </Row>
-                ))
-              ) : (
-                <div></div>
-              )}
-            </Col>
+              {pokemon?.comments?.length > 0 ? (
+      pokemon.comments.toReversed().map((comm) => (
+        <Row key={comm._id} className="comment-container ps-2 pe-2">
+          <p className="comment-username font-vt ps-2 pe-2">{comm.userName}</p>
+          <p className="comment-text">{comm.text}</p>
+        </Row>
+      ))
+    ) : (
+      <div className="font-vt text-20 text-white mt-3 ps-2">
+        No comments yet. Be the first to comment on this Pokémon!
+      </div>
+    )}
+  </Col>
+                      
           </Row>
         </Container>
 
@@ -427,6 +494,21 @@ function Product() {
             resolution={0.5}
           />
         </div>
+        {isModalOpen && (
+        <div style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", backgroundColor: "rgba(0, 0, 0, 0.8)", zIndex: 999, display: "flex", justifyContent: "center", alignItems: "center", backdropFilter: "blur(5px)", padding: "20px" }}>
+          <div style={{ position: "relative", width: "100%", maxWidth: "800px" }}>
+            <button onClick={() => setIsModalOpen(false)} style={{ position: "absolute", top: "20px", right: "20px", background: "transparent", border: "none", zIndex: 1000, cursor: "pointer" }}>
+              <img src={CrossIcon} style={{ width: "30px", height: "30px" }} alt="Close" />
+            </button>
+            <PokemonAddForm 
+              initialData={selectedPokemon} 
+              isModal={true} 
+              onSave={handleUpdatePokemon} 
+              onDelete={handleDeletePokemon} 
+            />
+          </div>
+        </div>
+      )}
       </>
     );
   }

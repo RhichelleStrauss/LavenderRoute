@@ -5,6 +5,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from 'react-bootstrap/Card';  
 import BinIcon from '../assets/icons/BinIcon.png';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const API = "http://localhost:5000/api/pokemon";
 
@@ -24,12 +26,18 @@ const POKEMON_TYPE = [
 //modal not open 
 
 
+
+
 //initialdata: on addpokemon page nothing, on catalog stores pokemons when clicking card
 //on save on delete callbacks - form givess functipns data
  function PokemonAddForm({ initialData, onSave, onDelete, isModal = false }) {
   const navigate = useNavigate();
   const [isTypeMenuOpen, setIsTypeMenuOpen] = useState(false);
   const typeRef = useRef(null);
+
+  const roles = JSON.parse(localStorage.getItem('userRoles') || '[]');
+  const isAdmin = roles.includes('admin');
+  const isRestrictedEdit = initialData && !isAdmin;
 
   const [form, setForm] = useState(initialData || {
     name: "", level: "", price: "", height: "", weight: "", 
@@ -52,44 +60,71 @@ const POKEMON_TYPE = [
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (form.type.length === 0) return alert("Select at least 1 type!");
+    if (form.type.length === 0) return toast.error("Select at least 1 type!");
     //if no types selected this alert pops up
 
-    if (onSave) {
-      onSave(form);
-      //checking if onsave exists foir editing, if onsave exists in catalog, the form givees data back to catalog page
-    } else {
-      //if onsave wasnt passed, (on addpokemon page), it runs this block to create a new entry
-      try {
-        const payload = {
-          ...form,
-          price: Number(form.price),
-          level: Number(form.level),
-          height: Number(form.height),
-          weight: Number(form.weight)
-        };
+    try {
+      const payload = {
+        ...form,
+        price: Number(form.price),
+        level: Number(form.level),
+        height: Number(form.height),
+        weight: Number(form.weight)
+      };
 
+      if (initialData) {
 
-        //post request
-        //stringify convertds object into jsn string
-        const response = await fetch("http://localhost:5000/api/pokemon", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
+        await axios.put(`${API}/${initialData._id}`, payload, {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         });
+        alert("Pokémon updated successfully!");
+      } else {
 
-        //if response is good, navigate to catalog page, others catch error
-        if (response.ok) {
-          navigate('/catalog');
-        } else {
-          alert("Failed to save to database");
-        }
-      } catch (error) {
-        alert("Error connecting to server");
+        await axios.post(API, payload, {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        });
+       toast.success("New Pokémon added to the LavenderRoute!");
+      }
+
+      if (onSave) {
+        onSave(form); 
+        //checking if onsave exists foir editing, if onsave exists in catalog, the form givees data back to catalog page
+      } else {
+        navigate('/catalog');
+        //if onsave wasnt passed, (on addpokemon page), it runs this block to create a new entry
+      }
+      } catch (err) {
+      console.error("SUBMIT ERROR FULL OBJECT:", err);
+      if (err.response) {
+        toast.error("Backend refused the listing: " + err.response.data.message);
+      } else {
+        toast.error("Request failed completely. Is the server running?");
       }
     }
   };
-  
+
+    const handleDelete = async () => {
+    const isConfirmed = window.confirm(`Are you sure you want to delete ${form.name}? This cannot be undone.`);
+    if (!isConfirmed) return;
+
+    try {
+      await axios.delete(`${API}/${initialData._id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      });
+     toast.success("Pokémon deleted permanently!");
+      
+      if (onDelete) {
+        onDelete();
+        } else if (onSave) {
+        onSave();
+        } else {
+        navigate('/catalog');
+      }
+    } catch (err) {
+      console.error("DELETE ERROR:", err);
+     toast.error("Failed to delete. It may have already been removed.");
+    }
+  };
 
 const styles = {
     card: { width: "100%", maxWidth: 800, margin:isModal ? "0 auto" : "40px auto", border: "1px solid #C4FF4D", borderRadius: "16px", backgroundColor: "#1a1a1ab5)", padding: "40px", boxSizing: "border-box", fontFamily: "'Poppins', sans-serif", color: "#BA8CFF", boxShadow: "0 0 40px #1a1a1a80",maxHeight: isModal ? "90vh" : "none", 
@@ -122,35 +157,40 @@ const styles = {
         {initialData ? "Edit Pokémon" : "Add New Pokémon"}
       </h2>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px 20px" }}>
           
           {/* ᓚᘏᗢ name */}
-          <Field.Root style={{ ...styles.field, gridColumn: "1 / -1" }}>
+         <Field.Root style={{ ...styles.field, gridColumn: "1 / -1", opacity: isRestrictedEdit ? 0.6 : 1 }}>
             <Field.Label style={styles.label}>Pokémon name:</Field.Label>
-            <Field.Control required style={styles.input} value={form.name} onChange={e => set("name", e.target.value)} placeholder="e.g. gengar" />
+            <Field.Control disabled={isRestrictedEdit} required style={{...styles.input, cursor: isRestrictedEdit ? 'not-allowed' : 'text'}} value={form.name} onChange={e => set("name", e.target.value)} placeholder="e.g. gengar" />
             <Field.Error style={styles.error} match="valueMissing">Please enter a name.</Field.Error>
           </Field.Root>
 
            {/* ᓚᘏᗢ description */}
-          <Field.Root style={{ ...styles.field, gridColumn: "1 / -1" }}>
+          <Field.Root style={{ ...styles.field, gridColumn: "1 / -1", opacity: isRestrictedEdit ? 0.6 : 1 }}>
              <Field.Label style={styles.label}>Description:</Field.Label>
-             <Field.Control render={<textarea />} required style={{ ...styles.input, minHeight: '80px', resize: 'vertical' }} value={form.description} onChange={e => set("description", e.target.value)} placeholder="Describe your pokémon " />
+             <Field.Control disabled={isRestrictedEdit} render={<textarea />} required style={{ ...styles.input, minHeight: '80px', resize: 'vertical', cursor: isRestrictedEdit ? 'not-allowed' : 'text' }} value={form.description} onChange={e => set("description", e.target.value)} placeholder="Describe your pokémon " />
              <Field.Error style={styles.error} match="valueMissing">Description is required.</Field.Error>
           </Field.Root>
 
            {/* ᓚᘏᗢ type */}
-          <Field.Root style={{ ...styles.field, position: "relative" }} ref={typeRef}>
+          <Field.Root style={{ ...styles.field, position: "relative", opacity: isRestrictedEdit ? 0.6 : 1 }} ref={typeRef}>
             <Field.Label style={styles.label}>Type:</Field.Label>
-            <div onClick={() => setIsTypeMenuOpen(!isTypeMenuOpen)} style={styles.typeContainer}>
+           <div onClick={() => !isRestrictedEdit && setIsTypeMenuOpen(!isTypeMenuOpen)} style={{...styles.typeContainer, cursor: isRestrictedEdit ? 'not-allowed' : 'pointer'}}>
               {form.type.length === 0 && <span style={{color: "rgb(186, 140, 255)", fontSize: "14px", paddingLeft: "4px"}}>Select types...</span>}
               {form.type.map(t => (
                 <span key={t} style={styles.tag}>
                   {t}
-                  <button type="button" onClick={(e) => { e.stopPropagation(); set("type", form.type.filter(type => type !== t)); }} style={styles.tagBtn}>✕</button>
+                 
+                  {!isRestrictedEdit && (
+                    <button type="button" onClick={(e) => { e.stopPropagation(); set("type", form.type.filter(type => type !== t)); }} style={styles.tagBtn}>✕</button>
+                  )}
                 </span>
               ))}
             </div>
+
+            
             
             {isTypeMenuOpen && form.type.length < 2 && (
               <div style={{ position: "absolute", top: "100%", left: 0, right: 0, zIndex: 50, marginTop: "4px", backgroundColor: "rgb(186, 140, 255)", color: "#BA8CFF", border: "2px solid #1A1A1A", maxHeight: "180px", overflowY: "auto", padding: "4px"}}>
@@ -164,24 +204,23 @@ const styles = {
           </Field.Root>
           
            {/* ᓚᘏᗢ gender */}
-          <Field.Root style={styles.field}>
+         <Field.Root style={{...styles.field, opacity: isRestrictedEdit ? 0.6 : 1}}>
             <Field.Label style={styles.label}>Gender:</Field.Label>
-            <Field.Control render={<select />} required style={styles.input} value={form.gender} onChange={e => set("gender", e.target.value)}>
+            <Field.Control disabled={isRestrictedEdit} render={<select />} required style={{...styles.input, cursor: isRestrictedEdit ? 'not-allowed' : 'pointer'}} value={form.gender} onChange={e => set("gender", e.target.value)}>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
               <option value="Genderless">Genderless</option>
             </Field.Control>
           </Field.Root>
 
-
              {/* ᓚᘏᗢ level */}
-          <Field.Root style={styles.field}>
+          <Field.Root style={{...styles.field, opacity: isRestrictedEdit ? 0.6 : 1}}>
             <Field.Label style={styles.label}>Level:</Field.Label>
-            <NumberField.Root value={form.level === "" ? null : Number(form.level)} onValueChange={v => set("level", v ?? "")} min={1} max={100} required>
-              <NumberField.Group style={styles.numberGroup}>
-                <NumberField.Decrement style={styles.numberBtn}>-</NumberField.Decrement>
-                <NumberField.Input style={styles.numberInput} />
-                <NumberField.Increment style={styles.numberBtn}>+</NumberField.Increment>
+            <NumberField.Root disabled={isRestrictedEdit} value={form.level === "" ? null : Number(form.level)} onValueChange={v => set("level", v ?? "")} min={1} max={100} required>
+              <NumberField.Group style={{...styles.numberGroup, cursor: isRestrictedEdit ? 'not-allowed' : 'text'}}>
+                <NumberField.Decrement disabled={isRestrictedEdit} style={styles.numberBtn}>-</NumberField.Decrement>
+                <NumberField.Input disabled={isRestrictedEdit} style={{...styles.numberInput, cursor: isRestrictedEdit ? 'not-allowed' : 'text'}} />
+                <NumberField.Increment disabled={isRestrictedEdit} style={styles.numberBtn}>+</NumberField.Increment>
               </NumberField.Group>
             </NumberField.Root>
             <Field.Error style={styles.error} match="valueMissing">Required.</Field.Error>
@@ -216,9 +255,9 @@ const styles = {
           </Field.Root>
 
              {/* ᓚᘏᗢ shiny toggle, shiny or no shiny */}
-          <Field.Root style={{ ...styles.field, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: '10px' }}>
-            <Field.Label style={{ ...styles.label, cursor: 'pointer' }}>Shiny Variant</Field.Label>
-            <Switch.Root checked={form.shiny} onCheckedChange={(c) => set("shiny", c)} style={{ width: '48px', height: '26px', backgroundColor: form.shiny ? 'black' : 'white', border: '2px solid black', borderRadius: '9999px', position: 'relative', cursor: 'pointer', padding: 0 }}>
+          <Field.Root style={{ ...styles.field, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: '10px', opacity: isRestrictedEdit ? 0.6 : 1 }}>
+            <Field.Label style={{ ...styles.label, cursor: isRestrictedEdit ? 'not-allowed' : 'pointer' }}>Shiny Variant</Field.Label>
+            <Switch.Root disabled={isRestrictedEdit} checked={form.shiny} onCheckedChange={(c) => set("shiny", c)} style={{ width: '48px', height: '26px', backgroundColor: form.shiny ? 'black' : 'white', border: '2px solid black', borderRadius: '9999px', position: 'relative', cursor: isRestrictedEdit ? 'not-allowed' : 'pointer', padding: 0 }}>
               <Switch.Thumb style={{ display: 'block', width: '18px', height: '18px', backgroundColor: form.shiny ? 'white' : 'black', borderRadius: '9999px', transition: 'transform 0.2s', transform: `translateX(${form.shiny ? '24px' : '2px'})`, marginTop: '2px' }} />
             </Switch.Root>
           </Field.Root>
@@ -234,12 +273,11 @@ const styles = {
           </Field.Root>
 
              {/* ᓚᘏᗢ img url*/}
-          <Field.Root style={{ ...styles.field, gridColumn: "1 / -1" }}>
+          <Field.Root style={{ ...styles.field, gridColumn: "1 / -1", opacity: isRestrictedEdit ? 0.6 : 1 }}>
             <Field.Label style={styles.label}>Image URL</Field.Label>
-            <Field.Control required type="url" style={styles.input} value={form.imagePokemon} onChange={e => set("imagePokemon", e.target.value)} placeholder="https://..." />
+            <Field.Control disabled={isRestrictedEdit} required type="url" style={{...styles.input, cursor: isRestrictedEdit ? 'not-allowed' : 'text'}} value={form.imagePokemon} onChange={e => set("imagePokemon", e.target.value)} placeholder="https://..." />
             <Field.Error style={styles.error} match="valueMissing">Image URL is required.</Field.Error>
           </Field.Root>
-
         </div>
 
              {/* ᓚᘏᗢ buttons depending on page */}

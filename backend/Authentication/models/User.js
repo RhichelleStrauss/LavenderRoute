@@ -33,6 +33,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+
   adminPasskey: {
     type: String,
     required: false
@@ -51,10 +52,6 @@ const UserSchema = new mongoose.Schema({
     default: false
   },
   
-  wishlist:{
-    type: [mongoose.Schema.Types.Mixed], 
-    default: []
-  },
 },
 { timestamps: true }
 );

@@ -2,10 +2,11 @@ const mongoose = require("mongoose");
 
 const commentSchema = new mongoose.Schema(
         {
-                text: {type: String, trim: true},
-                userName: {type: String, trim: true},
+                text: { type: String, trim: true },
+                userName: { type: String, trim: true },
         }
 );
+
 
 const PokemonSchema = new mongoose.Schema(
         {
@@ -81,8 +82,24 @@ const PokemonSchema = new mongoose.Schema(
                         trim: true
                 },
 
-                comments: [commentSchema]
+                status: {
+                        type: String,
+                        enum: ['pending', 'approved', 'rejected'],
+                        default: 'pending'
+                },
 
+                adminNotes: {
+                        type: String,
+                        required: false
+                },
+
+                sellerId: {
+                        type: mongoose.Schema.Types.ObjectId,
+                        ref: 'User',
+                        required: true
+                },
+
+                comments: [commentSchema]
 
         },
         { timestamps: true }
