@@ -1,0 +1,303 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Navbar from '../components/navbar.jsx';
+import ReflectiveCard from '../components/pokemonCard.jsx';
+import PokemonAddForm from '../components/PokemonAddForm.jsx';
+import CrossIcon from '../assets/icons/CrossIcon.png';
+import LiquidEther from '../components/LiquidEther.jsx';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import "../css/catalog.css";
+
+const AdminDashboard = () => {
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [adminNotes, setAdminNotes] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [pendingPosts, setPendingPosts] = useState([]);
+
+  useEffect(() => {
+    fetchPendingPosts();
+  }, []);
+
+  const fetchPendingPosts = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/pokemon/pending', {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      });
+      setPendingPosts(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleReview = async (action) => {
+    const token = localStorage.getItem('token');
+
+    if (action === 'reject' && !adminNotes) {
+      return toast.error("You must provide feedback to deny a post.");
+    }
+
+    try {
+      await axios.post('http://localhost:5000/api/auth/review-post', {
+        postId: selectedPost._id,
+        action: action,
+        adminNotes: action === 'reject' ? adminNotes : ""
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      toast.success(`Listing ${action === 'approve' ? 'approved' : 'rejected'} successfully!`);
+      setSelectedPost(null);
+      setAdminNotes("");
+      fetchPendingPosts();
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Review failed.");
+    }
+  };
+
+  return (
+    <div style={{ width: '100%', maxWidth: '1200px', margin: '0 auto' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
+        <div>
+          <h2 style={{ color: '#BA8CFF', margin: 0, fontSize: '48px', fontFamily: "'VT323', monospace" }}>Admin Hub</h2>
+          <p style={{ color: '#4D4D4D', margin: '5px 0 0 0' }}>Manage the Lavender Route ecosystem.</p>
+        </div>
+      </div>
+
+      <div className="catalog-grid">
+        {pendingPosts.length > 0 ? pendingPosts.map(pokemon => (
+          <div key={pokemon._id} onClick={(e) => {
+            e.preventDefault(); 
+            e.stopPropagation(); 
+            setSelectedPost(pokemon);
+          }}>
+            <ReflectiveCard
+              isInteractive={false}
+              pokemonName={pokemon.name}
+              id={pokemon._id}
+              level={pokemon.level}
+              type={pokemon.type}
+              gender={pokemon.gender}
+              height={pokemon.height}
+              weight={pokemon.weight}
+              imgUrl={pokemon.imagePokemon || pokemon.imgUrl}
+            />
+          </div>
+        )) : <p style={{ color: '#888' }}>Queue is empty.</p>}
+      </div>
+
+      {selectedPost && (
+        <div style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", backgroundColor: "rgba(0, 0, 0, 0.85)", zIndex: 999, display: "flex", justifyContent: "center", alignItems: "center", backdropFilter: "blur(5px)", padding: "20px" }}>
+          <div style={{ position: "relative", width: "100%", maxWidth: "800px", maxHeight: "90h", background: "#0a0a0a", border: "1px solid #BA8CFF", borderRadius: "16px", padding: "30px" }}>
+            <button onClick={() => { setSelectedPost(null); setIsEditing(false); setAdminNotes(""); }} style={{ position: "absolute", top: "20px", right: "20px", background: "transparent", border: "none", cursor: "pointer", zIndex: 1000 }}>
+              <img src={CrossIcon} style={{ width: "24px", height: "24px" }} alt="Close" />
+            </button>
+
+            {isEditing ? (
+              <div style={{ maxHeight: '80vh', overflowY: 'auto', paddingRight: '15px' }}>
+                <h3 style={{ color: '#BA8CFF', marginBottom: '20px', fontFamily: "'VT323', monospace" }}>Admin Override Edit</h3>
+                <PokemonAddForm initialData={selectedPost} isModal={true} onSave={() => setIsEditing(false)} />
+              </div>
+            ) : (
+              <div style={{ display: 'flex', gap: '30px' }}>
+                <ReflectiveCard pokemonName={selectedPost.name} id={selectedPost._id} level={selectedPost.level} type={selectedPost.type} gender={selectedPost.gender} imgUrl={selectedPost.imagePokemon || selectedPost.imgUrl} />
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                  <h3 style={{ color: '#fff', fontFamily: "'VT323', monospace", margin: 0 }}>Review: {selectedPost.name}</h3>
+                  <p style={{ color: '#888', fontFamily: "'VT323', monospace", margin: 0 }}>Seller: {selectedPost.sellerId?.firstName || "Unknown"}</p>
+
+                  <textarea
+                    placeholder="Feedback (required if denying)..."
+                    value={adminNotes}
+                    onChange={(e) => setAdminNotes(e.target.value)}
+                    style={{ width: '100%', height: '80px', background: 'rgba(42, 26, 58, 0.3)', border: '1px solid #2A1A3A', color: 'white', padding: '10px', borderRadius: '8px', outline: 'none' }}
+                  />
+
+                  <div style={{ display: 'flex', gap: '10px', marginTop: 'auto' }}>
+                    <button onClick={() => handleReview('approve')} style={{ flex: 1, background: '#C4FF4D', color: '#050505', border: 'none', padding: '10px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontFamily: "'VT323', monospace" }}>APPROVE</button>
+                    <button onClick={() => handleReview('reject')} style={{ flex: 1, background: '#660019', color: '#fff', border: 'none', padding: '10px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontFamily: "'VT323', monospace" }}>DENY</button>
+                    <button onClick={() => setIsEditing(true)} style={{ flex: 1, background: 'transparent', color: '#BA8CFF', border: '1px solid #BA8CFF', padding: '10px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontFamily: "'VT323', monospace" }}>EDIT</button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const SellerDashboard = () => {
+  const [activeTab, setActiveTab] = useState('active');
+  const [selectedPost, setSelectedPost] = useState(null);
+
+  const [myActivePosts, setMyActivePosts] = useState([]);
+  const [myPendingPosts, setMyPendingPosts] = useState([]);
+  const [myRejectedPosts, setMyRejectedPosts] = useState([]);
+
+  useEffect(() => {
+    const fetchSellerPosts = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/pokemon', {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        });
+        const allPosts = response.data;
+
+        setMyActivePosts(allPosts.filter(p => p.status === 'approved'));
+        setMyPendingPosts(allPosts.filter(p => p.status === 'pending'));
+        setMyRejectedPosts(allPosts.filter(p => p.status === 'rejected'));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchSellerPosts();
+  }, []);
+
+  return (
+    <div style={{ width: '100%', maxWidth: '1200px', margin: '0 auto' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
+        <div>
+          <h2 style={{ color: '#C4FF4D', margin: 0, fontSize: '48px', fontFamily: "'VT323', monospace" }}>Seller Hub</h2>
+          <p style={{ color: '#4D4D4D', margin: '5px 0 0 0' }}>Manage your inventory and track approvals.</p>
+        </div>
+        <div style={{ display: 'flex', gap: '5px', background: 'rgba(42, 26, 58, 0.3)', padding: '6px', borderRadius: '12px', border: '1px solid #2A1A3A' }}>
+          <button onClick={() => setActiveTab('active')} style={{ background: activeTab === 'active' ? '#C4FF4D' : 'transparent', color: activeTab === 'active' ? '#050505' : '#C4FF4D', border: 'none', padding: '8px 20px', borderRadius: '12px', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.3s ease', fontFamily: "'VT323', monospace" }}>Active Listings</button>
+          <button onClick={() => setActiveTab('pending')} style={{ background: activeTab === 'pending' ? '#C4FF4D' : 'transparent', color: activeTab === 'pending' ? '#050505' : '#C4FF4D', border: 'none', padding: '8px 20px', borderRadius: '12px', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.3s ease', fontFamily: "'VT323', monospace" }}>Pending</button>
+          <button onClick={() => setActiveTab('rejected')} style={{ background: activeTab === 'rejected' ? '#8f0024' : 'transparent', color: activeTab === 'rejected' ? '#050505' : '#8f0024', border: 'none', padding: '8px 20px', borderRadius: '12px', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.3s ease', fontFamily: "'VT323', monospace" }}>Needs Revision</button>
+        </div>
+      </div>
+
+      <div className="catalog-grid">
+        {activeTab === 'active' ? (
+          myActivePosts.length > 0 ? myActivePosts.map(pokemon => (
+            <ReflectiveCard
+              key={pokemon._id}
+              pokemonName={pokemon.name}
+              id={pokemon._id}
+              level={pokemon.level}
+              type={pokemon.type}
+              gender={pokemon.gender}
+              height={pokemon.height}
+              weight={pokemon.weight}
+              shiny={pokemon.shiny}
+              imgUrl={pokemon.imagePokemon || pokemon.imgUrl}
+              onEditClick={(e) => {
+                e.stopPropagation();
+                setSelectedPost(pokemon);
+              }}
+            />
+          )) : <p style={{ color: '#4D4D4D' }}>You have no active listings.</p>
+        ) : activeTab === 'pending' ? (
+          myPendingPosts.length > 0 ? myPendingPosts.map(pokemon => (
+            <ReflectiveCard
+              key={pokemon._id}
+              pokemonName={pokemon.name}
+              id={pokemon._id}
+              level={pokemon.level}
+              type={pokemon.type}
+              gender={pokemon.gender}
+              height={pokemon.height}
+              weight={pokemon.weight}
+              shiny={pokemon.shiny}
+              imgUrl={pokemon.imagePokemon || pokemon.imgUrl}
+              onEditClick={(e) => {
+                e.stopPropagation();
+                setSelectedPost(pokemon);
+              }}
+            />
+          )) : <p style={{ color: '#888' }}>You have no pending listings.</p>
+        ) : (
+          myRejectedPosts.length > 0 ? myRejectedPosts.map(pokemon => (
+            <div key={pokemon._id} style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '300px' }}>
+              <ReflectiveCard
+                pokemonName={pokemon.name}
+                id={pokemon._id}
+                level={pokemon.level}
+                type={pokemon.type}
+                gender={pokemon.gender}
+                height={pokemon.height}
+                weight={pokemon.weight}
+                shiny={pokemon.shiny}
+                imgUrl={pokemon.imagePokemon || pokemon.imgUrl}
+                onEditClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedPost(pokemon);
+                }}
+              />
+              <div style={{ padding: '10px', background: 'rgba(200, 0, 0, 0.2)', border: '1px solid #8f0024', borderRadius: '8px', color: '#8f0024', fontFamily: "'VT323', monospace" }}>
+                <strong>Admin Feedback:</strong> {pokemon.adminNotes || "No feedback provided."}
+              </div>
+            </div>
+          )) : <p style={{ color: '#888' }}>No rejected listings. Great job!</p>
+        )}
+      </div>
+
+      {selectedPost && (
+        <div style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", backgroundColor: "rgba(0, 0, 0, 0.8)", zIndex: 999, display: "flex", justifyContent: "center", alignItems: "center", backdropFilter: "blur(5px)", padding: "20px" }}>
+          <div style={{ position: "relative", width: "100%", maxWidth: "800px" }}>
+            <button onClick={() => setSelectedPost(null)} style={{ position: "absolute", top: "20px", right: "20px", background: "transparent", border: "none", zIndex: 1000, cursor: "pointer" }}>
+              <img src={CrossIcon} style={{ width: "30px", height: "30px" }} alt="Close" />
+            </button>
+            <PokemonAddForm initialData={selectedPost} isModal={true} onSave={() => setSelectedPost(null)} />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default function Dashboard() {
+  const [userRoles, setUserRoles] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+
+    const roles = JSON.parse(localStorage.getItem('userRoles') || '[]');
+
+    if (!roles.includes('admin') && !roles.includes('seller') && !roles.includes('hybrid')) {
+      navigate('/catalog');
+      return;
+    }
+
+    setUserRoles(roles);
+  }, [navigate]);
+
+  if (userRoles.length === 0) return null;
+
+  return (
+    <>
+      <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: -1 }}>
+        <LiquidEther
+          mouseForce={20}
+          cursorSize={100}
+          isViscous
+          viscous={30}
+          colors={["#2A1A3A", "#BA8CFF", "#2A1A3A"]}
+          autoDemo
+          autoSpeed={0.5}
+          autoIntensity={2.2}
+          isBounce={false}
+          resolution={0.5}
+        />
+      </div>
+      <Navbar />
+      <div style={{ minHeight: '100vh', width: '100vw', paddingTop: '120px', paddingBottom: '60px', color: 'white', boxSizing: 'border-box', paddingLeft: '20px', paddingRight: '20px', zIndex: -1 }}>
+        {userRoles.includes('admin') ? (
+          <AdminDashboard />
+        ) : userRoles.includes('seller') || userRoles.includes('hybrid') ? (
+          <SellerDashboard />
+        ) : (
+          <div style={{ textAlign: 'center', marginTop: '50px' }}>
+            <h2 style={{ color: '#BA8CFF' }}>Buyer Dashboard</h2>
+            <p style={{ color: '#888' }}>Your purchases and saved items will appear here.</p>
+          </div>
+        )}
+      </div>
+    </>
+  );
+}

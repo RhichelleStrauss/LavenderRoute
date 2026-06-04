@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"; // Added useEffect import
+import React, { useState, useEffect } from "react";
 import LiquidEther from "../components/LiquidEther.jsx";
 import ReflectiveCard from "../components/pokemonCard.jsx";
 import SearchCapsule from "../components/SearchCapsule.jsx";
@@ -9,8 +9,12 @@ import magnify from "../assets/icons/MagnifyGlassIcon.png";
 import CrossIcon from "../assets/icons/CrossIcon.png";
 import "../css/catalog.css";
 import Navbar from "../components/navbar.jsx";
+import { useNavigate } from 'react-router-dom';
+
+import toast from 'react-hot-toast';
 
 export default function PokemonAdd() {
+  const navigate = useNavigate();
   const [teamPokemon, setTeamPokemon] = useState([
     {
       _id: "test123",
@@ -25,16 +29,14 @@ export default function PokemonAdd() {
     },
   ]);
 
-  //modal for editing ᓚᘏᗢ
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPokemon, setSelectedPokemon] = useState(null);
-  // ᓚᘏᗢ
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState("");
   const [selectedGender, setSelectedGender] = useState("");
   const [selectedShiny, setSelectedShiny] = useState("");
-
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
   const [sortBy, setSortBy] = useState("");
 
@@ -43,7 +45,12 @@ export default function PokemonAdd() {
       try {
         const response = await fetch("http://localhost:5000/api/pokemon");
         const data = await response.json();
-        setTeamPokemon(data);
+
+        const approvedPokemon = data.filter(poke => poke.status === 'approved');
+        
+        
+        setTeamPokemon(approvedPokemon);
+
       } catch (error) {
         console.error("The backend is shy today:", error);
       }
@@ -64,52 +71,18 @@ export default function PokemonAdd() {
         }
       );
 
-      if (response.ok) {
-        setTeamPokemon((prev) =>
-          prev.map((p) => (p._id === updatedData._id ? updatedData : p))
-        );
-        setIsModalOpen(false);
-        setSelectedPokemon(null);
-      }
-    } catch (error) {
-      console.error("np updated:", error);
-    }
-  };
-  //put - updates
-  //map looks at data edited, looks through list - if matching what was updated UI gets upated
-  //ᓚᘏᗢ
-
-  //handle delete post ᓚᘏᗢ
-  const handleDeletePokemon = async (id) => {
-    if (!window.confirm("serious you want to delete this cutie pokemon"))
-      return;
-
-    try {
-      const response = await fetch(`http://localhost:5000/api/pokemon/${id}`, {
-        method: "DELETE",
-      });
-
-      if (response.ok) {
-        setTeamPokemon((prev) => prev.filter((p) => p._id !== id));
-        setIsModalOpen(false);
-        setSelectedPokemon(null);
-      }
-    } catch (error) {
-      console.error("no delete:", error);
-    }
-  };
-  //filter removes deleted pokemon, make new list without the poor thing
-
   const filteredPokemon = [...teamPokemon]
     .sort((a, b) => {
       if (sortBy === "level-asc") return a.level - b.level;
       if (sortBy === "level-desc") return b.level - a.level;
-      if (sortBy === "name-asc") return a.name.localeCompare(b.name);
-      if (sortBy === "name-desc") return b.name.localeCompare(a.name);
+      if (sortBy === "name-asc")
+        return (a.name || "").localeCompare(b.name || "");
+      if (sortBy === "name-desc")
+        return (b.name || "").localeCompare(a.name || "");
       return 0;
     })
     .filter((poke) => {
-      const matchesSearch = poke.name
+      const matchesSearch = (poke.name || "")
         .toLowerCase()
         .includes(searchQuery.toLowerCase());
 
@@ -121,10 +94,13 @@ export default function PokemonAdd() {
 
       const matchesShiny =
         selectedShiny === "" ||
-        (selectedShiny === "Shiny" ? poke.shiny === true : poke.shiny === false);
+        (selectedShiny === "Shiny"
+          ? poke.shiny === true
+          : poke.shiny === false);
 
       return matchesSearch && matchesType && matchesGender && matchesShiny;
     });
+
 
   return (
     <>
@@ -141,132 +117,62 @@ export default function PokemonAdd() {
           isBounce={false}
           resolution={0.5}
         />
-     
+       
       </div>
     <Navbar />
 
-      <div className="search-capsule-container">
-        <div className="search-pill-bar">
-          <button
-            type="button"
-            className={`filter-toggle-btn ${isFilterDrawerOpen ? "active" : ""}`}
-            onClick={() => setIsFilterDrawerOpen(!isFilterDrawerOpen)}
-            aria-label="Toggle Filters"
-          >
-            <img
-              src={filterIcon}
-              alt="Toggle Filters"
-              style={{ width: "24px", height: "24px" }}
-            />
-          </button>
-
-          <div className="search-input-wrapper">
-            <input
-              type="text"
-              placeholder="search..."
-              className="capsule-search"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <span className="search-icon">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
-            </span>
-          </div>
-        </div>
-
-        <div className={`filter-drawer ${isFilterDrawerOpen ? "open" : ""}`}>
-          <div className="drawer-inner-grid">
-            <div className="drawer-field">
-              <label>ELEMENTAL TYPE</label>
-              <select
-                value={selectedType}
-                onChange={(e) => setSelectedType(e.target.value)}
-              >
-                <option value="">ALL TYPES</option>
-                <option value="Normal">NORMAL</option>
-                <option value="Fire">FIRE</option>
-                <option value="Water">WATER</option>
-                <option value="Grass">GRASS</option>
-                <option value="Electric">ELECTRIC</option>
-                <option value="Ice">ICE</option>
-                <option value="Fighting">FIGHTING</option>
-                <option value="Poison">POISON</option>
-                <option value="Ground">GROUND</option>
-                <option value="Flying">FLYING</option>
-                <option value="Psychic">PSYCHIC</option>
-                <option value="Bug">BUG</option>
-                <option value="Rock">ROCK</option>
-                <option value="Ghost">GHOST</option>
-                <option value="Dragon">DRAGON</option>
-                <option value="Dark">DARK</option>
-                <option value="Steel">STEEL</option>
-                <option value="Fairy">FAIRY</option>
-                <option value="Stellar">STELLAR</option>
-              </select>
-            </div>
-
-            <div className="drawer-field">
-              <label>GENDER SPECS</label>
-              <select
-                value={selectedGender}
-                onChange={(e) => setSelectedGender(e.target.value)}
-              >
-                <option value="">ALL GENDERS</option>
-                <option value="Male">MALE</option>
-                <option value="Female">FEMALE</option>
-                <option value="Genderless">GENDERLESS</option>
-              </select>
-            </div>
-
-            <div className="drawer-field">
-              <label>GENETIC VARIANT</label>
-              <select
-                value={selectedShiny}
-                onChange={(e) => setSelectedShiny(e.target.value)}
-              >
-                <option value="">ALL VARIANTS</option>
-                <option value="Basic">BASIC FORM</option>
-                <option value="Shiny">SHINY VARIANT</option>
-              </select>
-            </div>
-          </div>
-        </div>
+      <div>
+        <Navbar />
       </div>
+      
+       <SearchCapsule
+        filterIcon={filterIcon}
+        searchIcon={searchIcon}
+        magnify={magnify}
+        isFilterDrawerOpen={isFilterDrawerOpen}
+        setIsFilterDrawerOpen={setIsFilterDrawerOpen}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        selectedType={selectedType}
+        setSelectedType={setSelectedType}
+        selectedGender={selectedGender}
+        setSelectedGender={setSelectedGender}
+        selectedShiny={selectedShiny}
+        setSelectedShiny={setSelectedShiny}
+      />
+      
     
 
       <div className="catalog-grid">
-        {filteredPokemon.length > 0 ? (
-          filteredPokemon.map((poke) => (
-            <ReflectiveCard
-              key={poke._id}
-              pokemonName={poke.name}
-              level={poke.level}
-              type={poke.type}
-              gender={poke.gender}
-              height={poke.height}
-              weight={poke.weight}
-              imgUrl={poke.imagePokemon}
-              shiny={poke.shiny}
-              //edit button - onclick handle function
-              onEdit={() => handleEditClick(poke)}
-            />
-          ))
-        ) : (
-          <p className="pixel-text" style={{ color: "#C4FF4D" }}>
-            Scanning for lifeforms...
-          </p>
-        )}
-      </div>
+  {filteredPokemon.length > 0 ? (
+    filteredPokemon.map((poke) => {
+
+      const id = poke._id || poke.id;
+
+        return (
+        <ReflectiveCard
+          id={id}
+          key={id} 
+          pokemonName={poke.name}
+          level={poke.level}
+          type={poke.type}
+          gender={poke.gender}
+          height={poke.height}
+          weight={poke.weight}
+          imgUrl={poke.imagePokemon}
+          shiny={poke.shiny}
+          onClick={() => navigate(`/pokemon/${id}`)}
+        />
+      );
+    })
+  ) : (
+    <p className="pixel-text" style={{ color: "#C4FF4D" }}>
+      Scanning for lifeforms...
+    </p>
+  )}
+</div>
 
       {isModalOpen && (
         <div
@@ -306,6 +212,7 @@ export default function PokemonAdd() {
             >
               <img
                 src={CrossIcon}
+                alt="Close"
                 style={{ width: "34px", height: "34px", objectFit: "contain" }}
               />
             </button>
@@ -319,6 +226,7 @@ export default function PokemonAdd() {
           </div>
         </div>
       )}
+   
     </>
   );
 }

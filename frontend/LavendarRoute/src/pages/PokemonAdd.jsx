@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import PokemonAddForm from '../components/PokemonAddForm.jsx';
 import LiquidEther from '../components/LiquidEther.jsx'
 import { Container, Card } from 'react-bootstrap';
-import Navbar from '../components/navbar.jsx';
+import Navbar from '../components/navbar';
+import toast from 'react-hot-toast';
 
 
 

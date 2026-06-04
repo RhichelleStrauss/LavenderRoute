@@ -1,0 +1,163 @@
+@import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
+
+.font-vt {
+  font-family: "VT323", monospace;
+}
+
+body {
+  color: white;
+  /* overflow-x: clip; */
+}
+
+#root {
+  width: 100%;
+}
+
+#liquid-ether {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+}
+
+#cart-content {
+  margin-top: 125px;
+}
+
+.cart-item {
+  margin-top: 20px !important;
+  background-color: rgba(196, 255, 77, 0.08);
+  border-style: solid;
+  border-width: 2px;
+  border-color: var(--green);
+  border-radius: clamp(8px,2vw,16px);
+  padding: 1%;
+}
+
+.cart-image {
+  max-width: 100%;
+}
+
+.cart-info,
+.cart-image,
+.cart-price:hover {
+  cursor: pointer;
+}
+
+.cart-item:hover {
+  transition: transform 0.2s;
+  transform: scale(1.05);
+  /* width: 105%; */
+}
+
+.pokemon-name {
+  color: #c4ff4d;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-24 {
+  padding: 0;
+  font-size: clamp(16px, 2vw, 24px) !important;
+}
+
+.text-32 {
+  padding: 0;
+  font-size: clamp(16px, 2vw, 32px) !important;
+}
+
+.text-36 {
+  padding: 0;
+  font-size: clamp(16px, 2vw, 36px) !important;
+}
+
+.text-42 {
+  padding: 0;
+  font-size: clamp(16px, 3vw, 42px) !important;
+}
+
+.remove-item-btn {
+  border: none;
+  color: red;
+  background-color: transparent;
+}
+
+.remove-item-btn:hover {
+  border: none;
+  color: white;
+  background-color: red;
+}
+
+#check-out-btn {
+  height: 100%;
+  background-color: transparent;
+  border-color: var(--purple);
+  border-width: 2px;
+  border-radius: clamp(8px,2vw,16px);
+  color: var(--purple);
+}
+
+#check-out-btn:hover {
+  background-color: var(--purple);
+  color: white;
+}
+
+.cross-icon {
+  width: clamp(24px, 50%, 80px);
+}
+
+.cross-icon:hover {
+  cursor: pointer;
+  filter: brightness(0) saturate(100%);
+  filter: brightness(0) saturate(100%) invert(16%) sepia(94%) saturate(6166%)
+    hue-rotate(358deg) brightness(94%) contrast(112%);
+}
+
+#empty-cart-btn {
+  height: 100%;
+  background-color: transparent;
+  border-color: var(--green);
+  border-width: 2px;
+  border-radius: clamp(8px,2vw,16px);
+  color: var(--green);
+}
+
+#empty-cart-btn:hover {
+  background-color: var(--green);
+  color: var(--grey);
+}
+
+#cart-empty{
+  margin-top: 30%;
+}
+
+.modal-content{
+   background-color: rgba(186, 140, 255, 0.08);
+   border-color: var(--purple);
+   border-width: 2px;
+   color: white;
+}
+
+.modal-header{
+  border: none;
+  padding-bottom: 0;
+}
+
+#cart-modal-btn{
+  font-size: 24px;
+  height: 100%;
+  background-color: transparent;
+  border-color: var(--purple);
+  border-width: 2px;
+  border-radius: clamp(8px,2vw,8px);
+  color: var(--purple);
+}
+
+#cart-modal-btn:hover{
+  background-color: var(--purple);
+  color: var(--grey);
+}
