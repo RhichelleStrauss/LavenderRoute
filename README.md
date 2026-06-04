@@ -17,8 +17,7 @@ In the standard digital asset and Pokémon trading space, platforms often feel g
 ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
 ![Base UI](https://img.shields.io/badge/Base%20UI-007FFF?style=for-the-badge&logo=mui&logoColor=white)
 
-<br/>
-<img src="./frontend/LavendarRoute/src/assets/HomePageLavRoute.jpg" alt="Lavender Route Home Page Screenshot" width="100%">
+<img src="https://github.com/RhichelleStrauss/LavenderRoute/blob/main/frontend/LavendarRoute/src/assets/HomePageLavRoute.jpg">
 
 ---
 
@@ -63,10 +62,10 @@ The idea was to create a digital marketplace that didn't feel like a standard e-
 ## Wireframes
 
 <div align="center">
-  <img src="./frontend/LavendarRoute/src/assets/HOME PAGE.png" width="24%">
-  <img src="./frontend/LavendarRoute/src/assets/Catalog.png" width="24%">
-  <img src="./frontend/LavendarRoute/src/assets/Modal.png" width="24%">
-  <img src="./frontend/LavendarRoute/src/assets/Post Creation Form.png" width="24%">
+  <img src="https://github.com/RhichelleStrauss/LavenderRoute/blob/main/frontend/LavendarRoute/src/assets/HOME PAGE.png" width="25%">
+  <img src="https://github.com/RhichelleStrauss/LavenderRoute/blob/main/frontend/LavendarRoute/src/assets/Catalog.png" width="25%">
+  <img src="https://github.com/RhichelleStrauss/LavenderRoute/blob/main/frontend/LavendarRoute/src/assets/Modal.png" width="25%">
+  <img src="https://github.com/RhichelleStrauss/LavenderRoute/blob/main/frontend/LavendarRoute/src/assets/Post Creation Form.png" width="25%">
 </div>
 
 ---
@@ -95,6 +94,7 @@ To achieve our highly specific "Misty Glass" cyberpunk aesthetic, standard UI li
 * A direct messaging system for Sellers and Buyers to negotiate safely.
 * Crypto-wallet connection for decentralized asset purchases.
 * Advanced filtering by Pokémon IVs, EVs, and specific abilities.
+* Adding the Pokémon API for easier Pokémon product creation.
 
 ## Mockups
 
@@ -106,4 +106,5 @@ To achieve our highly specific "Misty Glass" cyberpunk aesthetic, standard UI li
 
 ## License
 
-MIT © TheReactors
+MIT © [TheReactors]
+
