@@ -94,6 +94,7 @@ To achieve our highly specific "Misty Glass" cyberpunk aesthetic, standard UI li
 * A direct messaging system for Sellers and Buyers to negotiate safely.
 * Crypto-wallet connection for decentralized asset purchases.
 * Advanced filtering by Pokémon IVs, EVs, and specific abilities.
+* Adding the Pokémon API for easier Pokémon product creation.
 
 ## Mockups
 
