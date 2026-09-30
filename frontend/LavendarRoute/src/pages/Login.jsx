@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import gengarLogo from '../assets/gengar-logo.png';
-import '../css/SignUp.css'; 
+import '../css/SignUp.css';
 import LetterGlitch from '../components/LetterGlitch';
+import LiquidEther from '../components/LiquidEther';
 import PokePattern from '../components/PokePattern';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -70,10 +71,25 @@ function Login() {
       alignItems: 'center', 
       minHeight: '100vh', 
       width: '100vw',
-      backgroundColor: '#050505' 
+      backgroundColor: '#050505'
     }}>
-      <div className="page-container">
-        
+      <div className="liquid-ether-bg-wrapper">
+        <LiquidEther
+          mouseForce={20}
+          cursorSize={100}
+          isViscous
+          viscous={30}
+          colors={["#C4FF4D", "#C4FF4D", "#C4FF4D"]}
+          autoDemo
+          autoSpeed={0.5}
+          autoIntensity={2.2}
+          isBounce={false}
+          resolution={0.5}
+        />
+      </div>
+
+      <div className="page-container" style={{ position: 'relative', zIndex: 1 }}>
+
         <header className="page-header">
           <div className="logo-wrapper" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
             <img 

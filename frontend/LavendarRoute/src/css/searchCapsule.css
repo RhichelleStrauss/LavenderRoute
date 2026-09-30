@@ -2,7 +2,7 @@
   position: relative;
   width: 100%;
   margin-top: 8%;
-  padding: 0 16px;
+  padding: 0 24px;
   box-sizing: border-box;
 }
 
@@ -16,7 +16,7 @@
   border-radius: 12px;
   padding: 6px 16px;
   gap: 12px;
-  max-width: 900px;
+  max-width: 1038px;
   width: 100%;
   margin: 0 auto;
   box-sizing: border-box;
@@ -139,7 +139,7 @@
   background: rgba(42, 26, 58, 0.4);
   backdrop-filter: blur(10px);
   border-radius: 16px;
-  max-width: 900px;
+  max-width: 1038px;
   width: 100%;
   margin: 12px auto 0 auto;
   box-sizing: border-box;

@@ -71,7 +71,7 @@ const POKEMON_TYPE = [
     e.preventDefault();
     if (form.type.length === 0) return toast.error("Select at least 1 type!");
     //if no types selected this alert pops up
-
+    
     try {
       const payload = {
         ...form,

@@ -8,6 +8,7 @@ import gengarLogo from '../assets/gengar-logo.png'
 import '../css/SignUp.css'
 import PokePattern from '../components/PokePattern';
 import LetterGlitch from '../components/LetterGlitch'
+import LiquidEther from '../components/LiquidEther'
 import toast from 'react-hot-toast';
 
 //stepper imports
@@ -187,10 +188,25 @@ const renderStepContent = (step) => {
   return (
     <div className="signup-outer-wrapper" style={{ 
       display: 'flex', justifyContent: 'center', alignItems: 'center', 
-      minHeight: '100vh', width: '100vw', backgroundColor: '#050505' 
+      minHeight: '100vh', width: '100vw', backgroundColor: '#050505'
     }}>
-      <div className="page-container">
-        
+      <div className="liquid-ether-bg-wrapper">
+        <LiquidEther
+          mouseForce={20}
+          cursorSize={100}
+          isViscous
+          viscous={30}
+          colors={["#C4FF4D", "#C4FF4D", "#C4FF4D"]}
+          autoDemo
+          autoSpeed={0.5}
+          autoIntensity={2.2}
+          isBounce={false}
+          resolution={0.5}
+        />
+      </div>
+
+      <div className="page-container" style={{ position: 'relative', zIndex: 1 }}>
+
         <header className="page-header">
           <div className="logo-wrapper">
             <img src={gengarLogo} alt="Logo" width="45" height="45" className="logo-image" />
