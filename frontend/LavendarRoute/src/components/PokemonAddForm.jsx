@@ -22,7 +22,7 @@ const POKEMON_TYPE = [
 //certain objets convert strings into numbers 
 //payload is stringified into a json string, and placed into bpody of fetch to server on api https
 //modal not open 
-
+//
 
 //initialdata: on addpokemon page nothing, on catalog stores pokemons when clicking card
 //on save on delete callbacks - form givess functipns data
