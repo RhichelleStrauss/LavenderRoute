@@ -273,4 +273,4 @@ Distributed under the MIT License.
 
 ## 10. Authors and Contact Info
 
-- **The Reactors** – Developer and Designer
+- **The Reactors** – Developers and Designers
