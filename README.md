@@ -231,10 +231,9 @@ A minimal, lime-line icon set (filter, cart, account/profile) matching the neon-
 
 ### 6.1 Mockups
 
-<div align="center">
-  <img alt="Dashboard mockup" src="./frontend/LavendarRoute/src/assets/LavRouteMockupDashboard.png" width="48%" />
-  <img alt="Desktop mockup" src="./frontend/LavendarRoute/src/assets/DesktopMockup.png" width="48%" />
-</div>
+<img alt="Dashboard mockup" src="./frontend/LavendarRoute/src/assets/LavRouteMockupDashboard.png" />
+
+<img alt="Desktop mockup" src="./frontend/LavendarRoute/src/assets/DesktopMockup.png" />
 
 ---
 
