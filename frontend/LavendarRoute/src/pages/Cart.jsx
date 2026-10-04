@@ -68,22 +68,22 @@ const Cart = () => {
   const CheckOut = async () => {
     let currentCart = JSON.parse(localStorage.getItem("cart") || "[]");
 
-    try {
-      await Promise.all(
-        currentCart.map(async (pokemon) => {
-          const response = await fetch(
-            `http://localhost:5000/api/pokemon/${pokemon._id}`,
-            {
-              method: "DELETE",
-              headers: {
-                "Content-Type": "application/json",
-              },
-            },
-          );
+   try {
+  await Promise.all(
+    currentCart.map(async (pokemon) => {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/pokemon/${pokemon._id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
 
-          const data = await response.json();
-          console.log(data);
-        }),
+      const data = await response.json();
+      console.log(data);
+    }),
       );
 
       localStorage.setItem("cart", JSON.stringify([]));

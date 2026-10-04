@@ -17,7 +17,7 @@ import BinIcon from '../assets/icons/BinIcon.png';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-const API = "http://localhost:5000/api/pokemon";
+const API = `${import.meta.env.VITE_API_URL}/api/pokemon`;
 
 const POKEMON_TYPE = [
     'Normal', 'Fire', 'Water', 'Electric', 'Grass', 'Ice', 'Fighting', 'Poison', 'Ground', 'Flying',

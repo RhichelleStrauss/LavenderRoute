@@ -43,7 +43,7 @@ export default function PokemonAdd() {
   useEffect(() => {
     const getPokemon = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/pokemon");
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/pokemon`)
         const data = await response.json();
 
         const approvedPokemon = data.filter(poke => poke.status === 'approved');

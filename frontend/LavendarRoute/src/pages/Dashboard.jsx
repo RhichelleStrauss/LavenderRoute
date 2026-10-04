@@ -25,16 +25,16 @@ const AdminDashboard = () => {
     fetchPendingPosts();
   }, []);
 
-  const fetchPendingPosts = async () => {
-    try {
-      const response = await axios.get('http://localhost:5000/api/pokemon/pending', {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
-      setPendingPosts(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+const fetchPendingPosts = async () => {
+  try {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/pokemon/pending`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    });
+    setPendingPosts(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   const handleReview = async (action) => {
     const token = localStorage.getItem('token');
@@ -43,15 +43,14 @@ const AdminDashboard = () => {
       return toast.error("You must provide feedback to deny a post.");
     }
 
-    try {
-      await axios.post('http://localhost:5000/api/auth/review-post', {
-        postId: selectedPost._id,
-        action: action,
-        adminNotes: action === 'reject' ? adminNotes : ""
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
+   try {
+  await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/review-post`, {
+    postId: selectedPost._id,
+    action: action,
+    adminNotes: action === 'reject' ? adminNotes : ""
+  }, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
       toast.success(`Listing ${action === 'approve' ? 'approved' : 'rejected'} successfully!`);
       setSelectedPost(null);
       setAdminNotes("");
@@ -144,7 +143,7 @@ const SellerDashboard = () => {
   useEffect(() => {
     const fetchSellerPosts = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/pokemon', {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/pokemon`,  {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         });
         const allPosts = response.data;

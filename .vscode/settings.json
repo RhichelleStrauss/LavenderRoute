@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/d31be1c0-5846-4097-b40b-4a89a629d83b/resourceGroups/mern-demo/providers/Microsoft.Web/sites/LavenderRoute",
+    "appService.deploySubpath": "backend"
+}

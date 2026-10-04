@@ -24,7 +24,7 @@ const Home = () => {
   useEffect(() => {
     const getPokemon = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/pokemon'); 
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/pokemon`); 
         const data = await response.json();
         if (data && data.length > 0) {
           setTeamPokemon(data.slice(0, 3)); 

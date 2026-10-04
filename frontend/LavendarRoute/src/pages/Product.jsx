@@ -97,7 +97,7 @@ const [showModal, setShowModal] = useState(false);
         setLoading(false);
         return; 
       }
-      const url = `http://localhost:5000/api/pokemon/${id}`;
+      const url = `${import.meta.env.VITE_API_URL}/api/pokemon/${id}`;
 
       try {
         const response = await fetch(url);
@@ -134,7 +134,7 @@ const [showModal, setShowModal] = useState(false);
       //Posts the new comment.
       try {
         const response = await fetch(
-          `http://localhost:5000/api/pokemon/${id}/comments`,
+         `${import.meta.env.VITE_API_URL}/api/pokemon/${id}/comments`,
           {
             method: "POST",
             headers: {
@@ -176,7 +176,7 @@ const [showModal, setShowModal] = useState(false);
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/users/${token.id}/wishlist`,
+       `${import.meta.env.VITE_API_URL}/api/users/${token.id}/wishlist`,
         {
           method: "PUT",
           headers: {
@@ -198,7 +198,7 @@ const [showModal, setShowModal] = useState(false);
 
  const handleUpdatePokemon = async (updatedData) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/pokemon/${updatedData._id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/pokemon/${updatedData._id}`,  {
         method: "PUT",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}` },
         body: JSON.stringify(updatedData),
@@ -219,7 +219,7 @@ const [showModal, setShowModal] = useState(false);
   const handleDeletePokemon = async (deleteId) => {
     if (!window.confirm("Are you sure you want to delete this Pokémon?")) return;
     try {
-      const response = await fetch(`http://localhost:5000/api/pokemon/${deleteId}`, {
+     const response = await fetch(`${import.meta.env.VITE_API_URL}/api/pokemon/${deleteId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
