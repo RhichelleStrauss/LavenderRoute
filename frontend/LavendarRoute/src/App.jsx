@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from 'react-hot-toast';
 import gengarSprite from './assets/gengar-sprite.png';
 
-import Catalog from './pages/Catalog'; 
+import Catalog from './pages/catalog'; 
 import PokemonAdd from './pages/PokemonAdd';
 import SignUp from './pages/SignUp';
 import Login from './pages/Login';
