@@ -20,7 +20,7 @@ const ADMIN = {
 };
 
 async function main() {
-  await mongoose.connect(process.env.MONGO_URI);
+  await mongoose.connect(process.env.MONGO_URI, { dbName: "lavenderroute" }); // same DB as server.js
   console.log("Connected to MongoDB");
 
   const existing = await User.findOne({ email: ADMIN.email });

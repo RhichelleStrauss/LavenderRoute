@@ -9,14 +9,24 @@ const jwt = require("jsonwebtoken");
 //when logging out the token is removed from local storage
 
 const Pokemon = require('../../models/pokemon');
+//only signup can create accounts with these roles or both (hybrid)
+//no admin passkey or anything in register anymore
+const accountRoles = ['buyer', 'seller'];
 
 exports.register = async (req, res) => {
     try {
-        const { firstName, lastName, email, password, authPattern, dob, roles, adminPasskey } = req.body;
+        const { firstName, lastName, email, password, authPattern, dob, roles } = req.body;
 
         if (!firstName || !lastName || !email || !password || !authPattern) {
             return res.status(400).json({ message: 'Please fill in all fields' });
         }
+
+        const requestedRoles = Array.isArray(roles) ? roles : [];
+        if (requestedRoles.some(role => !accountRoles.includes(role))) {
+            return res.status(403).json({ message: 'That account type cannot be created through sign up.' });
+        }
+        const safeRoles = requestedRoles.length ? [...new Set(requestedRoles)] : ['buyer'];
+
 
         const existing = await User.findOne({ email });
         if (existing) {
@@ -25,26 +35,22 @@ exports.register = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 12);
         const hashedAuthPattern = await bcrypt.hash(authPattern, 12);
-        let hashedAdminPasskey = undefined;
-        if (adminPasskey) {
-            hashedAdminPasskey = await bcrypt.hash(adminPasskey, 12);
-        }
 
         const user = await User.create({
             firstName,
             lastName,
             email,
             dob,
-            roles,
+            roles : safeRoles,
             password: hashedPassword,
             authPattern: hashedAuthPattern,
-            adminPasskey: hashedAdminPasskey
         });
 
         res.status(201).json({ message: 'Account created successfully!' });
 
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        console.error(err);
+        res.status(500).json({ message: "Something went wrong. Please try again." });
     }
 };
 
@@ -101,35 +107,53 @@ exports.login = async (req, res) => {
         });
 
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        console.error(err);
+        res.status(500).json({ message: "Something went wrong. Please try again." });
     }
 };
+
+const { streakLimit } = require('../../config/streaks');
 
 exports.reviewPost = async (req, res) => {
     try {
         const { postId, action, adminNotes } = req.body;
+        if (action !== 'approve' && action !== 'reject') {
+            return res.status(400).json({ message: "Action must be approve or reject." });
+        }
+        const approved = action === 'approve';
 
-        const newStatus = action === 'approve' ? 'approved' : 'rejected';
-      const newNotes = action === 'reject' ? (adminNotes || "No feedback provided by admin.") : "";
-
-      const post = await Pokemon.findByIdAndUpdate(
-        postId, 
-        { 
-            status: newStatus, 
-            adminNotes: newNotes 
-        },
-        { new: true }
+    
+        const before = await Pokemon.findOneAndUpdate(
+            { _id: postId, status: { $ne: 'sold' } },
+            {
+                status: approved ? 'approved' : 'rejected',
+                adminNotes: approved ? "" : (adminNotes || "No feedback provided by admin."),
+            }
         );
-  
-      if (!post) {
-        return res.status(404).json({ message: "Post not found" });
-      }
-  
-      res.status(200).json({ message: `Post successfully ${action}d!` });
+        if (!before) {
+            return res.status(404).json({ message: "Post not found" });
+        }
+
+    
+        if (before.status === 'pending') {
+            const seller = await User.findById(before.sellerId);
+            if (seller) {
+                if (approved) {
+                    seller.approvalStreak += 1;
+                    seller.denyStreak = 0;
+                } else {
+                    seller.denyStreak += 1;
+                    seller.approvalStreak = 0;
+                    if (seller.denyStreak >= streakLimit) seller.isDeniedFromPosting = true;
+                }
+                await seller.save();
+            }
+        }
+
+        res.status(200).json({ message: `Post successfully ${action}d!` });
     } catch (error) {
-      console.error("Review error:", error);
-      res.status(500).json({ message: "Server error during review." });
+        console.error("Review error:", error);
+        res.status(500).json({ message: "Server error during review." });
     }
 };
-
       

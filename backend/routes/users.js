@@ -1,8 +1,26 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../Authentication/models/User");
+const verifyToken = require("../Authentication/middleware/verifyToken");
 
-router.put("/:id/wishlist", async (req, res) => { //calls to put wishlist array to the user model.
+// doesnt send back too broweser
+const privateFields = "-password -adminPasskey -authPattern";
+
+router.get("/me", verifyToken, async (req, res) => { 
+  //shows profike of logged in
+  try {
+    const user = await User.findById(req.user._id).select(privateFields);
+    res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Something went wrong. Please try again.",
+    });
+  }
+});
+
+router.put("/:id/wishlist", async (req, res) => { 
+  //calls to put wishlist array to the user model.
   try {
 
     const { pokemon } = req.body;
@@ -16,7 +34,7 @@ router.put("/:id/wishlist", async (req, res) => { //calls to put wishlist array 
         new: true,
         runValidators: true,
       }
-    );
+    ).select(privateFields);
 
     if (!user) {
       return res.status(404).json({

@@ -65,8 +65,8 @@ const PokemonSchema = new mongoose.Schema(
         },
 
         status: {type: String,
-                enum: ['pending', 'approved', 'rejected'],
-                default: 'pending'
+        enum: ['pending', 'approved', 'rejected', 'sold'],
+        default: 'pending'
         },
 
         adminNotes: {type: String,
@@ -77,6 +77,15 @@ const PokemonSchema = new mongoose.Schema(
                 ref: 'User',
                 required: true
         },
+
+        buyerId: { type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: false
+},
+
+soldAt: { type: Date,
+        required: false
+},
         
         comments: [commentSchema]
     },
