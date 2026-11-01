@@ -11,13 +11,13 @@ const CartAddModal = ({ show, handleClose, _data }) => {
 
   return (
     <Modal show={show} onHide={handleClose}>
-      <Modal.Header closeButton data-bs-theme="dark" style={{backgroundColor: "rgba(186, 140, 255, 0.08)"}}>
+      <Modal.Header closeButton data-bs-theme="dark">
         <Modal.Title className="font-vt" style={{ fontSize: "28px" }}>
           Pokémon added to cart
         </Modal.Title>
       </Modal.Header>
 
-      <Modal.Body style={{backgroundColor: "rgba(186, 140, 255, 0.08)"}}>
+      <Modal.Body>
         <Row>
           <Col className="d-flex justify-content-center">
             <img id="modal-image" src={_data?.imagePokemon} alt={_data?.name} />
@@ -45,7 +45,7 @@ const CartAddModal = ({ show, handleClose, _data }) => {
           </Col>
         </Row>
         <Row className="d-flex justify-content-center mt-2"> 
-          <Button style={{ fontSize: "26px" }} id="product-modal-btn" className="col-4 font-vt" onClick={() => navigate("/cart")}>
+          <Button id="product-modal-btn" className="col-4 font-vt" onClick={() => navigate("/cart")}>
             View Cart
           </Button>
         </Row>
