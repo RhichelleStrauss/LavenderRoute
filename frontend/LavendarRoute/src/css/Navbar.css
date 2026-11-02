@@ -8,9 +8,10 @@
   
   position: absolute; 
   top: 25px;
-  left: 20px;
-  right: 20px; 
-  max-width: 1780px;
+ 
+  left: calc(var(--page-edge) + var(--page-inset));
+  right: calc(var(--page-edge) + var(--page-inset));
+  max-width: var(--page-max);
   margin: 0 auto;
   box-sizing: border-box;
   
@@ -21,6 +22,23 @@
   justify-content: space-between;
   align-items: center;
   padding: 15px 40px;
+}
+
+.misty-glass-nav.nav-home {
+  background: rgba(14, 10, 20, 0.78); }
+
+.nav-glitch-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  z-index: -1; 
+  opacity: 0.28;
+  pointer-events: none;
+}
+
+.nav-glitch-bg canvas {
+  filter: blur(1.5px);
 }
 
 .clickable-logo {

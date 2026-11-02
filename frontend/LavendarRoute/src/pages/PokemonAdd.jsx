@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import PokemonAddForm from '../components/PokemonAddForm.jsx';
 import LiquidEther from '../components/LiquidEther.jsx'
-import { Container, Card } from 'react-bootstrap';
+import MagicBento from '../components/MagicBento.jsx';
 import Navbar from '../components/navbar';
-import toast from 'react-hot-toast';
+import Footer from '../components/Footer';import toast from 'react-hot-toast';
 
 
 
@@ -37,13 +37,24 @@ export default function PokemonAdd() {
 
       <Navbar />
 
-  <Container style={{ position: 'relative', zIndex: 1, paddingTop: '100px', paddingBottom: '60px' }}>
+  <div className="paf-page">
      
 
-        <PokemonAddForm />
+            <MagicBento
+          className="paf-bento"
+          columns={1}
+          glowColor="#C4FF4D"
+          clickEffect={false}
+          style={{ gridAutoRows: 'auto' }}
+          items={[{ content: <PokemonAddForm /> }]}
+        />
 
         
-        </Container>
+        </div>
+
+      <div className="page-footer">
+        <Footer glitch />
+      </div>
 
 
    

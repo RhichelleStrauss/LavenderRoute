@@ -4,123 +4,328 @@
 
 
 
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../components/navbar.jsx';
+import Footer from '../components/Footer.jsx';
 import ReflectiveCard from '../components/pokemonCard.jsx';
 import PokemonAddForm from '../components/PokemonAddForm.jsx';
 import CrossIcon from '../assets/icons/CrossIcon.png';
 import LiquidEther from '../components/LiquidEther.jsx';
+import MagicBento from '../components/MagicBento.jsx';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import "../css/catalog.css";
+import "../css/Dashboard.css";
 
-const AdminDashboard = () => {
-  const [selectedPost, setSelectedPost] = useState(null);
-  const [adminNotes, setAdminNotes] = useState("");
-  const [isEditing, setIsEditing] = useState(false);
-  const [pendingPosts, setPendingPosts] = useState([]);
+const priceFormatter = new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-  useEffect(() => {
-    fetchPendingPosts();
-  }, []);
+const timeAgo = (date) => {
+  if (!date) return "—";
+  const seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
+  if (seconds < 60) return "just now";
+  const units = [["y", 31536000], ["mo", 2592000], ["d", 86400], ["h", 3600], ["m", 60]];
+  for (const [label, size] of units) {
+    if (seconds >= size) return `${Math.floor(seconds / size)}${label} ago`;
+  }
+  return "—";
+};
 
-const fetchPendingPosts = async () => {
+// confirm, then delete a listing; returns true if it was deleted
+const deleteListing = async (post) => {
+  if (!post || !window.confirm(`Are you sure you want to delete ${post.name}? This cannot be undone.`)) return false;
   try {
-    const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/pokemon/pending`, {
+    await axios.delete(`${import.meta.env.VITE_API_URL}/api/pokemon/${post._id}`, {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
     });
-    setPendingPosts(response.data);
-  } catch (error) {
-    console.error(error);
+    toast.success(`${post.name} deleted.`);
+    return true;
+  } catch (err) {
+    console.error(err);
+    toast.error("Failed to delete. It may have already been removed.");
+    return false;
   }
 };
 
-  const handleReview = async (action) => {
-    const token = localStorage.getItem('token');
+const STAT_GLOW = { lime: '#C4FF4D', purple: '#BA8CFF', red: '#ff4d6d', grey: '#d4d4d8' };
 
-    if (action === 'reject' && !adminNotes) {
+const StatCard = ({ stat, loading }) => (
+  <MagicBento
+    className={`stat-bento stat-bento-${stat.accent}`}
+    columns={1}
+    glowColor={STAT_GLOW[stat.accent]}
+    style={{ gridAutoRows: 'auto' }}
+    items={[{
+      content: (
+        <div className={`admin-stat admin-stat-${stat.accent}`}>
+          <span className="admin-stat-label">{stat.label}</span>
+          <span className="admin-stat-value">{loading ? '–' : stat.value}</span>
+        </div>
+      ),
+    }]}
+  />
+);
+
+const ADMIN_TABS = [
+  { key: 'pending', label: 'Pending' },
+  { key: 'approved', label: 'Live' },
+  { key: 'rejected', label: 'Rejected' },
+];
+
+const STATUS_LABELS = { pending: 'Pending', approved: 'Live', rejected: 'Rejected' };
+
+const AdminDashboard = () => {
+  const navigate = useNavigate();
+  const [selectedId, setSelectedId] = useState(null);
+  const [adminNotes, setAdminNotes] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [allPosts, setAllPosts] = useState([]);
+  const [activeTab, setActiveTab] = useState('pending');
+  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  // one request for every listing (admin-only route), then split by status for the stats and tabs
+  const fetchPosts = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/pokemon/all`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      });
+      
+      setAllPosts(Array.isArray(response.data) ? response.data : []);
+    } catch (error) {
+      console.error(error);
+      toast.error("Couldn't load listings.");
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  const groups = { pending: [], approved: [], rejected: [] };
+  allPosts.forEach(p => groups[p.status]?.push(p));
+  const sellerCount = new Set(allPosts.map(p => p.sellerId?._id || p.sellerId).filter(Boolean)).size;
+
+  const query = search.trim().toLowerCase();
+  const rows = groups[activeTab]
+    .filter(p => !query
+      || p.name?.toLowerCase().includes(query)
+      || p.sellerId?.firstName?.toLowerCase().includes(query))
+    .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+
+    const selectedPost = allPosts.find(p => p._id === selectedId) || null;
+
+  const selectPost = (post) => {
+    setSelectedId(post._id);
+    setAdminNotes("");
+    setIsEditing(false);
+  };
+
+  const closeModal = () => {
+    setSelectedId(null);
+    setAdminNotes("");
+    setIsEditing(false);
+  };
+
+  const switchTab = (key) => {
+    setActiveTab(key);
+    closeModal();
+  };
+
+  const handleReview = async (post, action, notes = "") => {
+    if (action === 'reject' && !notes.trim()) {
       return toast.error("You must provide feedback to deny a post.");
     }
 
-   try {
-  await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/review-post`, {
-    postId: selectedPost._id,
-    action: action,
-    adminNotes: action === 'reject' ? adminNotes : ""
-  }, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-      toast.success(`Listing ${action === 'approve' ? 'approved' : 'rejected'} successfully!`);
-      setSelectedPost(null);
-      setAdminNotes("");
-      fetchPendingPosts();
+    try {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/review-post`, {
+        postId: post._id,
+        action: action,
+        adminNotes: action === 'reject' ? notes : ""
+      }, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      });
+      toast.success(`${post.name} ${action === 'approve' ? 'approved' : 'rejected'}!`);
+      closeModal();
+      fetchPosts();
     } catch (err) {
       toast.error(err.response?.data?.message || "Review failed.");
     }
   };
 
+  const stats = [
+    { label: 'Awaiting review', value: groups.pending.length, accent: 'lime' },
+    { label: 'Live listings', value: groups.approved.length, accent: 'purple' },
+    { label: 'Rejected', value: groups.rejected.length, accent: 'red' },
+    { label: 'Sellers', value: sellerCount, accent: 'grey' },
+  ];
+
   return (
-    <div style={{ width: '100%', maxWidth: '1200px', margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
+    <div className="admin-hub">
+      <div className="admin-header">
         <div>
-          <h2 style={{ color: '#BA8CFF', margin: 0, fontSize: '48px', fontFamily: "'VT323', monospace" }}>Admin Hub</h2>
-          <p style={{ color: '#4D4D4D', margin: '5px 0 0 0' }}>Manage the Lavender Route ecosystem.</p>
+          <h2 className="admin-title">Admin Hub</h2>
+          <p className="admin-subtitle">Manage the Lavender Route ecosystem.</p>
+        </div>
+        <button className="admin-btn admin-btn-ghost" onClick={fetchPosts} disabled={loading}>
+          {loading ? 'Loading...' : 'Refresh'}
+        </button>
+      </div>
+
+      <div className="admin-stats">
+        {stats.map(stat => <StatCard key={stat.label} stat={stat} loading={loading} />)}
+      </div>
+
+      <div className="admin-workspace admin-workspace-full">
+        <div className="admin-panel">
+          <div className="admin-toolbar">
+            <div className="admin-tabs">
+              {ADMIN_TABS.map(tab => (
+                <button
+                  key={tab.key}
+                  className={`admin-tab ${activeTab === tab.key ? 'active' : ''}`}
+                  onClick={() => switchTab(tab.key)}
+                >
+                  {tab.label}
+                  <span className="admin-tab-count">{groups[tab.key].length}</span>
+                </button>
+              ))}
+            </div>
+            <input
+              className="admin-search"
+              type="search"
+              placeholder="Search Pokémon or seller..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+
+          <div className="admin-table">
+
+            {loading ? (
+              <p className="admin-empty">Loading listings...</p>
+            ) : rows.length === 0 ? (
+              <p className="admin-empty">
+                {query ? 'No listings match your search.' : activeTab === 'pending' ? 'Queue is clear. Nothing waiting for review.' : 'Nothing here yet.'}
+              </p>
+            ) : rows.map(pokemon => (
+              <div
+                key={pokemon._id}
+                className={`admin-row ${selectedPost?._id === pokemon._id ? 'selected' : ''}`}
+                onClick={() => selectPost(pokemon)}
+              >
+                <img className="admin-thumb" src={pokemon.imagePokemon || pokemon.imgUrl} alt={pokemon.name} />
+
+                <div className="admin-cell-main">
+                  <span className="admin-name">{pokemon.name}</span>
+                  <div className="pokemon-tags admin-tags">
+                    {pokemon.shiny && <span className="tag tag-shiny">Shiny</span>}
+                    {pokemon.type?.map(t => (
+                      <span key={t} className={`tag type-${t.toLowerCase()}`}>{t}</span>
+                    ))}
+                  </div>
+                </div>
+
+                <span className="admin-cell" data-label="Seller">{pokemon.sellerId?.firstName || "Unknown"}</span>
+                <span className="admin-cell admin-mono" data-label="Level">{pokemon.level}</span>
+                <span className="admin-cell admin-mono" data-label="Price">₽ {priceFormatter.format(pokemon.price || 0)}</span>
+                <span className="admin-cell admin-muted" data-label="Submitted">{timeAgo(pokemon.createdAt)}</span>
+
+                {/* quick approve without opening the modal; stopPropagation keeps the row click from firing */}
+                <div className="admin-actions" onClick={(e) => e.stopPropagation()}>
+                  {activeTab === 'pending' ? (
+                    <button className="admin-btn admin-btn-approve" onClick={() => handleReview(pokemon, 'approve')}>Approve</button>
+                  ) : (
+                    <button className="admin-btn admin-btn-ghost" onClick={() => navigate(`/pokemon/${pokemon._id}`)}>View</button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
-      <div className="catalog-grid">
-        {pendingPosts.length > 0 ? pendingPosts.map(pokemon => (
-          <div key={pokemon._id} onClick={(e) => {
-            e.preventDefault(); 
-            e.stopPropagation(); 
-            setSelectedPost(pokemon);
-          }}>
-            <ReflectiveCard
-              isInteractive={false}
-              pokemonName={pokemon.name}
-              id={pokemon._id}
-              level={pokemon.level}
-              type={pokemon.type}
-              gender={pokemon.gender}
-              height={pokemon.height}
-              weight={pokemon.weight}
-              imgUrl={pokemon.imagePokemon || pokemon.imgUrl}
-            />
-          </div>
-        )) : <p style={{ color: '#888' }}>Queue is empty.</p>}
-      </div>
-
+      {/* review modal: opens when a row is clicked, card on the left, details + actions on the right */}
       {selectedPost && (
-        <div style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", backgroundColor: "rgba(0, 0, 0, 0.85)", zIndex: 999, display: "flex", justifyContent: "center", alignItems: "center", backdropFilter: "blur(5px)", padding: "20px" }}>
-          <div style={{ position: "relative", width: "100%", maxWidth: "800px", maxHeight: "90h", background: "#0a0a0a", border: "1px solid #BA8CFF", borderRadius: "16px", padding: "30px" }}>
-            <button onClick={() => { setSelectedPost(null); setIsEditing(false); setAdminNotes(""); }} style={{ position: "absolute", top: "20px", right: "20px", background: "transparent", border: "none", cursor: "pointer", zIndex: 1000 }}>
-              <img src={CrossIcon} style={{ width: "24px", height: "24px" }} alt="Close" />
+        <div className="admin-modal-backdrop" onClick={closeModal}>
+          <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="admin-modal-close" onClick={closeModal}>
+              <img src={CrossIcon} alt="Close" />
             </button>
 
             {isEditing ? (
-              <div style={{ maxHeight: '80vh', overflowY: 'auto', paddingRight: '15px' }}>
-                <h3 style={{ color: '#BA8CFF', marginBottom: '20px', fontFamily: "'VT323', monospace" }}>Admin Override Edit</h3>
-                <PokemonAddForm initialData={selectedPost} isModal={true} onSave={() => setIsEditing(false)} />
-              </div>
+              <>
+                <h3 className="admin-modal-title">Admin Override Edit</h3>
+                <PokemonAddForm
+                  initialData={selectedPost}
+                  isModal={true}
+                  onSave={() => { setIsEditing(false); fetchPosts(); }}
+                  onDelete={async () => { if (await deleteListing(selectedPost)) { closeModal(); fetchPosts(); } }}
+                />
+              </>
             ) : (
-              <div style={{ display: 'flex', gap: '30px' }}>
-                <ReflectiveCard pokemonName={selectedPost.name} id={selectedPost._id} level={selectedPost.level} type={selectedPost.type} gender={selectedPost.gender} imgUrl={selectedPost.imagePokemon || selectedPost.imgUrl} />
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                  <h3 style={{ color: '#fff', fontFamily: "'VT323', monospace", margin: 0 }}>Review: {selectedPost.name}</h3>
-                  <p style={{ color: '#888', fontFamily: "'VT323', monospace", margin: 0 }}>Seller: {selectedPost.sellerId?.firstName || "Unknown"}</p>
+              <div className="review-modal">
+                <div className="review-modal-card">
+                  <ReflectiveCard
+                    key={selectedPost._id}
+                    isInteractive={false}
+                    pokemonName={selectedPost.name}
+                    id={selectedPost._id}
+                    level={selectedPost.level}
+                    type={selectedPost.type}
+                    gender={selectedPost.gender}
+                    height={selectedPost.height}
+                    weight={selectedPost.weight}
+                    shiny={selectedPost.shiny}
+                    imgUrl={selectedPost.imagePokemon || selectedPost.imgUrl}
+                  />
+                </div>
+
+                <div className="review-modal-details">
+                  <div className="inspector-head">
+                    <span className={`status-pill status-${selectedPost.status}`}>{STATUS_LABELS[selectedPost.status]}</span>
+                    <span className="admin-muted">{timeAgo(selectedPost.createdAt)}</span>
+                  </div>
+
+                  <h3 className="admin-modal-title">Review: {selectedPost.name}</h3>
+
+                  <div className="inspector-meta">
+                    <div>
+                      <span className="admin-stat-label">Seller</span>
+                      <span className="inspector-meta-value">{selectedPost.sellerId?.firstName || "Unknown"}</span>
+                    </div>
+                    <div>
+                      <span className="admin-stat-label">Price</span>
+                      <span className="inspector-meta-value">₽ {priceFormatter.format(selectedPost.price || 0)}</span>
+                    </div>
+                  </div>
+
+                  {selectedPost.description && <p className="inspector-description">{selectedPost.description}</p>}
+
+                  {selectedPost.status === 'rejected' && selectedPost.adminNotes && (
+                    <div className="inspector-feedback">
+                      <span className="admin-stat-label">Previous feedback</span>
+                      <p>{selectedPost.adminNotes}</p>
+                    </div>
+                  )}
 
                   <textarea
+                    className="admin-notes"
                     placeholder="Feedback (required if denying)..."
                     value={adminNotes}
                     onChange={(e) => setAdminNotes(e.target.value)}
-                    style={{ width: '100%', height: '80px', background: 'rgba(42, 26, 58, 0.3)', border: '1px solid #2A1A3A', color: 'white', padding: '10px', borderRadius: '8px', outline: 'none' }}
                   />
 
-                  <div style={{ display: 'flex', gap: '10px', marginTop: 'auto' }}>
-                    <button onClick={() => handleReview('approve')} style={{ flex: 1, background: '#C4FF4D', color: '#050505', border: 'none', padding: '10px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontFamily: "'VT323', monospace" }}>APPROVE</button>
-                    <button onClick={() => handleReview('reject')} style={{ flex: 1, background: '#660019', color: '#fff', border: 'none', padding: '10px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontFamily: "'VT323', monospace" }}>DENY</button>
-                    <button onClick={() => setIsEditing(true)} style={{ flex: 1, background: 'transparent', color: '#BA8CFF', border: '1px solid #BA8CFF', padding: '10px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontFamily: "'VT323', monospace" }}>EDIT</button>
+                  <div className="admin-modal-actions">
+                    {selectedPost.status !== 'approved' && (
+                      <button className="admin-btn admin-btn-approve" onClick={() => handleReview(selectedPost, 'approve')}>Approve</button>
+                    )}
+                    {selectedPost.status !== 'rejected' && (
+                      <button className="admin-btn admin-btn-deny" onClick={() => handleReview(selectedPost, 'reject', adminNotes)}>Deny</button>
+                    )}
+                    <button className="admin-btn admin-btn-ghost" onClick={() => setIsEditing(true)}>Edit</button>
                   </div>
                 </div>
               </div>
@@ -132,118 +337,243 @@ const fetchPendingPosts = async () => {
   );
 };
 
-const SellerDashboard = () => {
-  const [activeTab, setActiveTab] = useState('active');
-  const [selectedPost, setSelectedPost] = useState(null);
+const SELLER_TABS = [
+  { key: 'approved', label: 'Live' },
+  { key: 'pending', label: 'Pending' },
+  { key: 'rejected', label: 'Needs revision' },
+];
 
-  const [myActivePosts, setMyActivePosts] = useState([]);
-  const [myPendingPosts, setMyPendingPosts] = useState([]);
-  const [myRejectedPosts, setMyRejectedPosts] = useState([]);
+const SellerDashboard = () => {
+  const navigate = useNavigate();
+  // the profile page's notifications can open a specific tab / listing
+  const linked = useLocation().state;
+  const inspectorRef = useRef(null);
+  const [myPosts, setMyPosts] = useState([]);
+  const [selectedId, setSelectedId] = useState(linked?.id || null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [activeTab, setActiveTab] = useState(linked?.tab || 'approved');
+  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  // /mine returns only this seller's listings, in every status
+  const fetchPosts = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/pokemon/mine`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      });
+      setMyPosts(Array.isArray(response.data) ? response.data : []);
+    } catch (error) {
+      console.error(error);
+      toast.error("Couldn't load your listings.");
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
-    const fetchSellerPosts = async () => {
-      try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/pokemon`,  {
-          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-        });
-        const allPosts = response.data;
-
-        setMyActivePosts(allPosts.filter(p => p.status === 'approved'));
-        setMyPendingPosts(allPosts.filter(p => p.status === 'pending'));
-        setMyRejectedPosts(allPosts.filter(p => p.status === 'rejected'));
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchSellerPosts();
+    fetchPosts();
   }, []);
 
+  const groups = { pending: [], approved: [], rejected: [] };
+  myPosts.forEach(p => groups[p.status]?.push(p));
+  const liveValue = groups.approved.reduce((sum, p) => sum + (Number(p.price) || 0), 0);
+
+  const query = search.trim().toLowerCase();
+  const rows = groups[activeTab]
+    .filter(p => !query || p.name?.toLowerCase().includes(query))
+    .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+
+  const selectedPost = rows.find(p => p._id === selectedId) || rows[0] || null;
+
+  const selectPost = (post) => {
+    setSelectedId(post._id);
+    if (window.matchMedia('(max-width: 1279px)').matches) {
+      inspectorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  const switchTab = (key) => {
+    setActiveTab(key);
+    setSelectedId(null);
+  };
+
+  const handleDelete = async () => {
+    if (await deleteListing(selectedPost)) {
+      setIsEditing(false);
+      fetchPosts();
+    }
+  };
+
+  const stats = [
+    { label: 'Live listings', value: groups.approved.length, accent: 'lime' },
+    { label: 'Pending review', value: groups.pending.length, accent: 'purple' },
+    { label: 'Needs revision', value: groups.rejected.length, accent: 'red' },
+    { label: 'Live value', value: `₽ ${priceFormatter.format(liveValue)}`, accent: 'grey' },
+  ];
+
+  const emptyText = {
+    approved: "You have no live listings yet.",
+    pending: "Nothing waiting for review.",
+    rejected: "No listings need revision. Great job!",
+  };
+
   return (
-    <div style={{ width: '100%', maxWidth: '1200px', margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
+    <div className="admin-hub seller-hub">
+      <div className="admin-header">
         <div>
-          <h2 style={{ color: '#C4FF4D', margin: 0, fontSize: '48px', fontFamily: "'VT323', monospace" }}>Seller Hub</h2>
-          <p style={{ color: '#4D4D4D', margin: '5px 0 0 0' }}>Manage your inventory and track approvals.</p>
+          <h2 className="admin-title">Seller Hub</h2>
+          <p className="admin-subtitle">Manage your inventory and track approvals.</p>
         </div>
-        <div style={{ display: 'flex', gap: '5px', background: 'rgba(42, 26, 58, 0.3)', padding: '6px', borderRadius: '12px', border: '1px solid #2A1A3A' }}>
-          <button onClick={() => setActiveTab('active')} style={{ background: activeTab === 'active' ? '#C4FF4D' : 'transparent', color: activeTab === 'active' ? '#050505' : '#C4FF4D', border: 'none', padding: '8px 20px', borderRadius: '12px', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.3s ease', fontFamily: "'VT323', monospace" }}>Active Listings</button>
-          <button onClick={() => setActiveTab('pending')} style={{ background: activeTab === 'pending' ? '#C4FF4D' : 'transparent', color: activeTab === 'pending' ? '#050505' : '#C4FF4D', border: 'none', padding: '8px 20px', borderRadius: '12px', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.3s ease', fontFamily: "'VT323', monospace" }}>Pending</button>
-          <button onClick={() => setActiveTab('rejected')} style={{ background: activeTab === 'rejected' ? '#8f0024' : 'transparent', color: activeTab === 'rejected' ? '#050505' : '#8f0024', border: 'none', padding: '8px 20px', borderRadius: '12px', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.3s ease', fontFamily: "'VT323', monospace" }}>Needs Revision</button>
+        <div className="admin-header-actions">
+          <button className="admin-btn admin-btn-ghost" onClick={fetchPosts} disabled={loading}>
+            {loading ? 'Loading...' : 'Refresh'}
+          </button>
+          <button className="admin-btn admin-btn-approve" onClick={() => navigate('/add-pokemon')}>
+            + List a Pokémon
+          </button>
         </div>
       </div>
 
-      <div className="catalog-grid">
-        {activeTab === 'active' ? (
-          myActivePosts.length > 0 ? myActivePosts.map(pokemon => (
-            <ReflectiveCard
-              key={pokemon._id}
-              pokemonName={pokemon.name}
-              id={pokemon._id}
-              level={pokemon.level}
-              type={pokemon.type}
-              gender={pokemon.gender}
-              height={pokemon.height}
-              weight={pokemon.weight}
-              shiny={pokemon.shiny}
-              imgUrl={pokemon.imagePokemon || pokemon.imgUrl}
-              onEditClick={(e) => {
-                e.stopPropagation();
-                setSelectedPost(pokemon);
-              }}
-            />
-          )) : <p style={{ color: '#4D4D4D' }}>You have no active listings.</p>
-        ) : activeTab === 'pending' ? (
-          myPendingPosts.length > 0 ? myPendingPosts.map(pokemon => (
-            <ReflectiveCard
-              key={pokemon._id}
-              pokemonName={pokemon.name}
-              id={pokemon._id}
-              level={pokemon.level}
-              type={pokemon.type}
-              gender={pokemon.gender}
-              height={pokemon.height}
-              weight={pokemon.weight}
-              shiny={pokemon.shiny}
-              imgUrl={pokemon.imagePokemon || pokemon.imgUrl}
-              onEditClick={(e) => {
-                e.stopPropagation();
-                setSelectedPost(pokemon);
-              }}
-            />
-          )) : <p style={{ color: '#888' }}>You have no pending listings.</p>
-        ) : (
-          myRejectedPosts.length > 0 ? myRejectedPosts.map(pokemon => (
-            <div key={pokemon._id} style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '300px' }}>
-              <ReflectiveCard
-                pokemonName={pokemon.name}
-                id={pokemon._id}
-                level={pokemon.level}
-                type={pokemon.type}
-                gender={pokemon.gender}
-                height={pokemon.height}
-                weight={pokemon.weight}
-                shiny={pokemon.shiny}
-                imgUrl={pokemon.imagePokemon || pokemon.imgUrl}
-                onEditClick={(e) => {
-                  e.stopPropagation();
-                  setSelectedPost(pokemon);
-                }}
-              />
-              <div style={{ padding: '10px', background: 'rgba(200, 0, 0, 0.2)', border: '1px solid #8f0024', borderRadius: '8px', color: '#8f0024', fontFamily: "'VT323', monospace" }}>
-                <strong>Admin Feedback:</strong> {pokemon.adminNotes || "No feedback provided."}
-              </div>
+      <div className="admin-stats">
+        {stats.map(stat => <StatCard key={stat.label} stat={stat} loading={loading} />)}
+      </div>
+
+      <div className="admin-workspace">
+        <div className="admin-panel">
+          <div className="admin-toolbar">
+            <div className="admin-tabs">
+              {SELLER_TABS.map(tab => (
+                <button
+                  key={tab.key}
+                  className={`admin-tab ${activeTab === tab.key ? 'active' : ''}`}
+                  onClick={() => switchTab(tab.key)}
+                >
+                  {tab.label}
+                  <span className="admin-tab-count">{groups[tab.key].length}</span>
+                </button>
+              ))}
             </div>
-          )) : <p style={{ color: '#888' }}>No rejected listings. Great job!</p>
-        )}
+            <input
+              className="admin-search"
+              type="search"
+              placeholder="Search your Pokémon..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+
+          <div className="admin-table">
+
+            {loading ? (
+              <p className="admin-empty">Loading your listings...</p>
+            ) : rows.length === 0 ? (
+              <p className="admin-empty">{query ? 'No listings match your search.' : emptyText[activeTab]}</p>
+            ) : rows.map(pokemon => (
+              <div
+                key={pokemon._id}
+                className={`admin-row seller-row ${selectedPost?._id === pokemon._id ? 'selected' : ''}`}
+                onClick={() => selectPost(pokemon)}
+              >
+                <img className="admin-thumb" src={pokemon.imagePokemon || pokemon.imgUrl} alt={pokemon.name} />
+
+                <div className="admin-cell-main">
+                  <span className="admin-name">{pokemon.name}</span>
+                  <div className="pokemon-tags admin-tags">
+                    {pokemon.shiny && <span className="tag tag-shiny">Shiny</span>}
+                    {pokemon.type?.map(t => (
+                      <span key={t} className={`tag type-${t.toLowerCase()}`}>{t}</span>
+                    ))}
+                  </div>
+                </div>
+
+                <span className="admin-cell admin-mono" data-label="Level">{pokemon.level}</span>
+                <span className="admin-cell admin-mono" data-label="Price">₽ {priceFormatter.format(pokemon.price || 0)}</span>
+                <span className="admin-cell admin-muted" data-label="Listed">{timeAgo(pokemon.createdAt)}</span>
+
+                <div className="admin-actions" onClick={(e) => e.stopPropagation()}>
+                  <button className="admin-btn admin-btn-ghost" onClick={() => { setSelectedId(pokemon._id); setIsEditing(true); }}>Edit</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <aside className="admin-inspector" ref={inspectorRef}>
+          {selectedPost ? (
+            <>
+              <div className="inspector-head">
+                <span className={`status-pill status-${selectedPost.status}`}>{STATUS_LABELS[selectedPost.status]}</span>
+                <span className="admin-muted">{timeAgo(selectedPost.createdAt)}</span>
+              </div>
+
+              <div className="inspector-card">
+                <ReflectiveCard
+                  key={selectedPost._id}
+                  isInteractive={false}
+                  pokemonName={selectedPost.name}
+                  id={selectedPost._id}
+                  level={selectedPost.level}
+                  type={selectedPost.type}
+                  gender={selectedPost.gender}
+                  height={selectedPost.height}
+                  weight={selectedPost.weight}
+                  shiny={selectedPost.shiny}
+                  imgUrl={selectedPost.imagePokemon || selectedPost.imgUrl}
+                />
+              </div>
+
+              <div className="inspector-meta">
+                <div>
+                  <span className="admin-stat-label">Price</span>
+                  <span className="inspector-meta-value">₽ {priceFormatter.format(selectedPost.price || 0)}</span>
+                </div>
+                <div>
+                  <span className="admin-stat-label">Comments</span>
+                  <span className="inspector-meta-value">{selectedPost.comments?.length || 0}</span>
+                </div>
+              </div>
+
+              {selectedPost.status === 'rejected' && (
+                <div className="inspector-feedback">
+                  <span className="admin-stat-label">Admin feedback</span>
+                  <p>{selectedPost.adminNotes || "No feedback provided."}</p>
+                </div>
+              )}
+
+              {selectedPost.status === 'pending' && (
+                <p className="admin-muted">Waiting for an admin to review this listing.</p>
+              )}
+
+              {selectedPost.description && <p className="inspector-description">{selectedPost.description}</p>}
+
+              <div className="admin-modal-actions">
+                <button className="admin-btn admin-btn-approve" onClick={() => setIsEditing(true)}>
+                  {selectedPost.status === 'rejected' ? 'Fix listing' : 'Edit'}
+                </button>
+                {selectedPost.status === 'approved' && (
+                  <button className="admin-btn admin-btn-ghost" onClick={() => navigate(`/pokemon/${selectedPost._id}`)}>View live</button>
+                )}
+              </div>
+            </>
+          ) : (
+            <p className="admin-empty">{loading ? 'Loading...' : 'Select a listing to preview its card.'}</p>
+          )}
+        </aside>
       </div>
 
-      {selectedPost && (
-        <div style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", backgroundColor: "rgba(0, 0, 0, 0.8)", zIndex: 999, display: "flex", justifyContent: "center", alignItems: "center", backdropFilter: "blur(5px)", padding: "20px" }}>
-          <div style={{ position: "relative", width: "100%", maxWidth: "800px" }}>
-            <button onClick={() => setSelectedPost(null)} style={{ position: "absolute", top: "20px", right: "20px", background: "transparent", border: "none", zIndex: 1000, cursor: "pointer" }}>
-              <img src={CrossIcon} style={{ width: "30px", height: "30px" }} alt="Close" />
+      {isEditing && selectedPost && (
+        <div className="admin-modal-backdrop" onClick={() => setIsEditing(false)}>
+          <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="admin-modal-close" onClick={() => setIsEditing(false)}>
+              <img src={CrossIcon} alt="Close" />
             </button>
-            <PokemonAddForm initialData={selectedPost} isModal={true} onSave={() => setSelectedPost(null)} />
+            <h3 className="admin-modal-title">Edit {selectedPost.name}</h3>
+            <PokemonAddForm
+              initialData={selectedPost}
+              isModal={true}
+              onSave={() => { setIsEditing(false); fetchPosts(); }}
+              onDelete={handleDelete}
+            />
           </div>
         </div>
       )}
@@ -291,7 +621,7 @@ export default function Dashboard() {
         />
       </div>
       <Navbar />
-      <div style={{ minHeight: '100vh', width: '100vw', paddingTop: '120px', paddingBottom: '60px', color: 'white', boxSizing: 'border-box', paddingLeft: '20px', paddingRight: '20px', zIndex: -1 }}>
+      <div style={{ minHeight: '100vh', width: '100%', paddingTop: '120px', paddingBottom: '60px', color: 'white', boxSizing: 'border-box', paddingLeft: '20px', paddingRight: '20px', zIndex: -1 }}>
         {userRoles.includes('admin') ? (
           <AdminDashboard />
         ) : userRoles.includes('seller') || userRoles.includes('hybrid') ? (
@@ -302,6 +632,9 @@ export default function Dashboard() {
             <p style={{ color: '#888' }}>Your purchases and saved items will appear here.</p>
           </div>
         )}
+      </div>
+      <div className="page-footer">
+        <Footer glitch />
       </div>
     </>
   );

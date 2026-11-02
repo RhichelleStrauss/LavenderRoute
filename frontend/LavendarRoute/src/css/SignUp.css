@@ -12,7 +12,7 @@
 }
 
 .page-container {
-  width: 100vw;
+  width: 100%;
   min-height: 100vh;
   box-sizing: border-box;
   border-radius: 0;
@@ -194,15 +194,16 @@ input::placeholder {
 
 .submit-btn {
   font-family: 'VT323', monospace;
-  font-size: 1.5rem;
+  font-size: var(--btn-font);
   width: 60%;
   /* margin: 10px auto 0 auto; */
   display: block;
-  padding: 12px;
+  height: var(--btn-height);
+  padding: 0 var(--btn-pad-x);
   background-color: #92d050;
   color: #1a1a1a;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
   text-transform: uppercase;
@@ -215,15 +216,16 @@ input::placeholder {
 
 .back-btn{
   font-family: 'VT323', monospace;
-  font-size: 1.5rem;
+  font-size: var(--btn-font);
   width: 60%;
   /* margin: 10px auto 0 auto; */
   display: block;
-  padding: 12px;
+  height: var(--btn-height);
+  padding: 0 var(--btn-pad-x);
   background-color: #4D4D4D;
   color: #1a1a1a;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
   text-transform: uppercase;

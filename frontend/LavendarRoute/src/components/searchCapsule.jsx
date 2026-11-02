@@ -1,4 +1,5 @@
 import React from "react";
+import LetterGlitch from "./LetterGlitch";
 import "../css/searchCapsule.css";
 
 export default function SearchCapsule({
@@ -21,6 +22,16 @@ export default function SearchCapsule({
   return (
     <div className="search-capsule-container">
       <div className="search-pill-bar">
+        <div className="search-glitch-bg" aria-hidden="true">
+          <LetterGlitch
+            glitchColors={["#7C3AED", "#A855F7"]}
+            glitchSpeed={50}
+            centerVignette={false}
+            outerVignette={false}
+            smooth={true}
+          />
+        </div>
+
         <button
           type="button"
           className={`filter-toggle-btn ${isFilterDrawerOpen ? "active" : ""}`}
@@ -66,6 +77,18 @@ export default function SearchCapsule({
       </div>
 
       <div className={`filter-drawer ${isFilterDrawerOpen ? "open" : ""}`}>
+        {isFilterDrawerOpen && (
+          <div className="search-glitch-bg" aria-hidden="true">
+            <LetterGlitch
+              glitchColors={["#7C3AED", "#A855F7"]}
+              glitchSpeed={50}
+              centerVignette={false}
+              outerVignette={false}
+              smooth={true}
+            />
+          </div>
+        )}
+
         <div className="drawer-inner-grid">
           <div className="drawer-field">
             <label>ELEMENTAL TYPE</label>

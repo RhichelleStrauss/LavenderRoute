@@ -188,7 +188,7 @@ const renderStepContent = (step) => {
   return (
     <div className="signup-outer-wrapper" style={{ 
       display: 'flex', justifyContent: 'center', alignItems: 'center', 
-      minHeight: '100vh', width: '100vw', backgroundColor: '#050505'
+      minHeight: '100vh', width: '100%', backgroundColor: '#050505'
     }}>
       <div className="liquid-ether-bg-wrapper">
         <LiquidEther

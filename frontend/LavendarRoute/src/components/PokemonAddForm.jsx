@@ -5,56 +5,72 @@
 
 //form creates a payload-copies all text data, but transofms price, lvelem height and weight into numbers
 //put is edit - form gets edited with new payload
-//post, sends axis post to create listing 
+//post, sends axis post to create listing
 //it attaches auth to ensure the user can make these changes
 
 //base ui imports
-import { Field, Switch, NumberField } from '@base-ui/react';
-import React, { useState, useRef, useEffect } from 'react';
+import { NumberField, Switch } from '@base-ui/react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Card from 'react-bootstrap/Card';  
 import BinIcon from '../assets/icons/BinIcon.png';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import '../css/reflectiveCard.css'; // card tag colours for the type tags
+import '../css/PokemonAddForm.css';
 
 const API = `${import.meta.env.VITE_API_URL}/api/pokemon`;
 
 const POKEMON_TYPE = [
     'Normal', 'Fire', 'Water', 'Electric', 'Grass', 'Ice', 'Fighting', 'Poison', 'Ground', 'Flying',
     'Psychic', 'Bug', 'Rock', 'Ghost', 'Dragon', 'Dark', 'Steel', 'Fairy'
-]; 
-//pokemon types for dropdown
+];
+//pokemon types for dropdown (max 2)
+
+const GENDERS = ['Male', 'Female', 'Genderless'];
 
 //braindump?
 //if editing (on catalog page), the form sends the data to the catalog component via onsave
-//if adding the form sends data out to api, redirects uou to catalog on sibmit 
+//if adding the form sends data out to api, redirects uou to catalog on sibmit
 // payload is a bundle of info about a pokemon sendinf to database\
 //before sending data, create a payload object that takes values on form
-//certain objets convert strings into numbers 
+//certain objets convert strings into numbers
 //payload is stringified into a json string, and placed into bpody of fetch to server on api https
-//modal not open 
+//modal not open
 
-
-
+//returns { field: message } for anything missing or out of range
+const validate = (form) => {
+  const errors = {};
+  if (!form.name?.trim()) errors.name = "Please enter a name.";
+  if (!form.description?.trim()) errors.description = "Description is required.";
+  if (!form.type?.length) errors.type = "Pick at least 1 type.";
+  if (form.level === "" || form.level < 1 || form.level > 100) errors.level = "Level must be 1–100.";
+  if (form.height === "" || form.height < 0) errors.height = "Required.";
+  if (form.weight === "" || form.weight < 0) errors.weight = "Required.";
+  if (form.price === "" || Number(form.price) < 0) errors.price = "Price is required.";
+  if (!/^https?:\/\/\S+$/i.test(form.imagePokemon || "")) errors.imagePokemon = "Enter an image link starting with http.";
+  return errors;
+};
 
 //initialdata: on addpokemon page nothing, on catalog stores pokemons when clicking card
 //on save on delete callbacks - form givess functipns data
  function PokemonAddForm({ initialData, onSave, onDelete, isModal = false }) {
   const navigate = useNavigate();
-  const [isTypeMenuOpen, setIsTypeMenuOpen] = useState(false);
-  const typeRef = useRef(null);
 
   const roles = JSON.parse(localStorage.getItem('userRoles') || '[]');
   const isAdmin = roles.includes('admin');
-  const isRestrictedEdit = initialData && !isAdmin;
+  // sellers editing a live/pending listing can only change height, weight and price;
+  // a rejected listing is fully editable so they can fix what the admin flagged
+  const isRestrictedEdit = initialData && !isAdmin && initialData.status !== 'rejected';
 
   const [form, setForm] = useState(initialData || {
-    name: "", level: "", price: "", height: "", weight: "", 
-    description: "", imagePokemon: "", type: [], gender: "Genderless", shiny: false 
+    name: "", level: "", price: "", height: "", weight: "",
+    description: "", imagePokemon: "", type: [], gender: "Genderless", shiny: false
   });
-
-  //set key value - helper function
-  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+  const [errors, setErrors] = useState({});
+  const [imageBroken, setImageBroken] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [isTypeMenuOpen, setIsTypeMenuOpen] = useState(false);
+  const typeRef = useRef(null);
 
   //clicking anywhere but menu, menu ckose
   useEffect(() => {
@@ -67,11 +83,29 @@ const POKEMON_TYPE = [
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  //set key value - helper function (also clears that field's error)
+  const set = (k, v) => {
+    setForm(f => ({ ...f, [k]: v }));
+    setErrors(e => ({ ...e, [k]: undefined }));
+  };
+
+  const addType = (t) => {
+    const next = [...form.type, t];
+    set("type", next);
+    if (next.length >= 2) setIsTypeMenuOpen(false);
+  };
+
+  const removeType = (t) => set("type", form.type.filter(type => type !== t));
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (form.type.length === 0) return toast.error("Select at least 1 type!");
-    //if no types selected this alert pops up
-    
+    const found = validate(form);
+    if (Object.keys(found).length > 0) {
+      setErrors(found);
+      return toast.error("Please fix the highlighted fields.");
+    }
+
+    setSaving(true);
     try {
       const payload = {
         ...form,
@@ -86,7 +120,7 @@ const POKEMON_TYPE = [
         await axios.put(`${API}/${initialData._id}`, payload, {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         });
-        alert("Pokémon updated successfully!");
+        toast.success(initialData.status === 'rejected' ? "Fixed and sent back for review!" : "Pokémon updated successfully!");
       } else {
 
         await axios.post(API, payload, {
@@ -96,7 +130,7 @@ const POKEMON_TYPE = [
       }
 
       if (onSave) {
-        onSave(form); 
+        onSave(form);
         //checking if onsave exists foir editing, if onsave exists in catalog, the form givees data back to catalog page
       } else {
         navigate('/catalog');
@@ -110,6 +144,7 @@ const POKEMON_TYPE = [
         toast.error("Request failed completely. Is the server running?");
       }
     }
+    setSaving(false);
   };
 
     const handleDelete = async () => {
@@ -121,10 +156,8 @@ const POKEMON_TYPE = [
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
      toast.success("Pokémon deleted permanently!");
-      
-      if (onDelete) {
-        onDelete();
-        } else if (onSave) {
+
+      if (onSave) {
         onSave();
         } else {
         navigate('/catalog');
@@ -135,180 +168,199 @@ const POKEMON_TYPE = [
     }
   };
 
-const styles = {
-    card: { width: "100%", maxWidth: 800, margin:isModal ? "0 auto" : "40px auto", border: "1px solid #C4FF4D", borderRadius: "16px", backgroundColor: "#1a1a1ab5)", padding: "40px", boxSizing: "border-box", fontFamily: "'Poppins', sans-serif", color: "#BA8CFF", boxShadow: "0 0 40px #1a1a1a80",maxHeight: isModal ? "90vh" : "none", 
-    overflowY: isModal ? "auto" : "visible"},
-    header: { margin: "0 0 32px 0", fontSize: 24, fontWeight: 800, color: "#BA8CFF", letterSpacing: "2px", textTransform: "uppercase", fontFamily: "'VT323', monospace", textShadow: "2px 2px 0px rgba(#1a1a1a80)" },
-    row: { display: "flex", gap: "24px", marginBottom: "20px" },
-    col: { flex: 1, position: "relative" },
-    label: { display: "block", fontSize: "14px", color: "#BA8CFF", marginBottom: "8px" },
-    input: { width: "100%", boxSizing: "border-box", padding: "12px 16px", border: "1px solid #BA8CFF", borderRadius: "12px", backgroundColor: "rgba(186, 140, 255, 0.2)", color: "#BA8CFF", fontSize: "14px", outline: "none" },
-    textarea: { width: "100%", boxSizing: "border-box", padding: "12px 16px", border: "1px solid #BA8CFF", borderRadius: "12px", backgroundColor: "rgba(186, 140, 255, 0.2)", color: "#BA8CFF", fontSize: "14px", outline: "none", minHeight: "100px", resize: "vertical" },
-    imageArea: { width: "100%", boxSizing: "border-box", padding: "12px 16px", border: "1px dashed #BA8CFF", borderRadius: "12px", backgroundColor: "rgba(186, 140, 255, 0.2)", color: "#BA8CFF", fontSize: "14px", outline: "none", minHeight: "140px", resize: "vertical" },
-    typeContainer: { minHeight: "44px", display: "flex", flexWrap: "wrap", gap: "8px", alignItems: "center", cursor: "pointer", border: "1px solid #BA8CFF", borderRadius: "12px", padding: "8px 12px", backgroundColor: "rgba(186, 140, 255, 0.2)" },
-    tag: { background: "#c4ff4dad", color: "#4D4D4D", padding: "4px 10px", borderRadius: "6px", fontSize: "13px", display: "flex", alignItems: "center", gap: "6px", fontWeight: "bold" },
-    tagBtn: { background: "transparent", border: "none", color: "#4D4D4D", cursor: "pointer", fontSize: "12px", padding: 0, fontWeight: "bold" },
-    numberGroup: { display: "flex", alignItems: "center", width: "100%", border: "1px solid #BA8CFF", borderRadius: "12px", overflow: "hidden", backgroundColor: "rgba(186, 140, 255, 0.2)", height: "44px" },
-    numberBtn: { background: "transparent", color: "#BA8CFF", width: "44px", height: "100%", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", fontSize: "18px" },
-    numberInput: { flex: 1, border: "none", borderLeft: "1px solid rgb(166, 29, 161) 1px solid rgb(186, 140, 255)", textAlign: "center", height: "100%", outline: "none", fontSize: "14px", margin: 0, appearance: "textfield", backgroundColor: "transparent", color: "#BA8CFF" },
-    priceWrapper: { display: "flex", border: "1px solid #BA8CFF", borderRadius: "12px", overflow: "hidden", backgroundColor: "rgba(255, 255, 255, 0.03)", height: "44px" },
-    pricePrefix: { background: "#ba8cffd4", padding: "0 20px", color: "#1a1a1a", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", fontSize: "18px" },
-    priceInput: { flex: 1, background: "rgba(186, 140, 255, 0.2)", border: "none", color: "#BA8CFF", padding: "0 16px", outline: "none", fontSize: "14px" },
-    btnContainer: { display: "flex", justifyContent: "flex-end", gap: "16px", marginTop: "40px" },
-    btnDraft: { background: "rgba(196, 255, 77, 0.2)", border: "1px solid rgba(196, 255, 77, 0.4)", color: "#C4FF4D", borderRadius: "12px", padding: "14px 28px", fontSize: "16px", fontWeight: "bold", cursor: "pointer" },
-    btnSubmit: { background: "#c4ff4dca", border: "none", color: "#2A1A3A", borderRadius: "12px", padding: "14px 28px", fontSize: "16px", fontWeight: "regular", cursor: "pointer", border: "1px solid #C4FF4D" },
-    btnDeleteIcon: { width: "54px", height: "54px", display: "flex", alignItems: "center", justifyContent: "center", background: "#9e004cb4", border: "1px solid #9e004d", borderRadius: "12px", cursor: "pointer", padding: "12px" }
-  };
+  const locked = (field) => isRestrictedEdit && !['height', 'weight', 'price'].includes(field);
+
+  const fieldClass = (field, extra = "") =>
+    `paf-field ${extra} ${errors[field] ? 'has-error' : ''} ${locked(field) ? 'is-locked' : ''}`;
+
+  const numberField = (field, label, props) => (
+    <div className={fieldClass(field)}>
+      <label className="paf-label">{label}</label>
+      <NumberField.Root
+        disabled={locked(field)}
+        value={form[field] === "" ? null : Number(form[field])}
+        onValueChange={v => set(field, v ?? "")}
+        {...props}
+      >
+        <NumberField.Group className="paf-number">
+          <NumberField.Decrement className="paf-number-btn">−</NumberField.Decrement>
+          <NumberField.Input className="paf-number-input" />
+          <NumberField.Increment className="paf-number-btn">+</NumberField.Increment>
+        </NumberField.Group>
+      </NumberField.Root>
+      {errors[field] && <span className="paf-error">{errors[field]}</span>}
+    </div>
+  );
 
  return (
-    <div style={styles.card}>
-      <h2 style={{ margin: "0 0 24px 0", fontSize: 36, fontWeight: 800, textTransform: "uppercase", borderBottom: "2px solid black", paddingBottom: "16px", fontFamily: "'VT323', monospace" }}>
-        {initialData ? "Edit Pokémon" : "Add New Pokémon"}
-      </h2>
+    <div className={`paf-card ${isModal ? 'paf-modal' : ''}`}>
+      <h2 className="paf-title">{initialData ? "Edit Pokémon" : "List a Pokémon"}</h2>
+      {isRestrictedEdit && (
+        <p className="paf-note">Live listings can only change height, weight and price.</p>
+      )}
 
       <form onSubmit={handleSubmit} noValidate>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px 20px" }}>
-          
-          {/* ᓚᘏᗢ name */}
-         <Field.Root style={{ ...styles.field, gridColumn: "1 / -1", opacity: isRestrictedEdit ? 0.6 : 1 }}>
-            <Field.Label style={styles.label}>Pokémon name:</Field.Label>
-            <Field.Control disabled={isRestrictedEdit} required style={{...styles.input, cursor: isRestrictedEdit ? 'not-allowed' : 'text'}} value={form.name} onChange={e => set("name", e.target.value)} placeholder="e.g. gengar" />
-            <Field.Error style={styles.error} match="valueMissing">Please enter a name.</Field.Error>
-          </Field.Root>
 
-           {/* ᓚᘏᗢ description */}
-          <Field.Root style={{ ...styles.field, gridColumn: "1 / -1", opacity: isRestrictedEdit ? 0.6 : 1 }}>
-             <Field.Label style={styles.label}>Description:</Field.Label>
-             <Field.Control disabled={isRestrictedEdit} render={<textarea />} required style={{ ...styles.input, minHeight: '80px', resize: 'vertical', cursor: isRestrictedEdit ? 'not-allowed' : 'text' }} value={form.description} onChange={e => set("description", e.target.value)} placeholder="Describe your pokémon " />
-             <Field.Error style={styles.error} match="valueMissing">Description is required.</Field.Error>
-          </Field.Root>
+        {/* two columns on the add page: basics left, stats + listing right */}
+        <div className="paf-columns">
+        <div className="paf-col">
+        {/* ᓚᘏᗢ the basics */}
+        <section className="paf-section">
+          <h3 className="paf-section-title">The basics</h3>
 
-           {/* ᓚᘏᗢ type */}
-          <Field.Root style={{ ...styles.field, position: "relative", opacity: isRestrictedEdit ? 0.6 : 1 }} ref={typeRef}>
-            <Field.Label style={styles.label}>Type:</Field.Label>
-           <div onClick={() => !isRestrictedEdit && setIsTypeMenuOpen(!isTypeMenuOpen)} style={{...styles.typeContainer, cursor: isRestrictedEdit ? 'not-allowed' : 'pointer'}}>
-              {form.type.length === 0 && <span style={{color: "rgb(186, 140, 255)", fontSize: "14px", paddingLeft: "4px"}}>Select types...</span>}
-              {form.type.map(t => (
-                <span key={t} style={styles.tag}>
-                  {t}
-                 
-                  {!isRestrictedEdit && (
-                    <button type="button" onClick={(e) => { e.stopPropagation(); set("type", form.type.filter(type => type !== t)); }} style={styles.tagBtn}>✕</button>
-                  )}
-                </span>
-              ))}
-            </div>
+          <div className={fieldClass('name')}>
+            <label className="paf-label" htmlFor="paf-name">Pokémon name</label>
+            <input id="paf-name" className="paf-input" disabled={locked('name')} value={form.name} onChange={e => set("name", e.target.value)} placeholder="e.g. Gengar" />
+            {errors.name && <span className="paf-error">{errors.name}</span>}
+          </div>
 
-            
-            
-            {isTypeMenuOpen && form.type.length < 2 && (
-              <div style={{ position: "absolute", top: "100%", left: 0, right: 0, zIndex: 50, marginTop: "4px", backgroundColor: "rgb(186, 140, 255)", color: "#BA8CFF", border: "2px solid #1A1A1A", maxHeight: "180px", overflowY: "auto", padding: "4px"}}>
-                {POKEMON_TYPE.filter(t => !form.type.includes(t)).map(t => (
-                  <div key={t} onClick={() => { set("type", [...form.type, t]); setIsTypeMenuOpen(false); }} style={{ padding: "8px 12px", cursor: "pointer", fontSize: "14px", color: "black", fontWeight: "500", borderBottom: "1px solid #2a1a3adc" }} onMouseOver={e => e.currentTarget.style.background = "#ba8cff79"} onMouseOut={e => e.currentTarget.style.background = "transparent"}>
+          <div className={fieldClass('description')}>
+            <label className="paf-label" htmlFor="paf-description">
+              Description <span className="paf-count">{form.description?.length || 0}</span>
+            </label>
+            <textarea id="paf-description" className="paf-input paf-textarea" disabled={locked('description')} value={form.description} onChange={e => set("description", e.target.value)} placeholder="Describe your Pokémon..." />
+            {errors.description && <span className="paf-error">{errors.description}</span>}
+          </div>
+
+          {/* ᓚᘏᗢ type dropdown, up to 2 */}
+          <div className={fieldClass('type')} ref={typeRef}>
+            <label className="paf-label">Type <span className="paf-count">{form.type.length}/2</span></label>
+            <div className="paf-dropdown">
+              <div
+                className={`paf-dropdown-trigger ${isTypeMenuOpen ? 'open' : ''}`}
+                role="button"
+                tabIndex={locked('type') ? -1 : 0}
+                onClick={() => !locked('type') && setIsTypeMenuOpen(o => !o)}
+                onKeyDown={(e) => { if ((e.key === 'Enter' || e.key === ' ') && !locked('type')) { e.preventDefault(); setIsTypeMenuOpen(o => !o); } }}
+              >
+                {form.type.length === 0 && <span className="paf-placeholder">Select types...</span>}
+                {form.type.map(t => (
+                  <span key={t} className={`tag type-${t.toLowerCase()} paf-chosen-type`}>
                     {t}
-                  </div>
+                    {!locked('type') && (
+                      <button type="button" aria-label={`Remove ${t}`} onClick={(e) => { e.stopPropagation(); removeType(t); }}>✕</button>
+                    )}
+                  </span>
+                ))}
+                <span className="paf-chevron">▾</span>
+              </div>
+
+              {isTypeMenuOpen && (
+                <div className="paf-dropdown-menu">
+                  {form.type.length >= 2 ? (
+                    <p className="paf-hint paf-menu-note">Max 2 types. Remove one to change it.</p>
+                  ) : POKEMON_TYPE.filter(t => !form.type.includes(t)).map(t => (
+                    <button key={t} type="button" className="paf-option" onClick={() => addType(t)}>
+                      <span className={`tag type-${t.toLowerCase()}`}>{t}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            {errors.type && <span className="paf-error">{errors.type}</span>}
+          </div>
+
+          {/* ᓚᘏᗢ gender + shiny */}
+          <div className="paf-row">
+            <div className={fieldClass('gender')}>
+              <label className="paf-label">Gender</label>
+              <div className="paf-segmented">
+                {GENDERS.map(g => (
+                  <button
+                    key={g}
+                    type="button"
+                    disabled={locked('gender')}
+                    className={form.gender === g ? 'active' : ''}
+                    onClick={() => set("gender", g)}
+                  >
+                    {g}
+                  </button>
                 ))}
               </div>
-            )}
-          </Field.Root>
-          
-           {/* ᓚᘏᗢ gender */}
-         <Field.Root style={{...styles.field, opacity: isRestrictedEdit ? 0.6 : 1}}>
-            <Field.Label style={styles.label}>Gender:</Field.Label>
-            <Field.Control disabled={isRestrictedEdit} render={<select />} required style={{...styles.input, cursor: isRestrictedEdit ? 'not-allowed' : 'pointer'}} value={form.gender} onChange={e => set("gender", e.target.value)}>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Genderless">Genderless</option>
-            </Field.Control>
-          </Field.Root>
-
-             {/* ᓚᘏᗢ level */}
-          <Field.Root style={{...styles.field, opacity: isRestrictedEdit ? 0.6 : 1}}>
-            <Field.Label style={styles.label}>Level:</Field.Label>
-            <NumberField.Root disabled={isRestrictedEdit} value={form.level === "" ? null : Number(form.level)} onValueChange={v => set("level", v ?? "")} min={1} max={100} required>
-              <NumberField.Group style={{...styles.numberGroup, cursor: isRestrictedEdit ? 'not-allowed' : 'text'}}>
-                <NumberField.Decrement disabled={isRestrictedEdit} style={styles.numberBtn}>-</NumberField.Decrement>
-                <NumberField.Input disabled={isRestrictedEdit} style={{...styles.numberInput, cursor: isRestrictedEdit ? 'not-allowed' : 'text'}} />
-                <NumberField.Increment disabled={isRestrictedEdit} style={styles.numberBtn}>+</NumberField.Increment>
-              </NumberField.Group>
-            </NumberField.Root>
-            <Field.Error style={styles.error} match="valueMissing">Required.</Field.Error>
-          </Field.Root>
-
-             {/* ᓚᘏᗢ height */}
-             {/* pokemon height are in meters */}
-          <Field.Root style={styles.field}>
-            <Field.Label style={styles.label}>Height (m):</Field.Label>
-            <NumberField.Root value={form.height === "" ? null : Number(form.height)} onValueChange={v => set("height", v ?? "")} step={0.1} min={0} required>
-              <NumberField.Group style={styles.numberGroup}>
-                <NumberField.Decrement style={styles.numberBtn}>-</NumberField.Decrement>
-                <NumberField.Input style={styles.numberInput} />
-                <NumberField.Increment style={styles.numberBtn}>+</NumberField.Increment>
-              </NumberField.Group>
-            </NumberField.Root>
-            <Field.Error style={styles.error} match="valueMissing">Required.</Field.Error>
-          </Field.Root>
-
-             {/* ᓚᘏᗢ weight */}
-             {/* on pokedex sites pokemon weight is usually pounds, but can be converted to kg, need a max of 450kg */}
-          <Field.Root style={styles.field}>
-            <Field.Label style={styles.label}>Weight (kg):</Field.Label>
-            <NumberField.Root value={form.weight === "" ? null : Number(form.weight)} onValueChange={v => set("weight", v ?? "")} step={0.1} min={0} required>
-              <NumberField.Group style={styles.numberGroup}>
-                <NumberField.Decrement style={styles.numberBtn}>-</NumberField.Decrement>
-                <NumberField.Input style={styles.numberInput} />
-                <NumberField.Increment style={styles.numberBtn}>+</NumberField.Increment>
-              </NumberField.Group>
-            </NumberField.Root>
-            <Field.Error style={styles.error} match="valueMissing">Required.</Field.Error>
-          </Field.Root>
-
-             {/* ᓚᘏᗢ shiny toggle, shiny or no shiny */}
-          <Field.Root style={{ ...styles.field, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: '10px', opacity: isRestrictedEdit ? 0.6 : 1 }}>
-            <Field.Label style={{ ...styles.label, cursor: isRestrictedEdit ? 'not-allowed' : 'pointer' }}>Shiny Variant</Field.Label>
-            <Switch.Root disabled={isRestrictedEdit} checked={form.shiny} onCheckedChange={(c) => set("shiny", c)} style={{ width: '48px', height: '26px', backgroundColor: form.shiny ? 'black' : 'white', border: '2px solid black', borderRadius: '9999px', position: 'relative', cursor: isRestrictedEdit ? 'not-allowed' : 'pointer', padding: 0 }}>
-              <Switch.Thumb style={{ display: 'block', width: '18px', height: '18px', backgroundColor: form.shiny ? 'white' : 'black', borderRadius: '9999px', transition: 'transform 0.2s', transform: `translateX(${form.shiny ? '24px' : '2px'})`, marginTop: '2px' }} />
-            </Switch.Root>
-          </Field.Root>
-
-             {/* ᓚᘏᗢ price */}
-          <Field.Root style={{ ...styles.field, gridColumn: "1 / -1" }}>
-            <Field.Label style={styles.label}>Price</Field.Label>
-            <div style={styles.priceWrapper}>
-              <div style={styles.pricePrefix}>₽</div>
-              <Field.Control required type="number" step="any" min="0" value={form.price} onChange={e => set("price", e.target.value)} style={styles.priceInput} placeholder="0.00" />
             </div>
-            <Field.Error style={styles.error} match="valueMissing">Price is required.</Field.Error>
-          </Field.Root>
 
-             {/* ᓚᘏᗢ img url*/}
-          <Field.Root style={{ ...styles.field, gridColumn: "1 / -1", opacity: isRestrictedEdit ? 0.6 : 1 }}>
-            <Field.Label style={styles.label}>Image URL(please copy image addres from bulbagarden for transparency)</Field.Label>
-            <Field.Control disabled={isRestrictedEdit} required type="url" style={{...styles.input, cursor: isRestrictedEdit ? 'not-allowed' : 'text'}} value={form.imagePokemon} onChange={e => set("imagePokemon", e.target.value)} placeholder="https://..." />
-            <Field.Error style={styles.error} match="valueMissing">Image URL is required.</Field.Error>
-          </Field.Root>
+            <div className={fieldClass('shiny', 'paf-shiny')}>
+              <label className="paf-label">Shiny variant</label>
+              <Switch.Root disabled={locked('shiny')} checked={!!form.shiny} onCheckedChange={(c) => set("shiny", c)} className="paf-switch">
+                <Switch.Thumb className="paf-switch-thumb" />
+              </Switch.Root>
+            </div>
+          </div>
+        </section>
+
+        </div>
+
+        <div className="paf-col">
+        {/* ᓚᘏᗢ stats - height in meters, weight in kg */}
+        <section className="paf-section">
+          <h3 className="paf-section-title">Stats</h3>
+          <div className="paf-row paf-row-3">
+            {numberField('level', 'Level', { min: 1, max: 100 })}
+            {numberField('height', 'Height (m)', { min: 0, step: 0.1 })}
+            {numberField('weight', 'Weight (kg)', { min: 0, step: 0.1 })}
+          </div>
+        </section>
+
+        {/* ᓚᘏᗢ price + image */}
+        <section className="paf-section">
+          <h3 className="paf-section-title">Listing</h3>
+
+          <div className={fieldClass('price')}>
+            <label className="paf-label" htmlFor="paf-price">Price</label>
+            <div className="paf-price">
+              <span className="paf-price-prefix">₽</span>
+              <input id="paf-price" className="paf-input" type="number" step="any" min="0" value={form.price} onChange={e => set("price", e.target.value)} placeholder="0.00" />
+            </div>
+            {errors.price && <span className="paf-error">{errors.price}</span>}
+          </div>
+
+          <div className={fieldClass('imagePokemon')}>
+            <label className="paf-label" htmlFor="paf-image">Image link</label>
+            <div className="paf-image-row">
+              <div className="paf-image-thumb">
+                {form.imagePokemon && !imageBroken
+                  ? <img src={form.imagePokemon} alt="" onError={() => setImageBroken(true)} />
+                  : <span>?</span>}
+              </div>
+              <input
+                id="paf-image"
+                className="paf-input"
+                type="url"
+                disabled={locked('imagePokemon')}
+                value={form.imagePokemon}
+                onChange={e => { set("imagePokemon", e.target.value); setImageBroken(false); }}
+                placeholder="https://..."
+              />
+            </div>
+            <span className={imageBroken ? 'paf-error' : 'paf-hint'}>
+              {imageBroken
+                ? "That image couldn't load. Check the link."
+                : "Tip: copy the image address from Bulbagarden for a transparent background."}
+            </span>
+            {errors.imagePokemon && <span className="paf-error">{errors.imagePokemon}</span>}
+          </div>
+        </section>
+
+        </div>
         </div>
 
              {/* ᓚᘏᗢ buttons depending on page */}
-             {/* save changes if on catalog editing, add product if on add product page */}
-        <div style={styles.btnContainer}>
-          <button type="submit" style={styles.btnSubmit}>
-            {initialData ? "Save Changes" : "Add Product"}
-          </button>
-          
-          {/* delete button only appears when on catalog page, editing */}
+             {/* save changes if editing, add product if on add product page */}
+        <div className="paf-actions">
+          {/* delete button only appears when editing */}
           {initialData && (
-            <button 
-              type="button" 
-              style={styles.btnDeleteIcon} 
-              onClick={() => onDelete(initialData._id)}
+            <button
+              type="button"
+              className="paf-delete"
+              title="Delete listing"
+              onClick={() => (onDelete ? onDelete(initialData._id) : handleDelete())}
             >
-              <img 
-                src={BinIcon} 
-                style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
-              />
+              <img src={BinIcon} alt="Delete" />
             </button>
           )}
+          <button type="submit" className="paf-submit" disabled={saving}>
+            {saving ? "Saving..." : initialData ? (initialData.status === 'rejected' ? "Resubmit for review" : "Save changes") : "List Pokémon"}
+          </button>
         </div>
 
       </form>
@@ -317,8 +369,6 @@ const styles = {
 }
 
 export default PokemonAddForm;
-
-
 
 
 

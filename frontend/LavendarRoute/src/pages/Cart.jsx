@@ -5,8 +5,10 @@ import crossIcon from "../assets/icons/CrossIcon.png";
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 import Navbar from "../components/navbar";
+import Footer from "../components/Footer.jsx";
 import LiquidEther from "../components/LiquidEther.jsx";
 
 import Container from "react-bootstrap/Container";
@@ -65,34 +67,57 @@ const Cart = () => {
     }
   };
 
+  // each Pokémon is bought through POST /:id/purchase, which marks it sold for this user;
+  // anything someone else bought first comes back 409 and is dropped from the cart
   const CheckOut = async () => {
-    let currentCart = JSON.parse(localStorage.getItem("cart") || "[]");
+    let currentCart = JSON.parse(localStorage.getItem("cart") || "[]").filter(Boolean);
 
-   try {
-  await Promise.all(
-    currentCart.map(async (pokemon) => {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/pokemon/${pokemon._id}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
+    if (!token) {
+      toast.error("Log in to check out.");
+      navigate("/login");
+      return;
+    }
+
+    try {
+      const results = await Promise.all(
+        currentCart.map(async (pokemon) => {
+          const response = await fetch(
+            `${import.meta.env.VITE_API_URL}/api/pokemon/${pokemon._id}/purchase`,
+            {
+              method: "POST",
+              headers: { Authorization: `Bearer ${token}` },
+            },
+          );
+          return { pokemon, status: response.status };
+        }),
       );
 
-      const data = await response.json();
-      console.log(data);
-    }),
-      );
+      if (results.some((r) => r.status === 401)) {
+        toast.error("Your session expired. Please log in again.");
+        navigate("/login");
+        return;
+      }
 
-      localStorage.setItem("cart", JSON.stringify([]));
-      setCartValue(0);
-      handleShow();
+      const bought = results.filter((r) => r.status === 200);
+      const unavailable = results.filter((r) => r.status === 409 || r.status === 404);
+      const failed = results.filter((r) => ![200, 401, 404, 409].includes(r.status));
 
-      console.log("All Pokémon deleted!");
+      unavailable.forEach((r) => toast.error(`${r.pokemon.name} is no longer available.`));
+      if (failed.length > 0) {
+        toast.error("Some Pokémon couldn't be bought. They're still in your cart.");
+      }
+
+      // keep only the ones that failed for another reason, so the buyer can try again
+      const remaining = failed.map((r) => r.pokemon);
+      localStorage.setItem("cart", JSON.stringify(remaining));
+      setCartValue(remaining.reduce((total, pokemon) => total + pokemon.price, 0));
+
+      if (bought.length > 0) {
+        handleShow();
+      }
     } catch (error) {
       console.error("Error in checkout:", error);
+      toast.error("Checkout failed. Please try again.");
     }
   };
 
@@ -135,7 +160,7 @@ const Cart = () => {
                 {!token ? (
                   <Button
                     id="check-out-btn"
-                    className="col-8 p-1 font-vt text-42"
+                    className="col-8 font-vt"
                     onClick={() => navigate("/login")}
                   >
                     Log in
@@ -143,7 +168,7 @@ const Cart = () => {
                 ) : (
                   <Button
                     id="check-out-btn"
-                    className="col-8 p-1 font-vt text-42"
+                    className="col-8 font-vt"
                     onClick={CheckOut}
                   >
                     Checkout
@@ -217,7 +242,7 @@ const Cart = () => {
             <Row className="mt-5 col-md-2 col-3">
               <Button
                 id="empty-cart-btn"
-                className="p-2 font-vt text-24"
+                className="font-vt"
                 onClick={() => UpdateCart("ALL")}
               >
                 Empty cart
@@ -234,6 +259,10 @@ const Cart = () => {
           </Row>
         </Container>
       )}
+
+      <div className="page-footer">
+        <Footer glitch />
+      </div>
 
       <div id="liquid-ether">
         <LiquidEther

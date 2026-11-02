@@ -1,21 +1,20 @@
 import React, { useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
+import LetterGlitch from './LetterGlitch';
 import gengarLogo from '../assets/gengar-logo.png'; 
 import AddIcon from '../assets/icons/AddIcon.png';
 import profileIcon from '../assets/icons/ProfileIcon.png';
 import cartIcon from '../assets/icons/CartIcon.png';
 import settingsIcon from '../assets/icons/SettingsIcon.png';
 import heartIcon from '../assets/icons/HeartNotFilledIcon.png';
-import LogoutIcon from '../assets/icons/LogoutIcon.png'; 
 
 import '../css/Navbar.css';
 
 const Navbar = () => {
   const navigate = useNavigate();
-  
+  const isHome = useLocation().pathname === '/';
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
-  const [showLogout, setShowLogout] = useState(false);
 
   const roles = JSON.parse(localStorage.getItem('userRoles') || '[]');
   const isAuthorized = roles.includes('admin') || roles.includes('seller') || roles.includes('hybrid');
@@ -24,20 +23,19 @@ const Navbar = () => {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const closeMenu = () => setIsMenuOpen(false);
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userRoles');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('cart');
-    localStorage.removeItem('wishlist');
-    navigate('/');
-    window.location.reload();
-
-  };
-
   return (
-    <nav className="misty-glass-nav">
-      
+    <nav className={`misty-glass-nav ${isHome ? 'nav-home' : ''}`}>
+
+      <div className="nav-glitch-bg" aria-hidden="true">
+        <LetterGlitch
+          glitchColors={["#7C3AED", "#A855F7"]}
+          glitchSpeed={50}
+          centerVignette={false}
+          outerVignette={false}
+          smooth={true}
+        />
+      </div>
+
       <div className="nav-logo clickable-logo" onClick={() => { navigate('/'); closeMenu(); }}>
         <img src={gengarLogo} alt="LavendarRoute Logo" className="nav-icon" />
         <h1 className="nav-brand">
@@ -105,36 +103,13 @@ const Navbar = () => {
             />
           )}
 
-          <div 
-            className="profile-container" 
-            onMouseEnter={() => setShowLogout(true)} 
-            onMouseLeave={() => setShowLogout(false)}
-            onClick={() => {
-              if (isLoggedIn) {
-                handleLogout();
-              } else {
-                navigate('/signup');
-                closeMenu();
-              }
-            }}
-            style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
-          >
-            {showLogout && isLoggedIn ? (
-              <img 
-                src={LogoutIcon} 
-                alt="Logout" 
-                title="Disconnect from Network"
-                className="action-icon action-icon-png" 
-              />
-            ) : (
-              <img 
-                src={profileIcon} 
-                alt="Profile" 
-                title={isLoggedIn ? "Trainer Profile" : "Trainer Login / Encrypted Access"}
-                className="action-icon action-icon-png"
-              />
-            )}
-          </div>
+          <img
+            src={profileIcon}
+            alt="Profile"
+            title={isLoggedIn ? "Trainer Profile" : "Trainer Login / Encrypted Access"}
+            className="action-icon action-icon-png"
+            onClick={() => { navigate(isLoggedIn ? '/profile' : '/signup'); closeMenu(); }}
+          />
 
         </div>
       </div>

@@ -2,10 +2,24 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import '../css/Footer.css';
 import gengarLogo from '../assets/gengar-logo.png';
+import LetterGlitch from './LetterGlitch';
 
-const Footer = () => {
+const Footer = ({ glitch = false }) => {
   return (
     <footer className="misty-glass-panel footer-container">
+
+      {glitch && (
+        <div className="footer-glitch-bg" aria-hidden="true">
+          <LetterGlitch
+            glitchColors={["#7C3AED", "#A855F7"]}
+            glitchSpeed={50}
+            centerVignette={false}
+            outerVignette={false}
+            smooth={true}
+          />
+        </div>
+      )}
+
       <div className="footer-grid">
         
 

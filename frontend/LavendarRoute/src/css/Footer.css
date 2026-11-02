@@ -8,6 +8,27 @@
   gap: 30px;
 }
 
+.footer-glitch-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  z-index: -1; 
+  opacity: 0.28;
+  pointer-events: none;
+}
+
+.footer-glitch-bg canvas {
+  filter: blur(1.5px);
+}
+
+.page-footer {
+  position: relative;
+  max-width: calc(var(--page-max) + 2 * (var(--page-edge) + var(--page-inset)));
+  margin: 0 auto;
+  padding: 0 calc(var(--page-edge) + var(--page-inset)) 25px;
+}
+
 .footer-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));

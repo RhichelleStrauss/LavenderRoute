@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Navbar from "../components/navbar";
+import Footer from "../components/Footer.jsx";
 import LiquidEther from "../components/LiquidEther.jsx";
 
 import Container from "react-bootstrap/Container";
@@ -168,6 +169,10 @@ const Wishlist = () => {
           </Row>
         </Container>
       )}
+
+      <div className="page-footer">
+        <Footer glitch />
+      </div>
 
       <div id="liquid-ether">
         <LiquidEther

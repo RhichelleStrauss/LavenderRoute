@@ -22,6 +22,26 @@
   box-sizing: border-box;
 }
 
+.search-pill-bar {
+  position: relative; 
+  /* glitvhy */
+}
+
+
+.search-glitch-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  z-index: -1;
+    opacity: 0.28;
+  pointer-events: none;
+}
+
+.search-glitch-bg canvas {
+  filter: blur(1.5px);
+}
+
 .filter-toggle-btn {
   background: transparent;
   border: none;
@@ -65,8 +85,8 @@
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background-color: rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(186, 140, 255, 0.2);
+  background-color: rgba(14, 10, 20, 0.85); 
+    border: 1px solid rgba(186, 140, 255, 0.2);
   border-radius: 26px;
   color: #BA8CFF;
   font-family: 'VT323', monospace;
@@ -99,8 +119,8 @@
 }
 
 .capsule-search {
-  background-color: rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(186, 140, 255, 0.2);
+  background-color: rgba(14, 10, 20, 0.85); 
+    border: 1px solid rgba(186, 140, 255, 0.2);
   border-radius: 999px;
   color: #FFFFFF;
   font-family: 'VT323', monospace;
@@ -133,6 +153,7 @@
 }
 
 .filter-drawer {
+  position: relative; 
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease-out;
@@ -171,8 +192,8 @@
 }
 
 .drawer-field select {
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(186, 140, 255, 0.3);
+  background: rgba(14, 10, 20, 0.85); 
+    border: 1px solid rgba(186, 140, 255, 0.3);
   color: #FFFFFF;
   padding: 6px 12px;
   border-radius: 6px;
@@ -206,4 +227,12 @@
     grid-template-columns: 1fr;
     gap: 16px;
   }
+}
+.capsule-search::placeholder {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.filter-drawer .search-glitch-bg {
+  bottom: auto;
+  height: 500px;
 }

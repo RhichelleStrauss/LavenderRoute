@@ -6,7 +6,8 @@
 
 body {
   min-height: 100vh;
-  width: 100vw;
+  width: 100%; 
+    overflow-x: hidden;
   background-color: #1A1A1A;
   color: azure;
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -27,4 +28,23 @@ body {
   --grey: #4D4D4D;
   --black: #1A1A1A;
   --dark-purple: #2A1A3A;
+
+   --page-edge: 50px;
+  --page-inset: 10px;
+  --page-max: calc(1680px - 2 * var(--page-inset));
+
+    --btn-height: 48px;
+  --btn-font: 24px;
+  --btn-pad-x: 24px;
+  --btn-sm-height: 36px;
+  --btn-sm-font: 20px;
+  --btn-sm-pad-x: 14px;
+}
+
+@media (max-width: 768px) {
+  :root { --page-edge: 20px; }
+}
+
+@media (max-width: 576px) {
+  :root { --page-inset: 0px; }
 }

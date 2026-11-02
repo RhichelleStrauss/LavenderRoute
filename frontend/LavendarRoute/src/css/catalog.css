@@ -1,6 +1,6 @@
 .catalog-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, 330px);
+  grid-template-columns: repeat(auto-fill, min(330px, 100%));
   justify-content: center;
   gap: 24px;
   padding: 24px;
@@ -17,4 +17,72 @@
   width: 100vw;
   height: 100vh;
   z-index: -1;
+}
+
+@media (max-width: 480px) {
+  .catalog-grid {
+    padding: 16px 12px;
+    gap: 16px;
+  }
+}
+
+.catalog-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  max-width: 1200px;
+  margin: 10px auto 40px;
+  padding: 0 24px;
+}
+
+.page-btn {
+  min-width: var(--btn-height);
+  height: var(--btn-height);
+  padding: 0 14px;
+  font-family: "VT323", monospace;
+  font-size: var(--btn-font);
+  line-height: 1;
+  color: #BA8CFF;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(186, 140, 255, 0.35);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.page-btn:hover:not(:disabled) {
+  border-color: #C4FF4D;
+  color: #C4FF4D;
+  box-shadow: 0 0 14px rgba(196, 255, 77, 0.3);
+}
+
+.page-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.page-btn.active {
+  color: #1A1A1A;
+  background: #C4FF4D;
+  border-color: #C4FF4D;
+  box-shadow: 0 0 14px rgba(196, 255, 77, 0.45);
+}
+
+.page-gap {
+  font-family: "VT323", monospace;
+  font-size: 22px;
+  color: rgb(156, 163, 175);
+  padding: 0 2px;
+}
+
+.page-info {
+  flex-basis: 100%;
+  text-align: center;
+  font-family: "VT323", monospace;
+  font-size: 18px;
+  color: rgb(156, 163, 175);
 }
